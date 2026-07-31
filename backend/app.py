@@ -24,9 +24,9 @@ FEATURES = ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
 try:
     model = joblib.load(os.path.join(MODEL_DIR, "crop_model.pkl"))
     label_encoder = joblib.load(os.path.join(MODEL_DIR, "label_encoder.pkl"))
-    print(f"✅ Model loaded – {len(label_encoder.classes_)} crop classes")
+    print(f"[OK] Model loaded - {len(label_encoder.classes_)} crop classes")
 except Exception as e:
-    print(f"⚠️ Model not loaded: {e}. /api/recommend-crop will return 503.")
+    print(f"[WARN] Model not loaded: {e}. /api/recommend-crop will return 503.")
 
 # ---------------------------------------------------------------------------
 # Ideal NPK values per crop (kg/ha) – used for fertilizer formula
