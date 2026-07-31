@@ -25,3 +25,16 @@ export async function getFertilizer(data) {
   }
   return res.json();
 }
+
+export async function detectPest(imageUrl) {
+  const res = await fetch(`${API_URL}/api/detect-pest`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image_url: imageUrl }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}

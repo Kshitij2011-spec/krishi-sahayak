@@ -193,6 +193,14 @@ function SoilInputPage() {
                 </div>
               ))}
             </div>
+
+            {/* Alternative Fallback */}
+            {result.alternative && (
+              <div className="alert alert-warning" style={{ marginTop: 'var(--space-lg)', display: 'block' }}>
+                <strong style={{ display: 'block', marginBottom: 'var(--space-sm)' }}>Low Confidence Fallback</strong>
+                Since the primary recommendation confidence is below 70%, you might also consider <strong>{result.alternative.crop}</strong> ({(result.alternative.confidence * 100).toFixed(1)}% confidence).
+              </div>
+            )}
           </div>
         )}
 

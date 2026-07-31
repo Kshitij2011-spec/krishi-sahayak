@@ -9,9 +9,14 @@ import numpy as np
 import joblib
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import requests
+from PIL import Image
+import io
 
 app = Flask(__name__)
 CORS(app)
+
+hf_pipeline = None
 
 # ---------------------------------------------------------------------------
 # Load model at startup
@@ -137,20 +142,34 @@ def recommend_crop():
         return jsonify({"error": f"Invalid input: {e}"}), 400
 
     # Predict
-    pred_encoded = model.predict(features)[0]
     proba = model.predict_proba(features)[0]
+    top_indices = np.argsort(proba)[::-1]
+
+    pred_encoded = top_indices[0]
     crop = label_encoder.inverse_transform([pred_encoded])[0]
-    confidence = float(proba.max())
+    confidence = float(proba[pred_encoded])
+
+    alt_encoded = top_indices[1]
+    alt_crop = label_encoder.inverse_transform([alt_encoded])[0]
+    alt_confidence = float(proba[alt_encoded])
 
     # Get feature importances for reasons
     importances = model.feature_importances_
     reasons = generate_reasons(features[0], crop, importances)
 
-    return jsonify({
+    response_data = {
         "crop": crop,
         "confidence": round(confidence, 4),
         "reasons": reasons,
-    })
+    }
+
+    if confidence < 0.7:
+        response_data["alternative"] = {
+            "crop": alt_crop,
+            "confidence": round(alt_confidence, 4)
+        }
+
+    return jsonify(response_data)
 
 
 @app.route("/api/fertilizer", methods=["POST"])
@@ -193,6 +212,55 @@ def fertilizer():
         "note": f"Based on soil deficit from ideal NPK for {crop}. "
                 f"N deficit: {n_deficit:.0f}, P deficit: {p_deficit:.0f}, K deficit: {k_deficit:.0f} kg/ha.",
     })
+
+
+@app.route("/api/detect-pest", methods=["POST"])
+def detect_pest():
+    global hf_pipeline
+    data = request.get_json(force=True)
+    if "image_url" not in data:
+        return jsonify({"error": "Missing image_url"}), 400
+
+    image_url = data["image_url"]
+
+    # Lazy load the pipeline to save memory on boot
+    if hf_pipeline is None:
+        try:
+            from transformers import pipeline
+            hf_pipeline = pipeline("image-classification", model="linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification")
+            print("[OK] HF Pipeline loaded")
+        except Exception as e:
+            return jsonify({"error": f"Model failed to load: {e}"}), 500
+
+    # Fetch image
+    try:
+        response = requests.get(image_url, timeout=10)
+        response.raise_for_status()
+        image = Image.open(io.BytesIO(response.content)).convert("RGB")
+    except Exception as e:
+        return jsonify({"error": f"Failed to process image: {e}"}), 400
+
+    # Run inference
+    try:
+        results = hf_pipeline(image)
+        # Results is a list like [{"label": "Apple___Apple_scab", "score": 0.99}, ...]
+        top_result = results[0]
+        label = top_result["label"]
+        score = top_result["score"]
+        
+        # Determine if we should escalate
+        escalate = bool(score < 0.6)
+        
+        # Format label to be more human readable
+        human_label = label.replace("___", " - ").replace("_", " ")
+
+        return jsonify({
+            "label": human_label,
+            "confidence": round(score, 4),
+            "escalate": escalate
+        })
+    except Exception as e:
+        return jsonify({"error": f"Inference failed: {e}"}), 500
 
 
 if __name__ == "__main__":
