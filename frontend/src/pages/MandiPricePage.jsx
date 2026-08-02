@@ -65,7 +65,14 @@ function MandiPricePage() {
               onClick={handleSearch}
               disabled={loading}
             >
-              {loading ? 'Searching...' : 'Search Prices'}
+              {loading ? (
+                <>
+                  <span className="spinner"></span>
+                  Searching...
+                </>
+              ) : (
+                'Search Prices'
+              )}
             </button>
           </div>
         </div>
