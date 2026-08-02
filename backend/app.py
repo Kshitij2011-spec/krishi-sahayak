@@ -7,6 +7,8 @@ Everything else (advisory history, feedback, file storage) goes through Supabase
 import os
 import numpy as np
 import joblib
+import datetime
+import random
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
@@ -272,8 +274,32 @@ def detect_pest():
         return jsonify({"error": f"Inference failed: {e}"}), 500
 
 
-import datetime
-import random
+@app.route("/api/translate", methods=["POST"])
+def translate_text():
+    data = request.get_json(force=True)
+    text = data.get("text")
+    target_lang = data.get("target_lang")
+    
+    if not text or not target_lang:
+        return jsonify({"error": "Missing text or target_lang"}), 400
+        
+    lang_code = target_lang.split('-')[0]
+    langpair = f"en|{lang_code}"
+    
+    API_URL = "https://api.mymemory.translated.net/get"
+    
+    try:
+        resp = requests.post(API_URL, data={"q": text, "langpair": langpair}, timeout=10)
+        resp.raise_for_status()
+        result = resp.json()
+        
+        if result.get("responseStatus") == 200:
+            translated = result["responseData"]["translatedText"]
+            return jsonify({"translatedText": translated})
+        else:
+            return jsonify({"error": result.get("responseDetails", "Translation failed")}), 502
+    except Exception as e:
+        return jsonify({"error": str(e)}), 502
 
 @app.route("/api/mandi-price", methods=["POST"])
 def mandi_price():

@@ -54,3 +54,16 @@ export async function getMandiPrices(commodity, district) {
   }
   return res.json();
 }
+
+export async function translateText(text, targetLang) {
+  const res = await fetch(`${API_URL}/api/translate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, target_lang: targetLang }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Translation request failed' }));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}

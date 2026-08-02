@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { recommendCrop, getFertilizer } from '../lib/api';
+import { recommendCrop, getFertilizer, translateText } from '../lib/api';
 import { supabase } from '../lib/supabase';
 
 const DISTRICTS = [
@@ -153,7 +153,7 @@ function SoilInputPage() {
     });
   };
 
-  const handleTTS = () => {
+  const handleTTS = async () => {
     if (!result) return;
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -178,7 +178,24 @@ function SoilInputPage() {
       if (fertilizer) {
         text += `Recommended fertilizer per acre is: ${fertilizer.urea_kg_acre} kilograms of Urea, ${fertilizer.dap_kg_acre} kilograms of DAP, and ${fertilizer.mop_kg_acre} kilograms of MOP.`;
       }
-      const utterance = new SpeechSynthesisUtterance(text);
+      
+      let finalSpeechText = text;
+      
+      // If language is not English, attempt to translate via backend
+      if (selectedLang !== 'en-IN' && selectedLang !== 'en-US') {
+        try {
+          const transRes = await translateText(text, selectedLang);
+          if (transRes && transRes.translatedText) {
+            finalSpeechText = transRes.translatedText;
+          }
+        } catch (e) {
+          console.error("Translation API failed, falling back to English text:", e);
+          // Label the fallback in the UI
+          setTtsWarning(prev => prev ? prev + " | Translation failed, speaking English." : "Translation failed, speaking English text with regional voice.");
+        }
+      }
+
+      const utterance = new SpeechSynthesisUtterance(finalSpeechText);
       utterance.lang = selectedLang;
       window.speechSynthesis.speak(utterance);
     } else {
