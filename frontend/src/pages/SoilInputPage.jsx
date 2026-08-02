@@ -96,6 +96,26 @@ function SoilInputPage() {
     });
   };
 
+  const handleTTS = () => {
+    if (!result) return;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      let text = `The recommended crop is ${result.crop} with a confidence of ${(result.confidence * 100).toFixed(1)} percent. `;
+      text += "Reasons for this recommendation include: ";
+      result.reasons.forEach((reason, i) => {
+        text += `${i + 1}, ${reason}. `;
+      });
+      if (fertilizer) {
+        text += `Recommended fertilizer per acre is: ${fertilizer.urea_kg_acre} kilograms of Urea, ${fertilizer.dap_kg_acre} kilograms of DAP, and ${fertilizer.mop_kg_acre} kilograms of MOP.`;
+      }
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'en-IN';
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert("Text-to-speech is not supported in your browser.");
+    }
+  };
+
   return (
     <>
       {/* Hero */}
@@ -173,7 +193,18 @@ function SoilInputPage() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-md)' }}>
               <div>
                 <p style={{ fontSize: '0.85rem', color: 'var(--gray-600)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Recommended Crop</p>
-                <h2 className="result-crop">{result.crop}</h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+                  <h2 className="result-crop">{result.crop}</h2>
+                  <button 
+                    className="btn btn-secondary" 
+                    style={{ padding: '0.25rem 0.5rem', fontSize: '0.8rem', borderRadius: 'var(--radius-sm)' }}
+                    onClick={handleTTS}
+                    title="Read Advisory Aloud"
+                    id="btn-tts"
+                  >
+                    🔊 Listen
+                  </button>
+                </div>
               </div>
               <span className="badge badge-success" style={{ fontSize: '1rem', padding: 'var(--space-sm) var(--space-lg)' }}>
                 {(result.confidence * 100).toFixed(1)}% confidence

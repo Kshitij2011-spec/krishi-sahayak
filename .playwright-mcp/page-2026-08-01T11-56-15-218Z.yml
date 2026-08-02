@@ -1,0 +1,27 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - link "Krishi -Sahayak" [ref=e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e6]: Krishi
+      - text: "-Sahayak"
+    - list [ref=e7]:
+      - listitem [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+      - listitem [ref=e10]:
+        - link "Pest Detection" [ref=e11] [cursor=pointer]:
+          - /url: /pest-detection
+      - listitem [ref=e12]:
+        - link "Mandi Prices" [ref=e13] [cursor=pointer]:
+          - /url: /mandi-prices
+  - generic [ref=e14]:
+    - heading "Pest & Disease Detection" [level=1] [ref=e15]
+    - paragraph [ref=e16]: Upload a photo of the affected plant leaf for AI-powered diagnosis
+  - generic [ref=e17]:
+    - generic [ref=e18]:
+      - heading "Upload Plant Image" [level=2] [ref=e19]
+      - img "Preview" [ref=e24] [cursor=pointer]
+      - button "Analyze Image" [ref=e29] [cursor=pointer]
+    - generic [ref=e30]:
+      - strong [ref=e31]: "Error:"
+      - text: "Model failed to load: No module named 'transformers'"

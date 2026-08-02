@@ -1,0 +1,53 @@
+- generic [ref=f1e3]:
+  - navigation [ref=f1e4]:
+    - link "Krishi -Sahayak" [ref=f1e5] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f1e6]: Krishi
+      - text: "-Sahayak"
+    - list [ref=f1e7]:
+      - listitem [ref=f1e8]:
+        - link "Home" [ref=f1e9] [cursor=pointer]:
+          - /url: /
+      - listitem [ref=f1e10]:
+        - link "Pest Detection" [ref=f1e11] [cursor=pointer]:
+          - /url: /pest-detection
+      - listitem [ref=f1e12]:
+        - link "Mandi Prices" [ref=f1e13] [cursor=pointer]:
+          - /url: /mandi-prices
+  - generic [ref=f1e14]:
+    - heading "AI-Powered Crop Advisory" [level=1] [ref=f1e15]
+    - paragraph [ref=f1e16]: Enter your soil & climate data to get personalized crop recommendations
+  - generic [ref=f1e18]:
+    - heading "Soil & Climate Parameters" [level=2] [ref=f1e19]
+    - generic [ref=f1e20]:
+      - generic [ref=f1e21]:
+        - generic [ref=f1e22]: Nitrogen (N) kg/ha
+        - spinbutton "Nitrogen (N) kg/ha" [ref=f1e23]
+      - generic [ref=f1e24]:
+        - generic [ref=f1e25]: Phosphorus (P) kg/ha
+        - spinbutton "Phosphorus (P) kg/ha" [ref=f1e26]
+      - generic [ref=f1e27]:
+        - generic [ref=f1e28]: Potassium (K) kg/ha
+        - spinbutton "Potassium (K) kg/ha" [ref=f1e29]
+      - generic [ref=f1e30]:
+        - generic [ref=f1e31]: Temperature (°C)
+        - spinbutton "Temperature (°C)" [ref=f1e32]
+      - generic [ref=f1e33]:
+        - generic [ref=f1e34]: Humidity (%)
+        - spinbutton "Humidity (%)" [ref=f1e35]
+      - generic [ref=f1e36]:
+        - generic [ref=f1e37]: Soil pH
+        - spinbutton "Soil pH" [ref=f1e38]
+      - generic [ref=f1e39]:
+        - generic [ref=f1e40]: Rainfall (mm)
+        - spinbutton "Rainfall (mm)" [ref=f1e41]
+      - generic [ref=f1e42]:
+        - generic [ref=f1e43]: District
+        - combobox "District" [ref=f1e44]:
+          - option "Ludhiana" [selected]
+          - option "Amritsar"
+          - option "Patiala"
+          - option "Jalandhar"
+          - option "Bathinda"
+          - option "Sangrur"
+    - button "Get Crop Recommendation" [ref=f1e46] [cursor=pointer]

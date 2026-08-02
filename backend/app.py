@@ -272,5 +272,59 @@ def detect_pest():
         return jsonify({"error": f"Inference failed: {e}"}), 500
 
 
+import datetime
+import random
+
+@app.route("/api/mandi-price", methods=["POST"])
+def mandi_price():
+    data = request.get_json(force=True)
+    if not data or "commodity" not in data or "district" not in data:
+        return jsonify({"error": "Missing commodity or district"}), 400
+
+    commodity = data["commodity"]
+    district = data["district"]
+
+    api_key = os.environ.get("DATA_GOV_IN_API_KEY")
+    if api_key:
+        url = "https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070"
+        params = {
+            "api-key": api_key,
+            "format": "json",
+            "filters[commodity]": commodity,
+            "filters[district]": district
+        }
+        try:
+            response = requests.get(url, params=params, timeout=10)
+            response.raise_for_status()
+            api_data = response.json()
+            if api_data.get("records"):
+                record = api_data["records"][0]
+                return jsonify({
+                    "commodity": record.get("commodity", commodity),
+                    "district": record.get("district", district),
+                    "min_price": record.get("min_price"),
+                    "max_price": record.get("max_price"),
+                    "modal_price": record.get("modal_price"),
+                    "arrival_date": record.get("arrival_date"),
+                    "is_fallback": False
+                })
+        except Exception as e:
+            print(f"Agmarknet API failed: {e}")
+            pass
+
+    # Fallback stub
+    base_price = {"Wheat": 2200, "Cotton": 7000, "Paddy (Rice)": 2100}.get(commodity, 2000)
+    variance = random.randint(-100, 100)
+    modal = base_price + variance
+    return jsonify({
+        "commodity": commodity,
+        "district": district,
+        "min_price": modal - 150,
+        "max_price": modal + 200,
+        "modal_price": modal,
+        "arrival_date": datetime.date.today().strftime("%d/%m/%Y"),
+        "is_fallback": True
+    })
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

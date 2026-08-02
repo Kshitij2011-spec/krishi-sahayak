@@ -41,3 +41,16 @@ export async function detectPest(imageUrl) {
   }
   return res.json();
 }
+
+export async function getMandiPrices(commodity, district) {
+  const res = await fetch(`${API_URL}/api/mandi-price`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ commodity, district }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(err.error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
