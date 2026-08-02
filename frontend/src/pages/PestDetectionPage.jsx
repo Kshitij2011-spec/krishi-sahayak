@@ -39,11 +39,14 @@ function PestDetectionPage() {
     }
   };
 
+  const [statusMessage, setStatusMessage] = useState(null);
+
   const handleAnalyze = async () => {
     if (!fileToUpload) return;
     setLoading(true);
     setError(null);
     setResult(null);
+    setStatusMessage(null);
 
     try {
       // 1. Upload to Supabase Storage
@@ -64,13 +67,29 @@ function PestDetectionPage() {
 
       const publicUrl = publicUrlData.publicUrl;
 
-      // 3. Call backend API
-      const detectionResult = await detectPest(publicUrl);
+      // 3. Call backend API with retry logic for 503
+      let detectionResult;
+      try {
+        detectionResult = await detectPest(publicUrl);
+      } catch (err) {
+        if (err.status === 503) {
+          const waitSecs = err.retry_in || 15;
+          setStatusMessage(`Model is warming up. Analyzing, this may take up to ${Math.round(waitSecs)} seconds...`);
+          // Wait and retry once
+          await new Promise(resolve => setTimeout(resolve, waitSecs * 1000));
+          setStatusMessage('Retrying analysis...');
+          detectionResult = await detectPest(publicUrl);
+          setStatusMessage(null);
+        } else {
+          throw err;
+        }
+      }
       
       // 4. Set result
       setResult({ ...detectionResult, imageUrl: publicUrl });
 
     } catch (err) {
+      setStatusMessage(null);
       setError(err.message || 'An error occurred during analysis');
     } finally {
       setLoading(false);
@@ -129,6 +148,11 @@ function PestDetectionPage() {
                   'Analyze Image'
                 )}
               </button>
+              {statusMessage && (
+                <p style={{ marginTop: 'var(--space-md)', color: 'var(--gray-600)' }}>
+                  {statusMessage}
+                </p>
+              )}
             </div>
           )}
         </div>

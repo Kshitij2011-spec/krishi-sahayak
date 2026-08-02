@@ -5,9 +5,4 @@ joblib==1.4.2
 numpy==2.2.3
 pandas==2.2.3
 gunicorn==23.0.0
---extra-index-url https://download.pytorch.org/whl/cpu
-torch
-torchvision
-transformers
-pillow
 requests

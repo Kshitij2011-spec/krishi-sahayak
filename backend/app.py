@@ -10,13 +10,12 @@ import joblib
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
-from PIL import Image
-import io
+
 
 app = Flask(__name__)
 CORS(app)
 
-hf_pipeline = None
+
 
 # ---------------------------------------------------------------------------
 # Load model at startup
@@ -216,37 +215,44 @@ def fertilizer():
 
 @app.route("/api/detect-pest", methods=["POST"])
 def detect_pest():
-    global hf_pipeline
     data = request.get_json(force=True)
     if "image_url" not in data:
         return jsonify({"error": "Missing image_url"}), 400
 
     image_url = data["image_url"]
-
-    # Lazy load the pipeline to save memory on boot
-    if hf_pipeline is None:
-        try:
-            from transformers import pipeline
-            hf_pipeline = pipeline("image-classification", model="linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification")
-            print("[OK] HF Pipeline loaded")
-        except Exception as e:
-            return jsonify({"error": f"Model failed to load: {e}"}), 500
+    hf_token = os.environ.get("HF_API_TOKEN")
+    if not hf_token:
+        return jsonify({"error": "HF_API_TOKEN not configured"}), 500
 
     # Fetch image
     try:
         response = requests.get(image_url, timeout=10)
         response.raise_for_status()
-        image = Image.open(io.BytesIO(response.content)).convert("RGB")
+        image_bytes = response.content
     except Exception as e:
-        return jsonify({"error": f"Failed to process image: {e}"}), 400
+        return jsonify({"error": f"Failed to fetch image: {e}"}), 400
 
-    # Run inference
+    # Run inference via HF API
     try:
-        results = hf_pipeline(image)
-        # Results is a list like [{"label": "Apple___Apple_scab", "score": 0.99}, ...]
+        api_url = "https://api-inference.huggingface.co/models/linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification"
+        headers = {"Authorization": f"Bearer {hf_token}"}
+        
+        # We send the raw image bytes
+        hf_response = requests.post(api_url, headers=headers, data=image_bytes, timeout=30)
+        
+        # If model is loading, HF returns 503 with a specific JSON body
+        if hf_response.status_code == 503:
+            return jsonify({"error": "Model is loading on Hugging Face", "retry_in": hf_response.json().get("estimated_time", 20)}), 503
+            
+        hf_response.raise_for_status()
+        results = hf_response.json()
+        
+        if not results or not isinstance(results, list):
+            return jsonify({"error": "Unexpected response format from HF API"}), 500
+            
         top_result = results[0]
-        label = top_result["label"]
-        score = top_result["score"]
+        label = top_result.get("label", "Unknown")
+        score = top_result.get("score", 0.0)
         
         # Determine if we should escalate
         escalate = bool(score < 0.6)
