@@ -234,8 +234,11 @@ def detect_pest():
 
     # Run inference via HF API
     try:
-        api_url = "https://api-inference.huggingface.co/models/linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification"
-        headers = {"Authorization": f"Bearer {hf_token}"}
+        api_url = "https://router.huggingface.co/hf-inference/models/linkanjarad/mobilenet_v2_1.0_224-plant-disease-identification"
+        headers = {
+            "Authorization": f"Bearer {hf_token}",
+            "Content-Type": "application/octet-stream"
+        }
         
         # We send the raw image bytes
         hf_response = requests.post(api_url, headers=headers, data=image_bytes, timeout=30)

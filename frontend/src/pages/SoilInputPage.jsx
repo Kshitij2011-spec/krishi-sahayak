@@ -194,11 +194,11 @@ function SoilInputPage() {
               ))}
             </div>
 
-            {/* Alternative Fallback */}
+            {/* Explainability / Alternatives */}
             {result.alternative && (
-              <div className="alert alert-warning" style={{ marginTop: 'var(--space-lg)', display: 'block' }}>
-                <strong style={{ display: 'block', marginBottom: 'var(--space-sm)' }}>Low Confidence Fallback</strong>
-                Since the primary recommendation confidence is below 70%, you might also consider <strong>{result.alternative.crop}</strong> ({(result.alternative.confidence * 100).toFixed(1)}% confidence).
+              <div className="alert alert-info" style={{ marginTop: 'var(--space-lg)', display: 'block' }}>
+                <strong style={{ display: 'block', marginBottom: 'var(--space-sm)' }}>Conditions suit multiple crops</strong>
+                {result.crop} ({(result.confidence * 100).toFixed(1)}%) or <strong>{result.alternative.crop}</strong> ({(result.alternative.confidence * 100).toFixed(1)}%) — both match your soil conditions closely.
               </div>
             )}
           </div>
