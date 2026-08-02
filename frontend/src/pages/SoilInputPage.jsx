@@ -299,8 +299,32 @@ function SoilInputPage() {
               </span>
             </div>
 
-            <div className="confidence-bar">
-              <div className="confidence-fill" style={{ width: `${result.confidence * 100}%` }}></div>
+            <div style={{ marginTop: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--gray-600)', fontWeight: 500, marginBottom: 'var(--space-sm)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Confidence Breakdown</p>
+              {(() => {
+                const probs = result.probabilities || [
+                  { crop: result.crop, confidence: result.confidence },
+                  ...(result.alternative ? [result.alternative] : [])
+                ];
+                
+                return probs.slice(0, 3).map((item, idx) => (
+                  <div key={idx} style={{ marginBottom: '0.75rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.25rem' }}>
+                      <span style={{ fontWeight: 500 }}>{item.crop}</span>
+                      <span>{(item.confidence * 100).toFixed(1)}%</span>
+                    </div>
+                    <div style={{ width: '100%', backgroundColor: 'var(--gray-200)', borderRadius: '4px', height: '8px', overflow: 'hidden' }}>
+                      <div style={{ 
+                        width: `${Math.min(item.confidence * 100, 100)}%`, 
+                        backgroundColor: idx === 0 ? 'var(--primary-color)' : (idx === 1 ? '#3b82f6' : '#8b5cf6'), 
+                        height: '100%', 
+                        borderRadius: '4px',
+                        transition: 'width 0.5s ease-in-out'
+                      }}></div>
+                    </div>
+                  </div>
+                ));
+              })()}
             </div>
 
             {/* Reasons */}
