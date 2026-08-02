@@ -18,6 +18,63 @@ function SoilInputPage() {
   const [error, setError] = useState(null);
   const [feedbackSent, setFeedbackSent] = useState(false);
   const [advisoryId, setAdvisoryId] = useState(null);
+  const [isListening, setIsListening] = useState(false);
+  const [language, setLanguage] = useState('hi-IN');
+  const [ttsWarning, setTtsWarning] = useState('');
+
+  const handleVoiceInput = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice input is not supported in your browser.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = language;
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+    recognition.onerror = (e) => {
+      console.error("Speech error", e.error);
+      setIsListening(false);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.toLowerCase();
+      console.log("Heard:", transcript);
+
+      const parseValue = (keyword) => {
+        const regex = new RegExp(`${keyword}[^\\d]*([\\d.]+)`, 'i');
+        const match = transcript.match(regex);
+        return match ? match[1] : null;
+      };
+
+      setForm((prev) => {
+        const nextForm = { ...prev };
+        const n = parseValue('nitrogen') || parseValue('\\bn\\b');
+        const p = parseValue('phosphorus') || parseValue('\\bp\\b');
+        const k = parseValue('potassium') || parseValue('\\bk\\b');
+        const temp = parseValue('temperature') || parseValue('\\btemp\\b');
+        const hum = parseValue('humidity');
+        const phVal = parseValue('\\bph\\b');
+        const rain = parseValue('rainfall') || parseValue('\\brain\\b');
+
+        if (n) nextForm.n = n;
+        if (p) nextForm.p = p;
+        if (k) nextForm.k = k;
+        if (temp) nextForm.temperature = temp;
+        if (hum) nextForm.humidity = hum;
+        if (phVal) nextForm.ph = phVal;
+        if (rain) nextForm.rainfall = rain;
+
+        return nextForm;
+      });
+    };
+
+    recognition.start();
+  };
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -100,6 +157,19 @@ function SoilInputPage() {
     if (!result) return;
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
+      setTtsWarning('');
+      
+      let selectedLang = language;
+      if (language === 'pa-IN') {
+        const voices = window.speechSynthesis.getVoices();
+        const hasPunjabi = voices.some(v => v.lang.startsWith('pa'));
+        if (!hasPunjabi) {
+          selectedLang = 'hi-IN';
+          setTtsWarning("Punjabi voice not natively supported on this device. Falling back to Hindi.");
+          console.warn("Punjabi TTS voice not found. Falling back to Hindi (hi-IN).");
+        }
+      }
+
       let text = `The recommended crop is ${result.crop} with a confidence of ${(result.confidence * 100).toFixed(1)} percent. `;
       text += "Reasons for this recommendation include: ";
       result.reasons.forEach((reason, i) => {
@@ -109,7 +179,7 @@ function SoilInputPage() {
         text += `Recommended fertilizer per acre is: ${fertilizer.urea_kg_acre} kilograms of Urea, ${fertilizer.dap_kg_acre} kilograms of DAP, and ${fertilizer.mop_kg_acre} kilograms of MOP.`;
       }
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-IN';
+      utterance.lang = selectedLang;
       window.speechSynthesis.speak(utterance);
     } else {
       alert("Text-to-speech is not supported in your browser.");
@@ -127,7 +197,24 @@ function SoilInputPage() {
       <div className="container">
         {/* Input Form */}
         <form onSubmit={handleSubmit} className="card" style={{ marginBottom: 'var(--space-xl)' }}>
-          <h2 className="card-title">Soil &amp; Climate Parameters</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-md)', flexWrap: 'wrap', gap: '1rem' }}>
+            <h2 className="card-title" style={{ marginBottom: 0 }}>Soil &amp; Climate Parameters</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <select 
+                value={language} 
+                onChange={(e) => setLanguage(e.target.value)}
+                style={{ padding: '0.4rem', borderRadius: '4px', border: '1px solid #ccc' }}
+                id="select-language"
+              >
+                <option value="hi-IN">Hindi (hi-IN)</option>
+                <option value="mr-IN">Marathi (mr-IN)</option>
+                <option value="pa-IN">Punjabi (pa-IN)</option>
+              </select>
+              <button type="button" className="btn btn-secondary" onClick={handleVoiceInput} disabled={isListening} id="btn-voice-input" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                {isListening ? "🔴 Listening..." : "🎤 Speak"}
+              </button>
+            </div>
+          </div>
           <div className="form-grid">
             <div className="form-group">
               <label htmlFor="field-n">Nitrogen (N) kg/ha</label>
@@ -205,6 +292,7 @@ function SoilInputPage() {
                     🔊 Listen
                   </button>
                 </div>
+                {ttsWarning && <p style={{ fontSize: '0.75rem', color: '#d97706', marginTop: '0.25rem' }}>{ttsWarning}</p>}
               </div>
               <span className="badge badge-success" style={{ fontSize: '1rem', padding: 'var(--space-sm) var(--space-lg)' }}>
                 {(result.confidence * 100).toFixed(1)}% confidence
