@@ -12,7 +12,6 @@ venv/
 node_modules/
 dist/
 .env.local
-.env.production
 
 # IDE
 .vscode/
