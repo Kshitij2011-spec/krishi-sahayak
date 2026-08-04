@@ -138,11 +138,79 @@ body {
   transition: all var(--transition-fast);
 }
 
+
 .navbar-links a:hover,
 .navbar-links a.active {
   color: var(--white);
   background: rgba(255, 255, 255, 0.12);
 }
+
+/* ============================================================
+   Language Switcher
+   ============================================================ */
+
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.82rem;
+  flex-shrink: 0;
+}
+
+.lang-globe {
+  font-size: 1rem;
+  margin-right: 2px;
+  opacity: 0.85;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--green-300);
+  font-size: 0.82rem;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 2px var(--space-xs);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+.lang-btn:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.lang-btn--active {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.18);
+  font-weight: 700;
+}
+
+.lang-separator {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.75rem;
+  padding: 0 1px;
+  user-select: none;
+}
+
+/* Responsive: collapse switcher below navbar-links on small screens */
+@media (max-width: 640px) {
+  .navbar {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+  .lang-switcher {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    padding: var(--space-xs) 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
 
 /* ============================================================
    Layout

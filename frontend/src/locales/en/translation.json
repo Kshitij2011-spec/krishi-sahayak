@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "home": "Home",
+    "pest_detection": "Pest Detection",
+    "mandi_prices": "Mandi Prices"
+  },
+  "soil": {
+    "hero_title": "AI-Powered Crop Advisory",
+    "hero_subtitle": "Enter your soil & climate data to get personalized crop recommendations",
+    "card_title": "Soil & Climate Parameters",
+    "btn_voice_speak": "Speak",
+    "btn_voice_listening": "Listening...",
+    "btn_recommend": "Get Crop Recommendation",
+    "analyzing": "Analyzing...",
+    "labels": {
+      "n": "Nitrogen (N) kg/ha",
+      "p": "Phosphorus (P) kg/ha",
+      "k": "Potassium (K) kg/ha",
+      "temperature": "Temperature (°C)",
+      "humidity": "Humidity (%)",
+      "ph": "Soil pH",
+      "rainfall": "Rainfall (mm)",
+      "district": "District"
+    },
+    "placeholders": {
+      "n": "e.g. 90",
+      "p": "e.g. 42",
+      "k": "e.g. 43",
+      "temperature": "e.g. 25.5",
+      "humidity": "e.g. 80",
+      "ph": "e.g. 6.5",
+      "rainfall": "e.g. 200"
+    },
+    "result": {
+      "recommended_crop": "Recommended Crop",
+      "confidence_breakdown": "Confidence Breakdown",
+      "confidence": "{{value}}% confidence",
+      "conditions_multiple": "Conditions suit multiple crops",
+      "conditions_multiple_desc": "{{crop1}} ({{conf1}}%) or {{crop2}} ({{conf2}}%) — both match your soil conditions closely.",
+      "btn_listen": "Listen"
+    },
+    "fertilizer": {
+      "title": "Fertilizer Recommendation (per acre)",
+      "col_fertilizer": "Fertilizer",
+      "col_dosage": "Dosage (kg/acre)",
+      "urea": "Urea (46% N)",
+      "dap": "DAP (20% P)",
+      "mop": "MOP (50% K)"
+    },
+    "feedback": {
+      "question": "Was this recommendation helpful?",
+      "thanks": "Thank you for your feedback!"
+    },
+    "errors": {
+      "error_prefix": "Error:",
+      "voice_unsupported": "Voice input is not supported in your browser.",
+      "tts_unsupported": "Text-to-speech is not supported in your browser."
+    },
+    "tts_fallback_warning": "{{lang}} voice not available on this device. Falling back to Hindi."
+  },
+  "pest": {
+    "hero_title": "Pest & Disease Detection",
+    "hero_subtitle": "Upload a photo of the affected plant leaf for AI-powered diagnosis",
+    "card_title": "Upload Plant Image",
+    "upload_text": "Drag & drop an image here, or click to browse",
+    "upload_hint": "Supports JPG, PNG up to 5MB",
+    "btn_analyze": "Analyze Image",
+    "analyzing": "Analyzing...",
+    "status": {
+      "warming_up": "Model is warming up. Analyzing, this may take up to {{secs}} seconds...",
+      "retrying": "Retrying analysis..."
+    },
+    "result": {
+      "detected_condition": "Detected Condition",
+      "low_confidence_title": "Low Confidence Diagnosis",
+      "low_confidence_desc": "The AI model is uncertain about this image ({{value}}% confidence).",
+      "query_sent": "Query sent to KVK extension officer, ID #{{id}}",
+      "expert_review": "An expert will review this photo and get back to you shortly."
+    },
+    "errors": {
+      "error_prefix": "Error:",
+      "analysis_error": "An error occurred during analysis"
+    }
+  },
+  "mandi": {
+    "hero_title": "Mandi Price Lookup",
+    "hero_subtitle": "Check latest commodity prices from nearby mandis",
+    "card_title": "Search Commodity Prices",
+    "label_commodity": "Commodity",
+    "label_district": "District",
+    "btn_search": "Search Prices",
+    "searching": "Searching...",
+    "result": {
+      "title": "Price Results for {{commodity}}",
+      "district": "District",
+      "arrival_date": "Arrival Date",
+      "col_price_type": "Price Type",
+      "col_amount": "Amount (₹ / Quintal)",
+      "min_price": "Minimum Price",
+      "max_price": "Maximum Price",
+      "modal_price": "Modal (Average) Price",
+      "fallback_note": "Note:",
+      "fallback_desc": "Displaying estimated fallback prices. Live Agmarknet data pending API response."
+    },
+    "errors": {
+      "error_prefix": "Error:"
+    }
+  }
+}

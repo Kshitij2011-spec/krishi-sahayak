@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "home": "मुख्यपृष्ठ",
+    "pest_detection": "किड ओळख",
+    "mandi_prices": "मंडी भाव"
+  },
+  "soil": {
+    "hero_title": "AI-आधारित पीक सल्ला",
+    "hero_subtitle": "वैयक्तिक पीक शिफारसींसाठी आपला माती आणि हवामान डेटा प्रविष्ट करा",
+    "card_title": "माती आणि हवामान मापदंड",
+    "btn_voice_speak": "बोला",
+    "btn_voice_listening": "ऐकत आहे...",
+    "btn_recommend": "पीक शिफारस मिळवा",
+    "analyzing": "विश्लेषण होत आहे...",
+    "labels": {
+      "n": "नायट्रोजन (N) kg/ha",
+      "p": "फॉस्फरस (P) kg/ha",
+      "k": "पोटॅशियम (K) kg/ha",
+      "temperature": "तापमान (°C)",
+      "humidity": "आर्द्रता (%)",
+      "ph": "मातीचा pH",
+      "rainfall": "पाऊस (mm)",
+      "district": "जिल्हा"
+    },
+    "placeholders": {
+      "n": "उदा. 90",
+      "p": "उदा. 42",
+      "k": "उदा. 43",
+      "temperature": "उदा. 25.5",
+      "humidity": "उदा. 80",
+      "ph": "उदा. 6.5",
+      "rainfall": "उदा. 200"
+    },
+    "result": {
+      "recommended_crop": "शिफारस केलेले पीक",
+      "confidence_breakdown": "विश्वास तपशील",
+      "confidence": "{{value}}% विश्वास",
+      "conditions_multiple": "परिस्थिती अनेक पिकांसाठी योग्य आहे",
+      "conditions_multiple_desc": "{{crop1}} ({{conf1}}%) किंवा {{crop2}} ({{conf2}}%) — दोन्ही आपल्या मातीच्या परिस्थितीशी जुळतात.",
+      "btn_listen": "ऐका"
+    },
+    "fertilizer": {
+      "title": "खत शिफारस (प्रति एकर)",
+      "col_fertilizer": "खत",
+      "col_dosage": "मात्रा (kg/एकर)",
+      "urea": "युरिया (46% N)",
+      "dap": "DAP (20% P)",
+      "mop": "MOP (50% K)"
+    },
+    "feedback": {
+      "question": "ही शिफारस उपयुक्त होती का?",
+      "thanks": "आपल्या अभिप्रायाबद्दल धन्यवाद!"
+    },
+    "errors": {
+      "error_prefix": "त्रुटी:",
+      "voice_unsupported": "आपल्या ब्राउझरमध्ये व्हॉइस इनपुट समर्थित नाही.",
+      "tts_unsupported": "आपल्या ब्राउझरमध्ये टेक्स्ट-टू-स्पीच समर्थित नाही."
+    },
+    "tts_fallback_warning": "{{lang}} आवाज या डिव्हाइसवर उपलब्ध नाही. हिंदीवर फॉलबॅक होत आहे."
+  },
+  "pest": {
+    "hero_title": "किड आणि रोग ओळख",
+    "hero_subtitle": "AI-आधारित निदानासाठी प्रभावित झाडाच्या पानाचा फोटो अपलोड करा",
+    "card_title": "झाडाचे चित्र अपलोड करा",
+    "upload_text": "येथे चित्र ड्रॅग करा व सोडा, किंवा क्लिक करून निवडा",
+    "upload_hint": "JPG, PNG 5MB पर्यंत समर्थित",
+    "btn_analyze": "चित्राचे विश्लेषण करा",
+    "analyzing": "विश्लेषण होत आहे...",
+    "status": {
+      "warming_up": "मॉडेल तयार होत आहे. विश्लेषणास {{secs}} सेकंद लागू शकतात...",
+      "retrying": "पुन्हा प्रयत्न होत आहे..."
+    },
+    "result": {
+      "detected_condition": "आढळलेली स्थिती",
+      "low_confidence_title": "कमी विश्वास निदान",
+      "low_confidence_desc": "AI मॉडेल या चित्राबद्दल अनिश्चित आहे ({{value}}% विश्वास).",
+      "query_sent": "KVK विस्तार अधिकाऱ्याला प्रश्न पाठवला, ID #{{id}}",
+      "expert_review": "एक तज्ञ या फोटोची तपासणी करेल आणि लवकरच आपल्याशी संपर्क करेल."
+    },
+    "errors": {
+      "error_prefix": "त्रुटी:",
+      "analysis_error": "विश्लेषणादरम्यान त्रुटी आली"
+    }
+  },
+  "mandi": {
+    "hero_title": "मंडी भाव शोध",
+    "hero_subtitle": "जवळच्या मंड्यांमधून नवीनतम वस्तू भाव तपासा",
+    "card_title": "वस्तू भाव शोधा",
+    "label_commodity": "वस्तू",
+    "label_district": "जिल्हा",
+    "btn_search": "भाव शोधा",
+    "searching": "शोधत आहे...",
+    "result": {
+      "title": "{{commodity}} साठी भाव परिणाम",
+      "district": "जिल्हा",
+      "arrival_date": "आगमन तारीख",
+      "col_price_type": "भाव प्रकार",
+      "col_amount": "रक्कम (₹ / क्विंटल)",
+      "min_price": "किमान भाव",
+      "max_price": "जास्तीत जास्त भाव",
+      "modal_price": "मोडल (सरासरी) भाव",
+      "fallback_note": "टीप:",
+      "fallback_desc": "अंदाजे फॉलबॅक भाव दाखवले जात आहेत. API प्रतिसादाच्या प्रतीक्षेत."
+    },
+    "errors": {
+      "error_prefix": "त्रुटी:"
+    }
+  }
+}

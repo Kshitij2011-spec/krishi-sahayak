@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "home": "होम",
+    "pest_detection": "कीट पहचान",
+    "mandi_prices": "मंडी मूल्य"
+  },
+  "soil": {
+    "hero_title": "AI-संचालित फसल सलाह",
+    "hero_subtitle": "व्यक्तिगत फसल अनुशंसाएं प्राप्त करने के लिए अपनी मिट्टी और जलवायु डेटा दर्ज करें",
+    "card_title": "मिट्टी और जलवायु मापदंड",
+    "btn_voice_speak": "बोलें",
+    "btn_voice_listening": "सुन रहा हूँ...",
+    "btn_recommend": "फसल अनुशंसा प्राप्त करें",
+    "analyzing": "विश्लेषण हो रहा है...",
+    "labels": {
+      "n": "नाइट्रोजन (N) kg/ha",
+      "p": "फास्फोरस (P) kg/ha",
+      "k": "पोटेशियम (K) kg/ha",
+      "temperature": "तापमान (°C)",
+      "humidity": "आर्द्रता (%)",
+      "ph": "मिट्टी का pH",
+      "rainfall": "वर्षा (mm)",
+      "district": "जिला"
+    },
+    "placeholders": {
+      "n": "उदा. 90",
+      "p": "उदा. 42",
+      "k": "उदा. 43",
+      "temperature": "उदा. 25.5",
+      "humidity": "उदा. 80",
+      "ph": "उदा. 6.5",
+      "rainfall": "उदा. 200"
+    },
+    "result": {
+      "recommended_crop": "अनुशंसित फसल",
+      "confidence_breakdown": "विश्वास विवरण",
+      "confidence": "{{value}}% विश्वास",
+      "conditions_multiple": "परिस्थितियाँ अनेक फसलों के लिए उपयुक्त हैं",
+      "conditions_multiple_desc": "{{crop1}} ({{conf1}}%) या {{crop2}} ({{conf2}}%) — दोनों आपकी मिट्टी की स्थिति से मेल खाते हैं।",
+      "btn_listen": "सुनें"
+    },
+    "fertilizer": {
+      "title": "उर्वरक अनुशंसा (प्रति एकड़)",
+      "col_fertilizer": "उर्वरक",
+      "col_dosage": "खुराक (kg/एकड़)",
+      "urea": "यूरिया (46% N)",
+      "dap": "DAP (20% P)",
+      "mop": "MOP (50% K)"
+    },
+    "feedback": {
+      "question": "क्या यह अनुशंसा सहायक थी?",
+      "thanks": "आपकी प्रतिक्रिया के लिए धन्यवाद!"
+    },
+    "errors": {
+      "error_prefix": "त्रुटि:",
+      "voice_unsupported": "आपके ब्राउज़र में वॉयस इनपुट समर्थित नहीं है।",
+      "tts_unsupported": "आपके ब्राउज़र में टेक्स्ट-टू-स्पीच समर्थित नहीं है।"
+    },
+    "tts_fallback_warning": "{{lang}} आवाज़ इस डिवाइस पर उपलब्ध नहीं है। हिंदी में फॉलबैक हो रहा है।"
+  },
+  "pest": {
+    "hero_title": "कीट और रोग पहचान",
+    "hero_subtitle": "AI-संचालित निदान के लिए प्रभावित पौधे की पत्ती की फोटो अपलोड करें",
+    "card_title": "पौधे की छवि अपलोड करें",
+    "upload_text": "यहाँ छवि खींचें और छोड़ें, या क्लिक करके चुनें",
+    "upload_hint": "JPG, PNG 5MB तक समर्थित",
+    "btn_analyze": "छवि विश्लेषण करें",
+    "analyzing": "विश्लेषण हो रहा है...",
+    "status": {
+      "warming_up": "मॉडल तैयार हो रहा है। विश्लेषण में {{secs}} सेकंड तक लग सकते हैं...",
+      "retrying": "पुनः प्रयास हो रहा है..."
+    },
+    "result": {
+      "detected_condition": "पहचानी गई स्थिति",
+      "low_confidence_title": "कम विश्वास निदान",
+      "low_confidence_desc": "AI मॉडल इस छवि के बारे में अनिश्चित है ({{value}}% विश्वास)।",
+      "query_sent": "KVK विस्तार अधिकारी को प्रश्न भेजा गया, ID #{{id}}",
+      "expert_review": "एक विशेषज्ञ इस फोटो की समीक्षा करेगा और जल्द ही आपसे संपर्क करेगा।"
+    },
+    "errors": {
+      "error_prefix": "त्रुटि:",
+      "analysis_error": "विश्लेषण के दौरान एक त्रुटि हुई"
+    }
+  },
+  "mandi": {
+    "hero_title": "मंडी मूल्य खोज",
+    "hero_subtitle": "नजदीकी मंडियों से नवीनतम वस्तु मूल्य जांचें",
+    "card_title": "वस्तु मूल्य खोजें",
+    "label_commodity": "वस्तु",
+    "label_district": "जिला",
+    "btn_search": "मूल्य खोजें",
+    "searching": "खोज रहा है...",
+    "result": {
+      "title": "{{commodity}} के लिए मूल्य परिणाम",
+      "district": "जिला",
+      "arrival_date": "आगमन तिथि",
+      "col_price_type": "मूल्य प्रकार",
+      "col_amount": "राशि (₹ / क्विंटल)",
+      "min_price": "न्यूनतम मूल्य",
+      "max_price": "अधिकतम मूल्य",
+      "modal_price": "मोडल (औसत) मूल्य",
+      "fallback_note": "नोट:",
+      "fallback_desc": "अनुमानित फॉलबैक मूल्य प्रदर्शित हो रहे हैं। API प्रतिक्रिया की प्रतीक्षा में।"
+    },
+    "errors": {
+      "error_prefix": "त्रुटि:"
+    }
+  }
+}
