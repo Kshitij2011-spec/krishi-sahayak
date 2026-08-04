@@ -19,6 +19,7 @@ const LANGUAGES = [
   { code: 'en', label: 'English' },
   { code: 'hi', label: 'हिन्दी' },
   { code: 'mr', label: 'मराठी' },
+  { code: 'pa', label: 'ਪੰਜਾਬੀ' },
 ];
 
 export default function LanguageSwitcher() {

@@ -19,6 +19,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './locales/en/translation.json';
 import hi from './locales/hi/translation.json';
 import mr from './locales/mr/translation.json';
+import pa from './locales/pa/translation.json';
 
 i18n
   .use(LanguageDetector)      // reads/writes localStorage['krishi_lang']
@@ -28,11 +29,12 @@ i18n
       en: { translation: en },
       hi: { translation: hi },
       mr: { translation: mr },
+      pa: { translation: pa },
     },
 
     // Fall back to English if a key is missing in the active language
     fallbackLng: 'en',
-    supportedLngs: ['en', 'hi', 'mr'],
+    supportedLngs: ['en', 'hi', 'mr', 'pa'],
 
     detection: {
       // Detection priority: localStorage → browser navigator language

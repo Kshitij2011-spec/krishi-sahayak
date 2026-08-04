@@ -16,6 +16,7 @@ export const LANG_TO_LOCALE = {
   en: 'en-IN',
   hi: 'hi-IN',
   mr: 'mr-IN',
+  pa: 'pa-IN',
 };
 
 /**
@@ -25,6 +26,7 @@ export const LANG_TO_LOCALE = {
  * Chain: mr-IN → mr → hi-IN → hi → en-IN → en
  */
 export const TTS_FALLBACK_CHAIN = {
+  'pa-IN': ['pa-IN', 'pa', 'hi-IN', 'hi', 'en-IN', 'en'],
   'mr-IN': ['mr-IN', 'mr', 'hi-IN', 'hi', 'en-IN', 'en'],
   'hi-IN': ['hi-IN', 'hi', 'en-IN', 'en'],
   'en-IN': ['en-IN', 'en'],
@@ -35,6 +37,7 @@ export const TTS_FALLBACK_CHAIN = {
  * Browsers are more forgiving here, so the chain is shorter.
  */
 export const RECOGNITION_FALLBACK_CHAIN = {
+  'pa-IN': ['pa-IN', 'hi-IN', 'en-IN'],
   'mr-IN': ['mr-IN', 'hi-IN', 'en-IN'],
   'hi-IN': ['hi-IN', 'en-IN'],
   'en-IN': ['en-IN'],
@@ -111,4 +114,5 @@ export const LOCALE_DISPLAY_NAMES = {
   'en-IN': 'English',
   'hi-IN': 'हिन्दी',
   'mr-IN': 'मराठी',
+  'pa-IN': 'ਪੰਜਾਬੀ',
 };

@@ -43,14 +43,14 @@ function SoilInputPage() {
 
       setForm((prev) => {
         const next = { ...prev };
-        // English | Hindi | Marathi aliases
-        const n    = parseValue('nitrogen',    'नाइट्रोजन', 'नायट्रोजन', '\\bn\\b');
-        const p    = parseValue('phosphorus',  'फास्फोरस',  'फॉस्फरस',   '\\bp\\b');
-        const k    = parseValue('potassium',   'पोटेशियम',  'पोटॅशियम',  '\\bk\\b');
-        const temp = parseValue('temperature', 'तापमान',    '\\btemp\\b');
-        const hum  = parseValue('humidity',    'आर्द्रता');
+        // English | Hindi | Marathi | Punjabi aliases
+        const n    = parseValue('nitrogen',    'नाइट्रोजन', 'नायट्रोजन', 'ਨਾਈਟ੍ਰੋਜਨ', '\\bn\\b');
+        const p    = parseValue('phosphorus',  'फास्फोरस',  'फॉस्फरस',   'ਫਾਸਫੋਰਸ',   '\\bp\\b');
+        const k    = parseValue('potassium',   'पोटेशियम',  'पोटॅशियम',  'ਪੋਟਾਸ਼ੀਅਮ',  '\\bk\\b');
+        const temp = parseValue('temperature', 'तापमान',    'ਤਾਪਮਾਨ',    '\\btemp\\b');
+        const hum  = parseValue('humidity',    'आर्द्रता',  'ਨਮੀ');
         const phV  = parseValue('\\bph\\b');
-        const rain = parseValue('rainfall',    'वर्षा',     'पाऊस',      '\\brain\\b');
+        const rain = parseValue('rainfall',    'वर्षा',     'पाऊस',      'ਵਰਖਾ',      '\\brain\\b');
 
         if (n)    next.n           = n;
         if (p)    next.p           = p;
