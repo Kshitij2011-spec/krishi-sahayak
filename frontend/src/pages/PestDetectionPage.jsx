@@ -1,199 +1,433 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
 import { detectPest } from '../lib/api';
 
 function PestDetectionPage() {
+  const { t } = useTranslation();
+  const fileInputRef = useRef(null);
+
   const [dragging, setDragging] = useState(false);
   const [preview, setPreview] = useState(null);
   const [fileToUpload, setFileToUpload] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+  const [statusMessage, setStatusMessage] = useState(null);
+
+  const handleFile = (file) => {
+    if (!file || !file.type.startsWith('image/')) {
+      setError('Please select a valid image file.');
+      return;
+    }
+
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+
+    const imageUrl = URL.createObjectURL(file);
+
+    setPreview(imageUrl);
+    setFileToUpload(file);
+    setResult(null);
+    setError(null);
+    setStatusMessage(null);
+  };
 
   const handleDragOver = (e) => {
     e.preventDefault();
     setDragging(true);
   };
 
-  const handleDragLeave = () => setDragging(false);
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setDragging(false);
+  };
 
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      setPreview(URL.createObjectURL(file));
-      setFileToUpload(file);
-      setResult(null);
-      setError(null);
-    }
+
+    const file = e.dataTransfer.files?.[0];
+    handleFile(file);
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      setFileToUpload(file);
-      setResult(null);
-      setError(null);
-    }
-  };
+    const file = e.target.files?.[0];
+    handleFile(file);
 
-  const [statusMessage, setStatusMessage] = useState(null);
+    // Allow selecting the same file again
+    e.target.value = '';
+  };
 
   const handleAnalyze = async () => {
     if (!fileToUpload) return;
+
     setLoading(true);
     setError(null);
     setResult(null);
     setStatusMessage(null);
 
     try {
-      // 1. Upload to Supabase Storage
+      // 1. Upload image to Supabase
       const fileExt = fileToUpload.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+
+      const fileName = `${Math.random()
+        .toString(36)
+        .substring(2, 15)}_${Date.now()}.${fileExt}`;
+
       const filePath = `uploads/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('pest-photos')
         .upload(filePath, fileToUpload);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        throw uploadError;
+      }
 
-      // 2. Get Public URL
+      // 2. Get public URL
       const { data: publicUrlData } = supabase.storage
         .from('pest-photos')
         .getPublicUrl(filePath);
 
       const publicUrl = publicUrlData.publicUrl;
 
-      // 3. Call backend API with retry logic for 503
+      // 3. Call pest detection API
       let detectionResult;
+
       try {
         detectionResult = await detectPest(publicUrl);
       } catch (err) {
         if (err.status === 503) {
           const waitSecs = err.retry_in || 15;
-          setStatusMessage(`Model is warming up. Analyzing, this may take up to ${Math.round(waitSecs)} seconds...`);
-          // Wait and retry once
-          await new Promise(resolve => setTimeout(resolve, waitSecs * 1000));
-          setStatusMessage('Retrying analysis...');
+
+          setStatusMessage(
+            t('pest.status.warming_up', {
+              secs: Math.round(waitSecs),
+            })
+          );
+
+          await new Promise((resolve) =>
+            setTimeout(resolve, waitSecs * 1000)
+          );
+
+          setStatusMessage(t('pest.status.retrying'));
+
           detectionResult = await detectPest(publicUrl);
+
           setStatusMessage(null);
         } else {
           throw err;
         }
       }
-      
-      // 4. Set result
-      setResult({ ...detectionResult, imageUrl: publicUrl });
 
+      setResult({
+        ...detectionResult,
+        imageUrl: publicUrl,
+      });
     } catch (err) {
       setStatusMessage(null);
-      setError(err.message || 'An error occurred during analysis');
+      setError(
+        err.message || t('pest.errors.analysis_error')
+      );
     } finally {
       setLoading(false);
     }
   };
 
+  const removeImage = () => {
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+
+    setPreview(null);
+    setFileToUpload(null);
+    setResult(null);
+    setError(null);
+    setStatusMessage(null);
+  };
+
   return (
-    <>
-      <section className="hero">
-        <h1 className="hero-title">Pest &amp; Disease Detection</h1>
-        <p className="hero-subtitle">Upload a photo of the affected plant leaf for AI-powered diagnosis</p>
+    <main className="pest-page">
+
+      {/* HERO */}
+      <section className="hero hero-pest">
+
+        <div className="hero-content hero-pest-content">
+          <div className="hero-eyebrow">
+            🌱 AI AGRICULTURE ASSISTANT
+          </div>
+
+          <h1 className="hero-title">
+            {t('pest.hero_title')}
+          </h1>
+
+          <p className="hero-subtitle">
+            {t('pest.hero_subtitle')}
+          </p>
+
+          <div className="hero-accent-line" />
+        </div>
+
       </section>
 
-      <div className="container">
-        <div className="card" style={{ marginBottom: 'var(--space-xl)' }}>
-          <h2 className="card-title">Upload Plant Image</h2>
+      {/* MAIN CONTENT */}
+      <div className="container pest-container">
+
+        {/* UPLOAD CARD */}
+        <section className="pest-card">
+
+          <div className="pest-card-header">
+            <div>
+              <p className="section-label">
+                🔬 IMAGE ANALYSIS
+              </p>
+
+              <h2 className="card-title">
+                {t('pest.card_title')}
+              </h2>
+
+              <p className="pest-description">
+                Upload a clear image of your crop or plant leaf.
+                Our AI model will analyze it and identify possible
+                pests or diseases.
+              </p>
+            </div>
+
+            <div className="pest-ai-badge">
+              <span>✦</span>
+              AI Powered
+            </div>
+          </div>
+
+          {/* UPLOAD AREA */}
           <div
-            className={`upload-area ${dragging ? 'dragging' : ''}`}
+            className={`pest-upload-area ${dragging ? 'dragging' : ''
+              } ${preview ? 'has-preview' : ''}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
-            onClick={() => document.getElementById('file-input').click()}
+            onClick={() => fileInputRef.current?.click()}
           >
+
             {preview ? (
-              <img src={preview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: 'var(--radius-md)' }} />
+              <div className="preview-wrapper">
+
+                <img
+                  src={preview}
+                  alt="Selected crop"
+                  className="pest-preview"
+                />
+
+                <div className="preview-overlay">
+                  <span>Click to replace image</span>
+                </div>
+
+              </div>
             ) : (
-              <>
-                <div className="upload-icon">📷</div>
-                <p className="upload-text">Drag &amp; drop an image here, or click to browse</p>
-                <p className="upload-hint">Supports JPG, PNG up to 5MB</p>
-              </>
+              <div className="upload-content">
+
+                <div className="upload-icon-wrapper">
+                  <span className="upload-icon">📷</span>
+                </div>
+
+                <h3>
+                  {t('pest.upload_text')}
+                </h3>
+
+                <p>
+                  {t('pest.upload_hint')}
+                </p>
+
+                <span className="upload-browse">
+                  Browse Image
+                </span>
+
+              </div>
             )}
+
             <input
-              id="file-input"
+              ref={fileInputRef}
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              style={{ display: 'none' }}
+              hidden
             />
           </div>
 
+          {/* FILE ACTIONS */}
           {preview && (
-            <div style={{ marginTop: 'var(--space-xl)', textAlign: 'center' }}>
-              <button 
-                className="btn btn-primary" 
-                onClick={handleAnalyze} 
+            <div className="pest-actions">
+
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={removeImage}
+                disabled={loading}
+              >
+                Remove Image
+              </button>
+
+              <button
+                type="button"
+                className="btn btn-primary pest-analyze-btn"
+                onClick={handleAnalyze}
                 disabled={loading}
                 id="btn-analyze-pest"
               >
                 {loading ? (
                   <>
-                    <span className="spinner"></span>
-                    Analyzing...
+                    <span className="spinner" />
+                    {t('pest.analyzing')}
                   </>
                 ) : (
-                  'Analyze Image'
+                  <>
+                    ✦ {t('pest.btn_analyze')}
+                  </>
                 )}
               </button>
-              {statusMessage && (
-                <p style={{ marginTop: 'var(--space-md)', color: 'var(--gray-600)' }}>
-                  {statusMessage}
-                </p>
-              )}
+
             </div>
           )}
-        </div>
 
+          {/* LOADING STATUS */}
+          {statusMessage && (
+            <div className="pest-status">
+              <span className="status-dot" />
+              {statusMessage}
+            </div>
+          )}
+
+        </section>
+
+        {/* ERROR */}
         {error && (
-          <div className="alert alert-danger" style={{ marginBottom: 'var(--space-xl)' }}>
-            <strong>Error:</strong> {error}
+          <div className="alert alert-danger pest-alert">
+            <span className="alert-icon">⚠️</span>
+
+            <div>
+              <strong>
+                {t('pest.errors.error_prefix')}
+              </strong>
+
+              <p>{error}</p>
+            </div>
           </div>
         )}
 
+        {/* RESULT */}
         {result && (
-          <div className="card" style={{ marginBottom: 'var(--space-xl)' }} id="pest-result">
+          <section
+            className="pest-result-card"
+            id="pest-result"
+          >
+
+            <div className="result-header">
+
+              <div>
+                <p className="section-label">
+                  AI ANALYSIS RESULT
+                </p>
+
+                {result.escalate ? (
+                  <h2 className="result-title warning">
+                    {t('pest.result.low_confidence_title')}
+                  </h2>
+                ) : (
+                  <>
+                    <p className="result-label">
+                      {t('pest.result.detected_condition')}
+                    </p>
+
+                    <h2 className="result-title">
+                      {result.label}
+                    </h2>
+                  </>
+                )}
+              </div>
+
+              <div
+                className={`confidence-badge ${result.escalate ? 'warning' : ''
+                  }`}
+              >
+                {(result.confidence * 100).toFixed(1)}%
+                <span>confidence</span>
+              </div>
+
+            </div>
+
             {result.escalate ? (
-              <div className="alert alert-warning" style={{ display: 'block' }}>
-                <strong style={{ display: 'block', marginBottom: 'var(--space-sm)' }}>Low Confidence Diagnosis</strong>
-                The AI model is uncertain about this image ({(result.confidence * 100).toFixed(1)}% confidence). 
-                <br /><br />
-                <strong>Query sent to KVK extension officer, ID #{Math.floor(Math.random() * 90000) + 10000}</strong>
-                <p style={{ marginTop: 'var(--space-sm)', fontSize: '0.9rem' }}>An expert will review this photo and get back to you shortly.</p>
+              <div className="low-confidence-box">
+
+                <div className="low-confidence-icon">
+                  ⚠️
+                </div>
+
+                <div>
+                  <h3>
+                    {t('pest.result.low_confidence_title')}
+                  </h3>
+
+                  <p>
+                    {t('pest.result.low_confidence_desc', {
+                      value: (result.confidence * 100).toFixed(1),
+                    })}
+                  </p>
+
+                  <strong>
+                    {t('pest.result.query_sent', {
+                      id: Math.floor(Math.random() * 90000) + 10000,
+                    })}
+                  </strong>
+
+                  <p className="expert-review">
+                    {t('pest.result.expert_review')}
+                  </p>
+                </div>
+
               </div>
             ) : (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-md)' }}>
-                <div>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--gray-600)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Detected Condition</p>
-                  <h2 className="result-crop" style={{ color: 'var(--danger)' }}>{result.label}</h2>
+              <>
+
+                <div className="confidence-section">
+
+                  <div className="confidence-info">
+                    <span>Detection confidence</span>
+                    <strong>
+                      {(result.confidence * 100).toFixed(1)}%
+                    </strong>
+                  </div>
+
+                  <div className="confidence-bar">
+                    <div
+                      className="confidence-fill"
+                      style={{
+                        width: `${result.confidence * 100}%`,
+                      }}
+                    />
+                  </div>
+
                 </div>
-                <span className="badge badge-danger" style={{ fontSize: '1rem', padding: 'var(--space-sm) var(--space-lg)' }}>
-                  {(result.confidence * 100).toFixed(1)}% confidence
-                </span>
-              </div>
+
+                {result.imageUrl && (
+                  <div className="result-image-section">
+                    <img
+                      src={result.imageUrl}
+                      alt="Analyzed crop"
+                      className="result-image"
+                    />
+                  </div>
+                )}
+
+              </>
             )}
-            
-            {!result.escalate && (
-              <div className="confidence-bar" style={{ marginTop: 'var(--space-lg)' }}>
-                <div className="confidence-fill" style={{ width: `${result.confidence * 100}%`, background: 'linear-gradient(90deg, var(--accent-600), var(--danger))' }}></div>
-              </div>
-            )}
-          </div>
+
+          </section>
         )}
+
       </div>
-    </>
+    </main>
   );
 }
 

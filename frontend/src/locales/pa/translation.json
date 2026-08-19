@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "home": "ਮੁੱਖ ਪੰਨਾ",
+    "pest_detection": "ਕੀਟ ਪਛਾਣ",
+    "mandi_prices": "ਮੰਡੀ ਭਾਅ"
+  },
+  "soil": {
+    "hero_title": "AI-ਸੰਚਾਲਿਤ ਫਸਲ ਸਲਾਹ",
+    "hero_subtitle": "ਨਿੱਜੀ ਫਸਲ ਸਿਫਾਰਸ਼ਾਂ ਲਈ ਆਪਣੀ ਮਿੱਟੀ ਅਤੇ ਮੌਸਮ ਦਾ ਡੇਟਾ ਦਰਜ ਕਰੋ",
+    "card_title": "ਮਿੱਟੀ ਅਤੇ ਮੌਸਮ ਮਾਪਦੰਡ",
+    "btn_voice_speak": "ਬੋਲੋ",
+    "btn_voice_listening": "ਸੁਣ ਰਿਹਾ ਹੈ...",
+    "btn_recommend": "ਫਸਲ ਸਿਫਾਰਸ਼ ਪ੍ਰਾਪਤ ਕਰੋ",
+    "analyzing": "ਵਿਸ਼ਲੇਸ਼ਣ ਹੋ ਰਿਹਾ ਹੈ...",
+    "labels": {
+      "n": "ਨਾਈਟ੍ਰੋਜਨ (N) kg/ha",
+      "p": "ਫਾਸਫੋਰਸ (P) kg/ha",
+      "k": "ਪੋਟਾਸ਼ੀਅਮ (K) kg/ha",
+      "temperature": "ਤਾਪਮਾਨ (°C)",
+      "humidity": "ਨਮੀ (%)",
+      "ph": "ਮਿੱਟੀ ਦਾ pH",
+      "rainfall": "ਵਰਖਾ (mm)",
+      "district": "ਜ਼ਿਲ੍ਹਾ"
+    },
+    "placeholders": {
+      "n": "ਜਿਵੇਂ. 90",
+      "p": "ਜਿਵੇਂ. 42",
+      "k": "ਜਿਵੇਂ. 43",
+      "temperature": "ਜਿਵੇਂ. 25.5",
+      "humidity": "ਜਿਵੇਂ. 80",
+      "ph": "ਜਿਵੇਂ. 6.5",
+      "rainfall": "ਜਿਵੇਂ. 200"
+    },
+    "result": {
+      "recommended_crop": "ਸਿਫਾਰਸ਼ੀ ਫਸਲ",
+      "confidence_breakdown": "ਭਰੋਸੇ ਦਾ ਵੇਰਵਾ",
+      "confidence": "{{value}}% ਭਰੋਸਾ",
+      "conditions_multiple": "ਹਾਲਾਤ ਕਈ ਫਸਲਾਂ ਲਈ ਅਨੁਕੂਲ ਹਨ",
+      "conditions_multiple_desc": "{{crop1}} ({{conf1}}%) ਜਾਂ {{crop2}} ({{conf2}}%) — ਦੋਵੇਂ ਤੁਹਾਡੀ ਮਿੱਟੀ ਦੀਆਂ ਸਥਿਤੀਆਂ ਨਾਲ ਮੇਲ ਖਾਂਦੇ ਹਨ।",
+      "btn_listen": "ਸੁਣੋ"
+    },
+    "fertilizer": {
+      "title": "ਖਾਦ ਸਿਫਾਰਸ਼ (ਪ੍ਰਤੀ ਏਕੜ)",
+      "col_fertilizer": "ਖਾਦ",
+      "col_dosage": "ਮਾਤਰਾ (kg/ਏਕੜ)",
+      "urea": "ਯੂਰੀਆ (46% N)",
+      "dap": "DAP (20% P)",
+      "mop": "MOP (50% K)"
+    },
+    "feedback": {
+      "question": "ਕੀ ਇਹ ਸਿਫਾਰਸ਼ ਮਦਦਗਾਰ ਸੀ?",
+      "thanks": "ਤੁਹਾਡੀ ਪ੍ਰਤੀਕਿਰਿਆ ਲਈ ਧੰਨਵਾਦ!"
+    },
+    "errors": {
+      "error_prefix": "ਗਲਤੀ:",
+      "voice_unsupported": "ਤੁਹਾਡੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਵੌਇਸ ਇਨਪੁੱਟ ਸਮਰਥਿਤ ਨਹੀਂ ਹੈ।",
+      "tts_unsupported": "ਤੁਹਾਡੇ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਟੈਕਸਟ-ਟੂ-ਸਪੀਚ ਸਮਰਥਿਤ ਨਹੀਂ ਹੈ।"
+    },
+    "tts_fallback_warning": "{{lang}} ਦੀ ਆਵਾਜ਼ ਇਸ ਡਿਵਾਈਸ 'ਤੇ ਉਪਲਬਧ ਨਹੀਂ ਹੈ। ਹਿੰਦੀ ਵਿੱਚ ਫਾਲਬੈਕ ਹੋ ਰਿਹਾ ਹੈ।"
+  },
+  "pest": {
+    "hero_title": "ਕੀਟ ਅਤੇ ਰੋਗ ਪਛਾਣ",
+    "hero_subtitle": "AI-ਸੰਚਾਲਿਤ ਨਿਦਾਨ ਲਈ ਪ੍ਰਭਾਵਿਤ ਪੌਦੇ ਦੇ ਪੱਤੇ ਦੀ ਫੋਟੋ ਅੱਪਲੋਡ ਕਰੋ",
+    "card_title": "ਪੌਦੇ ਦੀ ਤਸਵੀਰ ਅੱਪਲੋਡ ਕਰੋ",
+    "upload_text": "ਇੱਥੇ ਤਸਵੀਰ ਖਿੱਚੋ ਅਤੇ ਛੱਡੋ, ਜਾਂ ਕਲਿੱਕ ਕਰਕੇ ਚੁਣੋ",
+    "upload_hint": "JPG, PNG 5MB ਤੱਕ ਸਮਰਥਿਤ",
+    "btn_analyze": "ਤਸਵੀਰ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰੋ",
+    "analyzing": "ਵਿਸ਼ਲੇਸ਼ਣ ਹੋ ਰਿਹਾ ਹੈ...",
+    "status": {
+      "warming_up": "ਮਾਡਲ ਤਿਆਰ ਹੋ ਰਿਹਾ ਹੈ। ਵਿਸ਼ਲੇਸ਼ਣ ਵਿੱਚ {{secs}} ਸਕਿੰਟ ਲੱਗ ਸਕਦੇ ਹਨ...",
+      "retrying": "ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਹੋ ਰਹੀ ਹੈ..."
+    },
+    "result": {
+      "detected_condition": "ਪਛਾਣੀ ਗਈ ਸਥਿਤੀ",
+      "low_confidence_title": "ਘੱਟ ਭਰੋਸੇ ਦਾ ਨਿਦਾਨ",
+      "low_confidence_desc": "AI ਮਾਡਲ ਇਸ ਤਸਵੀਰ ਬਾਰੇ ਅਨਿਸ਼ਚਿਤ ਹੈ ({{value}}% ਭਰੋਸਾ)।",
+      "query_sent": "KVK ਵਿਸਤਾਰ ਅਧਿਕਾਰੀ ਨੂੰ ਸਵਾਲ ਭੇਜਿਆ ਗਿਆ, ID #{{id}}",
+      "expert_review": "ਇੱਕ ਮਾਹਰ ਇਸ ਫੋਟੋ ਦੀ ਸਮੀਖਿਆ ਕਰੇਗਾ ਅਤੇ ਜਲਦੀ ਤੁਹਾਡੇ ਨਾਲ ਸੰਪਰਕ ਕਰੇਗਾ।"
+    },
+    "errors": {
+      "error_prefix": "ਗਲਤੀ:",
+      "analysis_error": "ਵਿਸ਼ਲੇਸ਼ਣ ਦੌਰਾਨ ਗਲਤੀ ਆਈ"
+    }
+  },
+  "mandi": {
+    "hero_title": "ਮੰਡੀ ਭਾਅ ਖੋਜ",
+    "hero_subtitle": "ਨੇੜੇ ਦੀਆਂ ਮੰਡੀਆਂ ਤੋਂ ਨਵੀਨਤਮ ਵਸਤੂ ਭਾਅ ਦੇਖੋ",
+    "card_title": "ਵਸਤੂ ਭਾਅ ਖੋਜੋ",
+    "label_commodity": "ਵਸਤੂ",
+    "label_district": "ਜ਼ਿਲ੍ਹਾ",
+    "btn_search": "ਭਾਅ ਖੋਜੋ",
+    "searching": "ਖੋਜ ਹੋ ਰਹੀ ਹੈ...",
+    "result": {
+      "title": "{{commodity}} ਲਈ ਭਾਅ ਨਤੀਜੇ",
+      "district": "ਜ਼ਿਲ੍ਹਾ",
+      "arrival_date": "ਆਮਦ ਮਿਤੀ",
+      "col_price_type": "ਭਾਅ ਕਿਸਮ",
+      "col_amount": "ਰਕਮ (₹ / ਕੁਇੰਟਲ)",
+      "min_price": "ਘੱਟੋ-ਘੱਟ ਭਾਅ",
+      "max_price": "ਵੱਧ ਤੋਂ ਵੱਧ ਭਾਅ",
+      "modal_price": "ਮੋਡਲ (ਔਸਤ) ਭਾਅ",
+      "fallback_note": "ਨੋਟ:",
+      "fallback_desc": "ਅਨੁਮਾਨਿਤ ਫਾਲਬੈਕ ਭਾਅ ਦਿਖਾਏ ਜਾ ਰਹੇ ਹਨ। API ਜਵਾਬ ਦੀ ਉਡੀਕ ਵਿੱਚ।"
+    },
+    "errors": {
+      "error_prefix": "ਗਲਤੀ:"
+    }
+  }
+}

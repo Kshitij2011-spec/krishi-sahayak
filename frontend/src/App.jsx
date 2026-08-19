@@ -1,33 +1,38 @@
 import { Routes, Route, NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import SoilInputPage from './pages/SoilInputPage';
 import PestDetectionPage from './pages/PestDetectionPage';
 import MandiPricePage from './pages/MandiPricePage';
 import AdvancedAdvisoryPage from './pages/AdvancedAdvisoryPage';
+import LanguageSwitcher from './components/LanguageSwitcher';
 
 function App() {
+  const { t } = useTranslation();
+
   return (
     <div className="app">
       <nav className="navbar">
         <NavLink to="/" className="navbar-brand">
-          <span>Krishi</span>-Sahayak
+          🌿 <span>Krishi</span>-Sahayak
         </NavLink>
         <ul className="navbar-links">
           <li>
             <NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''} end>
-              Home
+              {t('nav.home')}
             </NavLink>
           </li>
           <li>
             <NavLink to="/pest-detection" className={({ isActive }) => isActive ? 'active' : ''}>
-              Pest Detection
+              {t('nav.pest_detection')}
             </NavLink>
           </li>
           <li>
             <NavLink to="/mandi-prices" className={({ isActive }) => isActive ? 'active' : ''}>
-              Mandi Prices
+              {t('nav.mandi_prices')}
             </NavLink>
           </li>
         </ul>
+        <LanguageSwitcher />
       </nav>
 
       <Routes>
