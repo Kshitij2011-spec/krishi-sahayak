@@ -9,6 +9,7 @@ from .gemini_layer import generate_advisory_reasoning
 from .confidence import calculate_confidence
 from .weather import get_weather_context
 from .market import get_market_context
+from .pest_risk import get_pest_risks
 
 def load_json(filename):
     base_dir = os.path.dirname(__file__)
@@ -132,6 +133,16 @@ def run_advisory(raw_input_data):
     else:
         market_context = {"status": "unavailable", "reason": "no_viable_crops"}
 
+    # 7. Pest Risk Lookup
+    season = climate.get("season", "Unknown")
+    pest_risk_context = get_pest_risks(
+        crop=top_crops[0],
+        state=state,
+        district=district,
+        season=season,
+        weather_context=weather_context
+    )
+
     # 6. Gemini Context
     context = {
         "farmer_input": validated_data,
@@ -139,6 +150,7 @@ def run_advisory(raw_input_data):
         "regional_context": region_info if region_info else {"status": "unavailable"},
         "weather_context": weather_context,
         "market_context": market_context,
+        "pest_risk_context": pest_risk_context,
         "fertilizer_context": fertilizer_context,
         "approved_varieties": approved_varieties,
         "data_quality": completeness
@@ -181,7 +193,8 @@ def run_advisory(raw_input_data):
                 "tradeoffs": top.get("tradeoffs", []),
                 "variety": top.get("variety"),
                 "fertilizer": fertilizer_context.get(crop_name, {"status": "unavailable", "reason": "No source-backed fertilizer rule exists for this crop/region/condition."}),
-                "regional_context": "supported" if regional_support.get(crop_name) else ("unavailable" if not region_info else "not_supported")
+                "regional_context": "supported" if regional_support.get(crop_name) else ("unavailable" if not region_info else "not_supported"),
+                "risk_and_prevention": pest_risk_context
             }
             
             for alt in ranked_crops[1:]:
@@ -201,7 +214,8 @@ def run_advisory(raw_input_data):
             "selection_basis": "highest agronomic_fit_score",
             "fertilizer": fertilizer_context.get(crop_name, {"status": "unavailable", "reason": "No source-backed fertilizer rule exists for this crop/region/condition."}),
             "regional_context": "supported" if regional_support.get(crop_name) else ("unavailable" if not region_info else "not_supported"),
-            "variety": None
+            "variety": None,
+            "risk_and_prevention": pest_risk_context
         }
         for alt in viable_candidates[1:]:
             alt_crop_name = alt["crop"].lower()

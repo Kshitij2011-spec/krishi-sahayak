@@ -1,0 +1,191 @@
+[
+  {
+    "crop": "cotton",
+    "region": "Vidarbha",
+    "season": "kharif",
+    "risks": [
+      {
+        "risk_name": "Pink Bollworm",
+        "risk_type": "pest",
+        "likelihood": "high",
+        "severity": "high",
+        "early_signs": [
+          "Rosette flowers",
+          "Boll damage",
+          "Premature boll opening"
+        ],
+        "monitoring": [
+          "Inspect flowers and fruiting bodies regularly",
+          "Use approved pheromone traps for monitoring moth activity"
+        ],
+        "prevention": [
+          "Timely sowing to avoid late-season peaks",
+          "Strict crop residue management (destroy stalks after harvest)",
+          "Avoid extended crop duration"
+        ],
+        "source": {
+          "authority": "ICAR-CICR",
+          "document": "Pink Bollworm Management Guidelines",
+          "url": "https://cicr.org.in/"
+        }
+      }
+    ]
+  },
+  {
+    "crop": "wheat",
+    "region": "Punjab",
+    "season": "rabi",
+    "risks": [
+      {
+        "risk_name": "Yellow Rust (Stripe Rust)",
+        "risk_type": "disease",
+        "likelihood": "medium",
+        "severity": "high",
+        "early_signs": [
+          "Yellow stripes of pustules on leaves",
+          "Yellow powder (spores) on fingers when rubbed"
+        ],
+        "monitoring": [
+          "Regular field scouting, especially in lower leaves and shady areas",
+          "Monitor regional weather advisories for high-humidity alerts"
+        ],
+        "prevention": [
+          "Sow recommended resistant varieties (e.g., PBW 826, Unnat PBW 343)",
+          "Avoid excessive use of nitrogenous fertilizers",
+          "Maintain proper plant spacing"
+        ],
+        "source": {
+          "authority": "PAU (Punjab Agricultural University)",
+          "document": "Rabi Crops Package of Practices",
+          "url": "https://www.pau.edu/"
+        }
+      }
+    ]
+  },
+  {
+    "crop": "rice",
+    "region": "Punjab",
+    "season": "kharif",
+    "risks": [
+      {
+        "risk_name": "Brown Plant Hopper (BPH)",
+        "risk_type": "pest",
+        "likelihood": "medium",
+        "severity": "high",
+        "early_signs": [
+          "Yellowing and drying of plants in circular patches (Hopper burn)",
+          "Presence of small brown insects at the base of tillers"
+        ],
+        "monitoring": [
+          "Part the canopy and inspect the base of the stems near water level",
+          "Monitor weekly from maximum tillering to heading stage"
+        ],
+        "prevention": [
+          "Avoid excessive application of urea",
+          "Practice alternate wetting and drying (AWD) rather than continuous flooding",
+          "Maintain alleyways for aeration"
+        ],
+        "source": {
+          "authority": "PAU (Punjab Agricultural University)",
+          "document": "Kharif Crops Package of Practices",
+          "url": "https://www.pau.edu/"
+        }
+      }
+    ]
+  },
+  {
+    "crop": "soybean",
+    "region": "Vidarbha",
+    "season": "kharif",
+    "risks": [
+      {
+        "risk_name": "Girdle Beetle and Stem Fly",
+        "risk_type": "pest",
+        "likelihood": "high",
+        "severity": "medium",
+        "early_signs": [
+          "Two parallel rings on the stem or petiole (Girdle Beetle)",
+          "Drooping and drying of terminal leaves",
+          "Tunneling inside the main stem (Stem Fly)"
+        ],
+        "monitoring": [
+          "Inspect plants 15-20 days after sowing for initial symptoms",
+          "Look for drooping trifoliate leaves"
+        ],
+        "prevention": [
+          "Maintain optimum seed rate (do not over-seed)",
+          "Ensure balanced fertilizer application",
+          "Follow proper crop rotation practices"
+        ],
+        "source": {
+          "authority": "Dr. PDKV",
+          "document": "Soybean Cultivation Practices for Vidarbha",
+          "url": "https://www.pdkv.ac.in/"
+        }
+      }
+    ]
+  },
+  {
+    "crop": "pigeonpea",
+    "region": "Vidarbha",
+    "season": "kharif",
+    "risks": [
+      {
+        "risk_name": "Pod Borer (Helicoverpa armigera)",
+        "risk_type": "pest",
+        "likelihood": "high",
+        "severity": "high",
+        "early_signs": [
+          "Holes in developing pods",
+          "Presence of greenish-brown caterpillars on flowers and pods",
+          "Shedding of flowers"
+        ],
+        "monitoring": [
+          "Install pheromone traps at the onset of flowering",
+          "Regularly inspect the upper canopy during flowering and pod formation stages"
+        ],
+        "prevention": [
+          "Install bird perches in the field to encourage natural predators",
+          "Intercropping with crops like sorghum or maize",
+          "Deep summer ploughing to expose pupae"
+        ],
+        "source": {
+          "authority": "Dr. PDKV",
+          "document": "Pigeonpea Production Guidelines",
+          "url": "https://www.pdkv.ac.in/"
+        }
+      }
+    ]
+  },
+  {
+    "crop": "chickpea",
+    "region": "Punjab",
+    "season": "rabi",
+    "risks": [
+      {
+        "risk_name": "Gram Pod Borer",
+        "risk_type": "pest",
+        "likelihood": "high",
+        "severity": "high",
+        "early_signs": [
+          "Damage to tender shoots and leaves",
+          "Circular holes in mature pods"
+        ],
+        "monitoring": [
+          "Use pheromone traps starting from pre-flowering stage",
+          "Monitor crop weekly during flowering and pod development"
+        ],
+        "prevention": [
+          "Timely sowing is crucial to escape peak infestation",
+          "Mixed cropping with mustard or linseed",
+          "Avoid excessive irrigation"
+        ],
+        "source": {
+          "authority": "PAU",
+          "document": "Rabi Pulses Package of Practices",
+          "url": "https://www.pau.edu/"
+        }
+      }
+    ]
+  }
+]

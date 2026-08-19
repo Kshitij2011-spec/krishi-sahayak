@@ -291,3 +291,15 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Live Smoke Test:** Executed manual test querying Nagpur Soybean. Validated that missing API keys return clean unavailabilities without failing the advisory payload.
 - **Resource Usage:** 0 automated API calls. 0 extra Gemini calls. Maximum 1 market API request per advisory enforced by querying only the top agronomic candidate.
 - **Next Authorized Phase:** Phase 2G (Pest/Disease Early Warning).
+
+## 25. Phase 2G: Regional Pest & Disease Early Warning Layer
+- **Implementation Summary:** Added proactive, deterministic pest/disease risk layer mapped to crop, region, and season using a static verified JSON dataset.
+- **Source:** Data populated based on standard ICAR, CICR, PAU, and PDKV recommendations.
+- **Coverage:** Implemented baseline for Phase 1 crops. Validated for region mappings like Vidarbha (Maharashtra) and Punjab. Tested explicitly on Cotton, Wheat, Rice, Soybean, Pigeonpea, Chickpea.
+- **Behavior:** The module (`pest_risk.py`) returns verified early signs, monitoring tips, and cultural prevention strategies. It explicitly omits any chemical/pesticide dosage to maintain safety guardrails. If data is unavailable, it gracefully yields `{"status": "no_verified_risk_data"}` without fabricating.
+- **Engine Integration:** `get_pest_risks()` is strictly evaluated only for the single top recommended candidate crop to minimize overhead. The result is passed into the `pest_risk_context` of the single Gemini call. Gemini is instructed not to hallucinate any pests but merely synthesize the provided context.
+- **Test Integrity:** Added 9 tests for `pest_risk.py` (`PR-01` to `PR-09`) testing exact matches, fallbacks, and deterministic constraints. Added 4 engine tests (`PR-E01` to `PR-E04`). All 164 backend tests pass.
+- **React UI Compatibility:** `AdvancedAdvisoryPage.jsx` modified slightly to render an "EARLY RISK WARNING" section when valid pest risk contexts are available, displaying signs, monitoring, and prevention natively.
+- **Existing Systems:** The separate reactive image detection (`/api/detect-pest` and `PestDetectionPage.jsx`) remains fully intact. The future architecture is defined to feed predictive data directly against uploaded images.
+- **Resource Usage:** 0 external API calls for pests. 0 additional Gemini calls used.
+- **Next Authorized Phase:** Phase 2H (Variety/Data Enrichment + Final Advisory Polish).

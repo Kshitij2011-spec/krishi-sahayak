@@ -150,6 +150,36 @@ function AdvancedAdvisoryPage() {
           )}
         </div>
 
+        {top.risk_and_prevention && top.risk_and_prevention.status === "available" && (
+          <div className="result-card warnings-card">
+            <h2>⚠️ EARLY RISK WARNING</h2>
+            {top.risk_and_prevention.risks.map((risk, idx) => (
+              <div key={idx} style={{ marginBottom: "15px", borderBottom: "1px solid #eee", paddingBottom: "10px" }}>
+                <h3 style={{ margin: "5px 0", color: "#d9534f" }}>{risk.risk_name}</h3>
+                <p><strong>Risk:</strong> <span style={{textTransform: "capitalize"}}>{risk.likelihood}</span></p>
+                <div style={{ marginTop: "8px" }}>
+                  <strong>Early signs:</strong>
+                  <ul style={{ margin: "4px 0", paddingLeft: "20px" }}>
+                    {risk.early_signs.map((sign, i) => <li key={i}>{sign}</li>)}
+                  </ul>
+                </div>
+                <div style={{ marginTop: "8px" }}>
+                  <strong>How to monitor:</strong>
+                  <ul style={{ margin: "4px 0", paddingLeft: "20px" }}>
+                    {risk.monitoring.map((m, i) => <li key={i}>{m}</li>)}
+                  </ul>
+                </div>
+                <div style={{ marginTop: "8px" }}>
+                  <strong>Prevention:</strong>
+                  <ul style={{ margin: "4px 0", paddingLeft: "20px" }}>
+                    {risk.prevention.map((p, i) => <li key={i}>{p}</li>)}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {result.alternatives && result.alternatives.length > 0 && (
           <div className="result-card alternatives-card">
             <h2>ALTERNATIVES</h2>
