@@ -1,0 +1,121 @@
+# Krishi-Sahayak: Current Development State
+
+## 1. Known Baseline (End of Phase 0.5)
+- **Frontend Framework:** React via Vite. Hosted on Vercel.
+- **Backend API:** Flask. Hosted on Render.
+- **Database:** Supabase for telemetry, connected directly to frontend.
+- **Features Verified:**
+  - Crop & Fertilizer Recommendation (Random Forest)
+  - Pest Detection (Hugging Face Inference API)
+  - Mandi Prices (data.gov.in API with fallback)
+  - Voice Input & Text-to-Speech (Web Speech API)
+
+## 2. Recent Commits Inspected
+- `b165112` (chore: UI polish and add HANDOVER.md)
+- `7259f46` (Revert "feat: translate tts text via backend")
+- `7ea81bf` (feat: translate tts text via backend)
+- `593c7a7` (feat: add confidence breakdown bar chart)
+- `8ccb6cd` (feat: voice input and language selector)
+- `5eb7a98` (chore: setup Vercel root build config)
+- `3fe4afe` (feat: rebuild Mandi Prices and TTS)
+- `500c2c1` (fix: use router.huggingface.co and add Content-Type to fix DNS and 400 errors)
+- `ae3e23a` (feat: migrate pest detection to HF Inference API, handle 503 retries)
+
+## 3. Current Truth
+- **Branch:** `main` (synchronized with `origin/main`)
+- **Speech-to-Text & Voice:**
+  - Fully implemented on the frontend using `window.SpeechRecognition` (voice input) and `window.speechSynthesis` (TTS).
+  - Backend translation was reverted (`7259f46`); it strictly uses native browser regional voices (`hi-IN`, `mr-IN`, `pa-IN`). A warning logs if the Punjabi voice is missing.
+- **UI & Frontend Routing:**
+  - `App.jsx` handles three main routes: `/` (Soil Input), `/pest-detection` (Pest Detection), `/mandi-prices` (Mandi Prices).
+  - Confidence breakdown UI (bar chart) added to `SoilInputPage.jsx` for explainability.
+  - Vercel config (`vercel.json`) handles routing rewrites.
+- **Backend & ML Models:**
+  - Flask `app.py` serves `/api/recommend-crop`, `/api/fertilizer`, `/api/detect-pest`, and `/api/mandi-price`.
+  - Additional diagnostic scripts (`analyze_confidence.py`, `diagnose_crop.py`) present but isolated from the server execution.
+  - `requirements.txt` remains simple without conflicting heavy dependencies.
+- **Dependencies:**
+  - Standard React, React-Router, and Supabase client on frontend.
+  - Flask, Scikit-learn, joblib, numpy, pandas on backend.
+
+## 4. Discrepancies Found
+- **No major architectural discrepancies** between the Phase 0.5 verified assumptions and the actual repository state.
+- **Voice Features Configuration:** As noted in HANDOVER.md and git log, backend translation was attempted and reverted. Voice features now solely rely on native OS capabilities.
+- **Vercel Root Deployment:** The frontend requires a specific `.vercel` configuration and rewrites in `vercel.json` due to SPA routing, which was updated properly.
+
+## 5. Pre-Flight Checklist for Phase 1
+- [x] Repository state verified and up to date with `main`
+- [x] `AGENTS.md` rules and Phase Gates defined
+- [x] Baseline assumptions confirmed against actual code
+- [x] No unrelated code changes present
+
+Phase 1 readiness verified. No regressions detected in existing code.
+
+## 6. Phase 1A: Verified Data Foundation
+- **Status:** Complete.
+- **Files Created:** 
+  - `backend/advisory/__init__.py`
+  - `backend/advisory/data/crop_taxonomy.json`
+  - `backend/advisory/data/fertilizer_table.json`
+  - `backend/advisory/data/regional_affinity.json`
+- **Data Sources Used:** PAU Package of Practices, Dr. PDKV (Vidarbha), ICAR.
+- **Validation Performed:** Programmatic constraint checking and agricultural consistency review (e.g. fertilizer NPK kg/ha conventions).
+- **Unresolved Data Gaps:** Some crops lack explicit variety tables and exact bounds; set to `null` to prevent fabrication.
+- **Existing Application Code Modified:** NONE. (Existing endpoints, ML model, frontend, and Supabase integrations are explicitly protected and untouched).
+- **Next Authorized Phase:** Phase 1B (Awaiting authorization).
+
+## 7. Phase 1B: Advisory Input Validation Layer
+- **Purpose:** Provide a clean, deterministic boundary between untrusted farmer input and the future advisory engine.
+- **Files Created:**
+  - `backend/advisory/validator.py`
+  - `backend/advisory/tests/test_validator.py`
+- **Validation Contract:** Enforces strict structural, type, range, and enum validation. Rejects negative values where inappropriate (pH < 0, etc) and missing mandatory fields. Normalizes string casing and whitespace. Trims long strings. Accepts unknown root keys but strips them from the valid output.
+- **Test Count:** 33 tests.
+- **Test Result:** All 33 tests passed locally using the built-in `unittest` module.
+- **Known Limitations:** Data source classification is descriptive only for Phase 1B and not mathematically scored. Fuzzy matching for geographies is currently skipped.
+- **Existing Codebase Impact:** Zero impact. Existing app files are unchanged.
+- **Next Authorized Phase:** Phase 1C.
+
+## 8. Phase 1C: Deterministic Agronomic Rule Engine
+- **Implementation Summary:** Created a pre-LLM deterministic pre-filter for crop viability based strictly on verified JSON data taxonomy.
+- **Rule Treatment Table:**
+  - Season: HARD_FILTER
+  - Critical Irrigation Mismatch: HARD_FILTER
+  - pH: SOFT_SCORE
+  - Temperature: SOFT_SCORE
+  - Rainfall: SOFT_SCORE
+  - Regional/Budget/Market: Ignored in this phase.
+- **Test Count:** 27 new tests added in `test_rule_filter.py`. 33 tests maintained in `test_validator.py`.
+- **Test Result:** All 60 tests passed locally. Verified determinism and mutual exclusivity of excluded vs candidate crops.
+- **Known Limitations:** Does not calculate profitability, predict yields, or invoke LLMs. Regional affinity is deliberately not factored into scoring yet.
+- **Existing Codebase Impact:** Zero impact. Existing backend and ML model remain unmodified.
+- **Next Authorized Phase:** Phase 1D.
+
+## 9. Phase 1D: Deterministic Fertilizer Engine
+- **Implementation Summary:** Created a fully isolated fertilizer recommendation module `fertilizer_engine.py` that calculates deficits securely using JSON lookup matching.
+- **Unit Conventions:** 
+  - Nitrogen is treated explicitly as elemental (N) in kg/ha. 
+  - Phosphorus and Potassium deficits are dynamically blocked from resolving because the soil input (`phosphorus_kg_ha`, `potassium_kg_ha`) has ambiguous chemical representation (elemental vs oxide) compared to the JSON schema (P2O5/K2O). 
+- **Calculation Approach:** Deficit = `max(0, reference - input)` with `N` only. Farm scale computed dynamically from acres `(1 ha = 2.47105 acres)`.
+- **Source Handling:** Strictly queries `fertilizer_table.json` by matching exact region + condition first, defaulting to region if condition unspecified. Rejects fallback to unrelated regions.
+- **Safety Decisions:** 
+  - Safely stopped Product Conversion (DAP, Urea, MOP) since P/K ambiguity prevents accurate mass balancing.
+  - LLMs are entirely prohibited from calculating fertilizer values.
+- **Tests:** 14 new tests added in `test_fertilizer.py` verifying critical ambiguity safety (guarding against blind subtraction), farm scaling, missing baseline behavior, and non-negative deficits.
+- **Unresolved Issues:** P and K chemical representation mapping is unresolved and currently limits the deficit output. Product conversion is suspended.
+- **Next Authorized Phase:** Phase 1D.1.
+
+## 10. Phase 1D.1: NPK Unit Resolution & STCR Contract
+- **Implementation Summary:** Replaced the crude deficit arithmetic `max(0, recommended - soil)` with an agronomically defensible Soil Test Crop Response (STCR) logic based on Indian Soil Health Card standards.
+- **Unit Conventions Resolution:**
+  - `soil.nitrogen_kg_ha`, `phosphorus_kg_ha`, `potassium_kg_ha` represent Available Elemental N, P, K concentration in the soil.
+  - `fertilizer_table.json` represents General Recommended Doses (GRD) of applied fertilizer nutrients (N, P2O5, K2O).
+  - Therefore, simple subtraction is scientifically invalid.
+- **Calculation Approach:** 
+  - Soil tests are categorized into Low, Medium, High fertility classes.
+  - Low soils receive a +25% adjustment to the GRD.
+  - Medium soils receive the baseline GRD (0% adjustment).
+  - High soils receive a -25% adjustment to the GRD.
+- **Product Conversion:** Safely unlocked Urea, DAP, and MOP dose generation per hectare and per farm size. Nutrient balancing explicitly accounts for DAP supplying both N (18%) and P2O5 (46%), preventing double-fertilization.
+- **Existing Codebase Impact:** Zero impact. Existing backend and ML model remain unmodified.
+- **Next Authorized Phase:** Phase 1E (Awaiting authorization).

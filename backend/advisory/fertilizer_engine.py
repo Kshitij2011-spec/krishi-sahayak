@@ -25,23 +25,49 @@ def match_baseline(crop_name, state, irrigation_type):
     if not crop_records:
         return None
         
-    # Attempt 1: Match crop + region/state + irrigation condition (e.g., 'irrigated', 'rainfed')
     for rec in crop_records:
         rec_region = rec.get("region", "").lower()
         rec_cond = rec.get("conditions", "").lower()
         if rec_region == state.lower() and irrigation_type.lower() in rec_cond:
             return rec
             
-    # Attempt 2: Match crop + region/state regardless of condition
     for rec in crop_records:
         rec_region = rec.get("region", "").lower()
         if rec_region == state.lower():
             return rec
             
-    # Attempt 3: Any record for the crop as a fallback?
-    # The prompt explicitly warns: "Do not silently substitute a different region's recommendation as if it were universal."
-    # Therefore, if region-specific data is requested and not found, we return None.
     return None
+
+def get_soil_class(nutrient, value):
+    """
+    Classifies the soil nutrient value (kg/ha) into Low, Medium, High 
+    based on Indian standard soil testing rating charts.
+    """
+    if nutrient == 'N':
+        if value < 240: return 'low'
+        if value <= 480: return 'medium'
+        return 'high'
+    elif nutrient == 'P':
+        if value < 11: return 'low'
+        if value <= 22: return 'medium'
+        return 'high'
+    elif nutrient == 'K':
+        if value < 110: return 'low'
+        if value <= 280: return 'medium'
+        return 'high'
+    return 'medium'
+
+def adjust_dose(grd, soil_class):
+    """
+    Adjusts the General Recommended Dose (GRD) by 25% based on soil class.
+    """
+    if grd is None:
+        return 0
+    if soil_class == 'low':
+        return grd * 1.25
+    elif soil_class == 'high':
+        return max(0, grd * 0.75)
+    return grd
 
 def calculate_fertilizer(validated_input, crop_name):
     if not _is_validated(validated_input):
@@ -67,49 +93,64 @@ def calculate_fertilizer(validated_input, crop_name):
     soil_p = validated_input["soil"]["phosphorus_kg_ha"]
     soil_k = validated_input["soil"]["potassium_kg_ha"]
     
-    # -------------------------------------------------------------------------
-    # SAFETY DECISION: UNIT AMBIGUITY
-    # Nitrogen is elemental (N). We can calculate deficit safely.
-    # Phosphorus and Potassium soil inputs (phosphorus_kg_ha, potassium_kg_ha) 
-    # do not explicitly declare if they are elemental (P/K) or oxide (P2O5/K2O).
-    # The recommendation is explicitly P2O5 and K2O.
-    # We MUST NOT blindly subtract these ambiguous values.
-    # -------------------------------------------------------------------------
+    # Evaluate soil fertility classes
+    class_n = get_soil_class('N', soil_n)
+    class_p = get_soil_class('P', soil_p)
+    class_k = get_soil_class('K', soil_k)
     
-    n_deficit_ha = max(0, recommended["N_kg_ha"] - soil_n)
+    # Calculate STCR Adjusted Dose (kg/ha)
+    adj_n = adjust_dose(recommended.get("N_kg_ha"), class_n)
+    adj_p2o5 = adjust_dose(recommended.get("P2O5_kg_ha"), class_p)
+    adj_k2o = adjust_dose(recommended.get("K2O_kg_ha"), class_k)
+    
+    # Calculate Product Dosages (kg/ha)
+    # DAP: 46% P2O5, 18% N
+    # Urea: 46% N
+    # MOP: 60% K2O
+    dap_kg_ha = adj_p2o5 / 0.46 if adj_p2o5 > 0 else 0
+    n_from_dap = dap_kg_ha * 0.18
+    remaining_n = max(0, adj_n - n_from_dap)
+    urea_kg_ha = remaining_n / 0.46
+    mop_kg_ha = adj_k2o / 0.60 if adj_k2o > 0 else 0
     
     farm_acres = validated_input["land"]["farm_size_acres"]
     farm_hectares = farm_acres / HECTARE_IN_ACRES
     
     return {
-        "status": "available",
+        "status": "baseline_available",
+        "calculation_method": "STCR_adjusted_regional_baseline",
         "source": {
             "authority": baseline.get("source", "Unknown"),
             "region": baseline.get("region", "Unknown"),
             "condition": baseline.get("conditions", "Unknown"),
             "notes": baseline.get("notes", "")
         },
-        "units": {
-            "reference": "kg/ha",
-            "soil": "kg/ha (ambiguous P/K)"
+        "soil_analysis": {
+            "N_class": class_n,
+            "P_class": class_p,
+            "K_class": class_k
         },
-        "recommended": {
+        "recommended_baseline": {
             "N_kg_ha": recommended.get("N_kg_ha"),
             "P2O5_kg_ha": recommended.get("P2O5_kg_ha"),
             "K2O_kg_ha": recommended.get("K2O_kg_ha")
         },
-        "deficit": {
-            "N_kg_ha": n_deficit_ha,
-            "P2O5_kg_ha": None,
-            "K2O_kg_ha": None
+        "adjusted_dose": {
+            "N_kg_ha": round(adj_n, 2),
+            "P2O5_kg_ha": round(adj_p2o5, 2),
+            "K2O_kg_ha": round(adj_k2o, 2)
+        },
+        "products_per_ha": {
+            "urea_kg_ha": round(urea_kg_ha, 2),
+            "dap_kg_ha": round(dap_kg_ha, 2),
+            "mop_kg_ha": round(mop_kg_ha, 2)
         },
         "farm_scale": {
             "farm_size_acres": round(farm_acres, 5),
             "farm_size_hectares": round(farm_hectares, 5),
-            "deficit_N_kg_farm": round(n_deficit_ha * farm_hectares, 5)
+            "urea_kg_farm": round(urea_kg_ha * farm_hectares, 2),
+            "dap_kg_farm": round(dap_kg_ha * farm_hectares, 2),
+            "mop_kg_farm": round(mop_kg_ha * farm_hectares, 2)
         },
-        "warnings": [
-            "Baseline recommendation; adjust according to soil test.",
-            "Phosphorus and Potassium deficits cannot be calculated because the soil input chemical representation (elemental vs oxide) is ambiguous. Product conversion is suspended."
-        ]
+        "warning": "Dosages are STCR-adjusted based on general soil fertility classes. Consult local extension for micro-nutrient balancing."
     }
