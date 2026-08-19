@@ -6,6 +6,7 @@ from .validator import validate_advisory_input
 from .rule_filter import filter_and_score
 from .fertilizer_engine import calculate_fertilizer
 from .gemini_layer import generate_advisory_reasoning
+from .confidence import calculate_confidence
 
 def load_json(filename):
     base_dir = os.path.dirname(__file__)
@@ -147,7 +148,7 @@ def run_advisory(raw_input_data):
                 "tradeoffs": top.get("tradeoffs", []),
                 "variety": top.get("variety"),
                 "fertilizer": fertilizer_context.get(crop_name, {"status": "unavailable", "reason": "No source-backed fertilizer rule exists for this crop/region/condition."}),
-                "regional_context": "supported" if regional_support.get(crop_name) else ("unavailable" if not region_info else "unsupported")
+                "regional_context": "supported" if regional_support.get(crop_name) else ("unavailable" if not region_info else "not_supported")
             }
             
             for alt in ranked_crops[1:]:
@@ -166,7 +167,7 @@ def run_advisory(raw_input_data):
             "crop": top["crop"],
             "selection_basis": "highest agronomic_fit_score",
             "fertilizer": fertilizer_context.get(crop_name, {"status": "unavailable", "reason": "No source-backed fertilizer rule exists for this crop/region/condition."}),
-            "regional_context": "supported" if regional_support.get(crop_name) else ("unavailable" if not region_info else "unsupported"),
+            "regional_context": "supported" if regional_support.get(crop_name) else ("unavailable" if not region_info else "not_supported"),
             "variety": None
         }
         for alt in viable_candidates[1:]:
@@ -181,6 +182,21 @@ def run_advisory(raw_input_data):
     if reasoning_source == "gemini":
         data_sources_used.append("gemini_reasoning")
 
+    # 9. Confidence Calculation
+    # Find agronomic score for top recommendation
+    top_agronomic_score = 0
+    for c in viable_candidates:
+        if c["crop"].lower() == top_recommendation.get("crop", "").lower():
+            top_agronomic_score = c["agronomic_fit_score"]
+            break
+            
+    confidence = calculate_confidence(
+        agronomic_fit_score=top_agronomic_score,
+        data_completeness=completeness,
+        field_quality=validation_result.get("field_quality", {}),
+        regional_status=top_recommendation.get("regional_context", "unavailable")
+    )
+
     # Construct the final result
     return {
         "status": "success",
@@ -193,5 +209,5 @@ def run_advisory(raw_input_data):
         "warnings": [],
         "data_sources_used": data_sources_used,
         "data_completeness": completeness,
-        "confidence_status": "pending_phase_1f"
+        "confidence": confidence
     }

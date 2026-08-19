@@ -152,4 +152,18 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **API integrations:** Specifically deferred Market (Agmarknet), Weather, and Pest integrations to future phases.
 - **Testing Strategy:** Added `test_engine.py` addressing E-01 through E-10 via mocks, ensuring zero credit burn during standard CI/CD execution. 91 total tests passing.
 - **Existing Codebase Impact:** Zero impact. The original `app.py` and React frontend are unmodified.
-- **Next Authorized Phase:** Phase 1F (Awaiting authorization).
+- **Next Authorized Phase:** Phase 1F.
+
+## 14. Phase 1F: Deterministic Advisory Confidence Layer
+- **Implementation Summary:** Created `confidence.py` to calculate a transparent engineering heuristic reflecting the system's ability to defend its recommendation. 
+- **Formula:** Uses a 50/30/20 weighted split: Agronomic Fit (50%), Data Quality (30%), and Regional Evidence (20%).
+- **Component Meanings:** 
+  - *Agronomic Fit*: Exact deterministic score imported from `rule_filter.py`.
+  - *Data Quality*: Checks `mandatory_total` and missing data, alongside data sources (`soil_health_card`, `farmer_entered`, `defaulted_regional_avg`).
+  - *Regional Evidence*: Converts presence/absence in `regional_affinity.json` into a scalar.
+- **Caps:** Strict engineering ceilings apply. Any missing mandatory field severely caps confidence at 40 (Low). Heavily reliant on regional defaults caps at 65 (Moderate). Farmer entered caps at 82 (High). Strong verified data caps at 92 (Very High).
+- **Engine Integration:** Substituted the `confidence_status = "pending"` stub with the robust `confidence` result object.
+- **Independence:** Operates independently of whether Gemini generated the reasoning or deterministic rules did.
+- **Testing Strategy:** `test_confidence.py` developed with 11 distinct behavior tests (CF-01 through CF-10 + invariants check). 102 total tests successfully passing. Zero network / Gemini credits consumed.
+- **Existing Codebase Impact:** Zero impact.
+- **Next Authorized Phase:** Phase 1G (Awaiting authorization).
