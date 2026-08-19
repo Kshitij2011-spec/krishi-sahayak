@@ -5,12 +5,19 @@ ML-only backend: crop recommendation, fertilizer dosage, pest detection (Day 3).
 Everything else (advisory history, feedback, file storage) goes through Supabase directly.
 """
 import os
+import sys
 import numpy as np
 import joblib
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 import traceback
+
+# Ensure the project root is on sys.path so that 'backend.advisory' resolves
+# whether Gunicorn starts from the project root or from backend/.
+_project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
 
 try:
     from dotenv import load_dotenv
