@@ -10,8 +10,8 @@ import joblib
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
-
-
+import traceback
+from backend.advisory.engine import run_advisory
 app = Flask(__name__)
 CORS(app)
 
@@ -325,6 +325,27 @@ def mandi_price():
         "arrival_date": datetime.date.today().strftime("%d/%m/%Y"),
         "is_fallback": True
     })
+
+@app.route("/api/v2/advisory", methods=["POST"])
+def advisory_v2():
+    try:
+        data = request.get_json(force=True)
+    except Exception:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
+
+    if not isinstance(data, dict):
+        return jsonify({"status": "error", "message": "JSON body must be an object"}), 400
+
+    try:
+        result = run_advisory(data)
+        if result.get("status") == "error":
+            return jsonify(result), 400
+        return jsonify(result), 200
+    except Exception as e:
+        # Log safely, do not expose internal details
+        app.logger.error("Unexpected error in /api/v2/advisory: %s", str(e))
+        return jsonify({"status": "error", "message": "Unable to process advisory request."}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

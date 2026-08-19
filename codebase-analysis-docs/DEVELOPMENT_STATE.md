@@ -199,4 +199,17 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Credit Accounting:** Attempted: 1, Completed: 0, Retries: 0, Extra calls: 0.
 - **Security Check:** API keys were verified dynamically without printing values or exposing secret buffers in terminal/logs.
 - **Code Changes:** No codebase changes were necessary; all existing protections held.
-- **Next Authorized Phase:** Awaiting user direction (Phase 1I.1 or Phase 2).
+- **Next Authorized Phase:** Phase 2A.
+
+## 18. Phase 2A: Flask Advisory API Integration
+- **Implementation Summary:** Integrated the standalone advisory engine into the Flask backend via a new endpoint `POST /api/v2/advisory`.
+- **API Contract:** 
+  - **Request:** Expects a validated JSON object mimicking the standalone engine's input block (location, soil, climate, land, farmer_constraints).
+  - **Response:** Returns the direct engine output (`status`, `query_id`, `gemini_available`, `candidate_crops`, `top_recommendation`, etc.).
+  - **HTTP Status:** Returns `200` for successful advisory generation (including fallback path without Gemini), `400` for validation failures, and `500` for unexpected server errors.
+- **Gemini Optionality:** The endpoint elegantly bypasses Gemini integration if `GOOGLE_API_KEY` is omitted, returning deterministic fallback advice gracefully. This fulfills the requirement that Gemini failure is not a server failure.
+- **Testing Outcome:** Created `test_flask_advisory.py` enforcing 10 targeted assertions (FT-01 to FT-10). Total unified suite holds 134 passing tests.
+- **Manual Verification:** Sent an arbitrary POST payload via `requests` directly testing the locally hosted engine. Output validated the exact offline fallback functionality (Cotton, gemini_available=False).
+- **Existing Routes:** `/api/recommend-crop`, `/api/fertilizer`, `/api/detect-pest`, and `/api/mandi-price` remain unmodified and fully functional. Random Forest continues unchanged.
+- **Deployment Status:** Retained local-only deployment status.
+- **Next Authorized Phase:** Awaiting user direction (Phase 2B).
