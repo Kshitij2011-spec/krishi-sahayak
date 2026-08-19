@@ -166,4 +166,14 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Independence:** Operates independently of whether Gemini generated the reasoning or deterministic rules did.
 - **Testing Strategy:** `test_confidence.py` developed with 11 distinct behavior tests (CF-01 through CF-10 + invariants check). 102 total tests successfully passing. Zero network / Gemini credits consumed.
 - **Existing Codebase Impact:** Zero impact.
-- **Next Authorized Phase:** Phase 1G (Awaiting authorization).
+- **Next Authorized Phase:** Phase 1G.
+
+## 15. Phase 1G: Standalone Demo Runner, Scenario Validation & Full-System Hardening
+- **Implementation Summary:** Implemented the standalone CLI demo runner and comprehensive end-to-end scenario validations confirming independent architecture viability.
+- **Standalone Workflow:** JSON Farmer Input -> Validation -> Agronomic Filtering -> Regional Grounding -> Fertilizer Recommendation -> Optional ONE Gemini Reasoning Call -> Confidence -> Structured Advisory -> CLI Output.
+- **Scenario Coverage:** Added `test_scenarios.py` verifying 12 strict edge conditions including valid configurations (S01, S02), water constraints (S03), missing/malformed text (S04, S05, S06), hostile LLM behavior mimicking (S07, S08), zero-credit environments (S09), missing fertilizer/regional maps (S10, S11), and reproducibility (S12).
+- **Adversarial Testing:** Engine stability hardened against extreme numeric constraints, unexpected keys, and invalid datatypes without crashing.
+- **CLI Commands:** Available globally via `python -m backend.advisory.cli --scenario punjab-rabi` or dynamically using `--input`.
+- **Testing Outcome:** The full offline test suite contains 117 passing tests, strictly mocking all LLM surfaces to ensure 0 Gemini credits consumed and no network requirements.
+- **Known Weaknesses:** Missing real-time APIs (Market, Weather, Pest) natively reduce predictive accuracy of farmer profit mapping, requiring later phase extensions.
+- **Next Authorized Phase:** Awaiting user direction (Phase 1H or Phase 2).

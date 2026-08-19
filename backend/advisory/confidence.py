@@ -27,7 +27,7 @@ def calculate_confidence(agronomic_fit_score, data_completeness, field_quality, 
             has_defaulted = True
         elif source in ["farmer_entered", "test_strip_photo"]:
             has_farmer_entered = True
-        elif source in ["soil_health_card", "lab_verified"]:
+        elif source == "soil_health_card":
             has_verified = True
             
     if has_defaulted:
