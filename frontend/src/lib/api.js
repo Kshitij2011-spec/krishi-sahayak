@@ -54,3 +54,16 @@ export async function getMandiPrices(commodity, district) {
   }
   return res.json();
 }
+
+export async function getAdvancedAdvisory(payload) {
+  const res = await fetch(`${API_URL}/api/v2/advisory`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(err.message || err.error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}

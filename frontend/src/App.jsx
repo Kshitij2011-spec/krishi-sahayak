@@ -2,6 +2,7 @@ import { Routes, Route, NavLink } from 'react-router-dom';
 import SoilInputPage from './pages/SoilInputPage';
 import PestDetectionPage from './pages/PestDetectionPage';
 import MandiPricePage from './pages/MandiPricePage';
+import AdvancedAdvisoryPage from './pages/AdvancedAdvisoryPage';
 
 function App() {
   return (
@@ -26,6 +27,11 @@ function App() {
               Mandi Prices
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/advanced-advisory" className={({ isActive }) => isActive ? 'active' : ''}>
+              Advanced Advisory
+            </NavLink>
+          </li>
         </ul>
       </nav>
 
@@ -33,6 +39,7 @@ function App() {
         <Route path="/" element={<SoilInputPage />} />
         <Route path="/pest-detection" element={<PestDetectionPage />} />
         <Route path="/mandi-prices" element={<MandiPricePage />} />
+        <Route path="/advanced-advisory" element={<AdvancedAdvisoryPage />} />
       </Routes>
     </div>
   );

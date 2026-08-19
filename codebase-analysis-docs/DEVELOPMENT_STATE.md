@@ -238,4 +238,14 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Reasoning Audit:** GROUNDED. The LLM accurately acknowledged the `kharif` season, `rainfed` limitation, and low `10,000 INR` budget, producing sensible, non-hallucinated explanations.
 - **Fallback Verification:** Offline tests and initial uncredentialed app boots successfully validated the offline fallback pipeline without API calls.
 - **Credit Accounting:** Attempted: 1, Completed: 1, Retries: 0, Extra calls: 0.
-- **Next Authorized Phase:** Awaiting user direction (Phase 2C).
+- **Next Authorized Phase:** Phase 2C.
+
+## 21. Phase 2C: React Advanced Crop Advisory Integration
+- **Implementation Summary:** Created a new, isolated React page (`AdvancedAdvisoryPage.jsx`) to expose the advanced backend advisory system while keeping the original Random Forest flow completely untouched.
+- **Routing & Integration:** Added the `/advanced-advisory` route in `App.jsx` and `getAdvancedAdvisory` POST call in `lib/api.js`.
+- **UI Architecture:** Built a comprehensive form matching the 14-field backend input payload schema. The result view gracefully handles both Gemini-powered ("AI reasoning available") and fallback ("Advisory generated using verified agronomic rules") states without treating the fallback as an error.
+- **Rendering Nuances:** Conditionally displays crop varieties, handles missing fertilizer baselines elegantly, and cleanly presents the deterministic 50/30/20 confidence heuristics alongside the top recommendation and alternatives.
+- **Test Integrity:** Passed backend tests (134 tests). Frontend successfully built for production (`npm run build`). Manual offline fallback rendering tests were completed.
+- **Existing Page Regression:** The original `SoilInputPage.jsx` and `/` route was unmodified. Existing Random Forest recommendations, fertilizer mappings, speech-to-text, and TTS all remain 100% functional.
+- **Security Validation:** Verified that NO Gemini API keys exist in the frontend, nor are sent from the browser. The frontend solely relies on `/api/v2/advisory`.
+- **Next Authorized Phase:** Awaiting user direction (Phase 2D).
