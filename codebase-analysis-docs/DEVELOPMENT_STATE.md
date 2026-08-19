@@ -142,4 +142,14 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Prompt Injection Controls:** The system instruction explicitly isolates farmer inputs, ensuring they are treated as untrusted data rather than system commands.
 - **Testing Strategy:** Added `test_gemini_layer.py` with 10 mock-driven tests (GT-01 through GT-10). Live Gemini test: NOT RUN — API key unavailable.
 - **Existing Codebase Impact:** Zero impact. Existing backend and ML model remain unmodified. Added `google-genai` to `requirements.txt`.
-- **Next Authorized Phase:** Phase 1E-B (Awaiting authorization).
+- **Next Authorized Phase:** Phase 1E-B.
+
+## 13. Phase 1E-B: Standalone Advisory Orchestrator
+- **Implementation Summary:** Implemented `engine.py` to orchestrate `validator.py`, `rule_filter.py`, regional and fertilizer context lookups, and `gemini_layer.py` into a single end-to-end pipeline.
+- **Gemini Invocation Policy:** The engine executes exactly ONE Gemini call per advisory request, ONLY if `GOOGLE_API_KEY` and `GEMINI_MODEL_NAME` exist and at least one crop passes the agronomic hard filters. 
+- **Deterministic Fallback:** When Gemini is unavailable, the engine gracefully falls back to deterministic rule scoring without generating fake data.
+- **Architecture:** `RAW INPUT -> VALIDATOR -> AGRONOMIC RULES -> REGIONAL/FERTILIZER CONTEXT -> GEMINI CALL -> VALIDATION -> DETERMINISTIC FALLBACK -> STRUCTURED RESULT`.
+- **API integrations:** Specifically deferred Market (Agmarknet), Weather, and Pest integrations to future phases.
+- **Testing Strategy:** Added `test_engine.py` addressing E-01 through E-10 via mocks, ensuring zero credit burn during standard CI/CD execution. 91 total tests passing.
+- **Existing Codebase Impact:** Zero impact. The original `app.py` and React frontend are unmodified.
+- **Next Authorized Phase:** Phase 1F (Awaiting authorization).
