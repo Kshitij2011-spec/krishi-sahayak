@@ -58,11 +58,7 @@ def run_advisory(raw_input_data):
             "data": None
         }
         
-    # Sort viable candidates by score (desc), penalty (asc), alphabetical (asc)
-    viable_candidates.sort(key=lambda x: (-x["agronomic_fit_score"], x["penalty_count"], x["crop"]))
-    top_crops = [c["crop"] for c in viable_candidates]
-
-    # 3. Regional Context
+    # 3. Regional Context (moved up to use for tie-breaking)
     regional_affinity = load_json("regional_affinity.json")
     state = validated_data["location"]["state"]
     district = validated_data["location"]["district"]
@@ -74,14 +70,22 @@ def run_advisory(raw_input_data):
                 region_info = entry
                 break
                 
-    regional_support = {}
-    for crop in top_crops:
+    regional_support_all = {}
+    for c in viable_candidates:
+        crop_name = c["crop"]
         is_supported = False
         if region_info:
-            c = crop.lower()
-            if c in region_info.get("kharif", []) or c in region_info.get("rabi", []) or c in region_info.get("other", []):
+            c_low = crop_name.lower()
+            if c_low in region_info.get("kharif", []) or c_low in region_info.get("rabi", []) or c_low in region_info.get("other", []):
                 is_supported = True
-        regional_support[crop] = is_supported
+        regional_support_all[crop_name] = is_supported
+        c["regionally_supported"] = is_supported
+        
+    # Sort viable candidates by score (desc), penalty (asc), regional support (desc), alphabetical (asc)
+    viable_candidates.sort(key=lambda x: (-x["agronomic_fit_score"], x["penalty_count"], not x["regionally_supported"], x["crop"]))
+    top_crops = [c["crop"] for c in viable_candidates]
+
+    regional_support = {c: regional_support_all[c] for c in top_crops}
     
     # 4. Fertilizer Context
     fertilizer_context = {}

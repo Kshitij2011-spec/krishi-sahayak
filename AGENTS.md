@@ -16,8 +16,8 @@ This project is an AI-driven crop recommendation and advisory system built for t
 - **ML Model:** Random Forest (scikit-learn) trained on Kaggle dataset (22 crops).
 
 ## Development State
-Current Phase: 1G
-Status: Standalone CLI exists. Scenario suite exists. Offline end-to-end testing established. Gemini remains optional. Credit-safe architecture verified.
+Current Phase: 1H
+Status: Recommendation quality audit completed. Deterministic scoring calibrated/verified. Tie-breaking rules improved. Data coverage limitations documented.
 Next Approved Phase: None
 
 ## Phase History
@@ -34,6 +34,7 @@ Next Approved Phase: None
 - **Phase 1E-B:** Complete - Standalone end-to-end engine orchestrated via `engine.py`. One-Gemini-call policy implemented with deterministic fallback. No market/weather/pest APIs. Confidence deferred to Phase 1F.
 - **Phase 1F:** Complete - Deterministic advisory confidence layer implemented (`confidence.py`). 50/30/20 weights (Agronomic/Data/Regional) with strict engineering caps (max 40 for missing mandatory data, 92 for fully verified). Independent of Gemini response.
 - **Phase 1G:** Complete - Standalone demo runner (`cli.py`) and full scenario suite (`test_scenarios.py`) implemented. Verified credit-safe, robust, adversarial-tested offline pipeline.
+- **Phase 1H:** Complete - Recommendation quality audited. Tie-breaking bias fixed using regional affinity. Data coverage matrices (fertilizer, variety) verified and limitations documented. Confidence boundaries proven sound.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*

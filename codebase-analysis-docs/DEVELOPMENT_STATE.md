@@ -176,4 +176,17 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **CLI Commands:** Available globally via `python -m backend.advisory.cli --scenario punjab-rabi` or dynamically using `--input`.
 - **Testing Outcome:** The full offline test suite contains 117 passing tests, strictly mocking all LLM surfaces to ensure 0 Gemini credits consumed and no network requirements.
 - **Known Weaknesses:** Missing real-time APIs (Market, Weather, Pest) natively reduce predictive accuracy of farmer profit mapping, requiring later phase extensions.
-- **Next Authorized Phase:** Awaiting user direction (Phase 1H or Phase 2).
+- **Next Authorized Phase:** Phase 1H.
+
+## 16. Phase 1H: Recommendation Quality Audit, Bias Detection & Deterministic Calibration
+- **Implementation Summary:** Conducted a zero-API deterministic audit across multiple Ludhiana and Nagpur scenarios to investigate crop ranking, tie-breaking artifacts, and confidence capping behavior.
+- **Audit Findings:**
+  - **Alphabetical Bias:** Crops with identical agronomic scores and zero penalties were previously tie-broken alphabetically. This was fixed by shifting `regional_affinity` upstream as the primary tie-breaker before alphabetical sort.
+  - **Soft Penalties:** Confirmed that soft penalties (e.g., pH diff > 0.5 causing a 10-point penalty) are functioning as sound engineering heuristics. A perfect agronomic fit logically edges out a regionally supported crop with poor climate/soil match.
+  - **Hard Filters:** Season and Irrigation constraints correctly exclude impossible candidates (e.g., rainfed scarce water appropriately drops Rice). Missing optional constraints default correctly without unfairly excluding candidates.
+- **Data Coverage Limitations:**
+  - **Fertilizer Coverage:** Explicitly verified that ONLY Wheat, Soybean, and Cotton currently have source-backed fertilizer schedules. All other crops correctly report `unavailable`.
+  - **Variety Coverage:** Only Wheat, Maize, and Soybean possess approved variety mappings. Others remain safely mapped to `None`.
+- **Confidence Assessment:** False-high confidence cases exist when data is verified but region/fertilizer maps are absent (still scaling up to High 90), which is mathematically expected per the current heuristic (fertilizer explicitly omitted from confidence formula). False-lows correctly trigger when mandatory properties (like pH) are missing.
+- **Testing Outcome:** Created `test_audit.py` with 7 strict principles (Q01-Q07). 124 tests passing.
+- **Next Authorized Phase:** Awaiting Live Gemini Validation.
