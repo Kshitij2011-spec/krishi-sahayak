@@ -1,4 +1,5 @@
 import unittest
+import os
 from backend.advisory.engine import run_advisory
 
 class TestFinalBenchmark(unittest.TestCase):
@@ -7,6 +8,19 @@ class TestFinalBenchmark(unittest.TestCase):
     These test that the advisory engine handles realistic contextual scenarios
     correctly and robustly.
     """
+    def setUp(self):
+        self.original_api_key = os.environ.get("GOOGLE_API_KEY")
+        self.original_model = os.environ.get("GEMINI_MODEL_NAME")
+        if "GOOGLE_API_KEY" in os.environ:
+            del os.environ["GOOGLE_API_KEY"]
+        if "GEMINI_MODEL_NAME" in os.environ:
+            del os.environ["GEMINI_MODEL_NAME"]
+
+    def tearDown(self):
+        if self.original_api_key is not None:
+            os.environ["GOOGLE_API_KEY"] = self.original_api_key
+        if self.original_model is not None:
+            os.environ["GEMINI_MODEL_NAME"] = self.original_model
 
     def _run_and_validate(self, payload):
         res = run_advisory(payload)
