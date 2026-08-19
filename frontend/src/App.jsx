@@ -27,19 +27,14 @@ function App() {
               Mandi Prices
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/advanced-advisory" className={({ isActive }) => isActive ? 'active' : ''}>
-              Advanced Advisory
-            </NavLink>
-          </li>
         </ul>
       </nav>
 
       <Routes>
-        <Route path="/" element={<SoilInputPage />} />
+        <Route path="/" element={<AdvancedAdvisoryPage />} />
         <Route path="/pest-detection" element={<PestDetectionPage />} />
         <Route path="/mandi-prices" element={<MandiPricePage />} />
-        <Route path="/advanced-advisory" element={<AdvancedAdvisoryPage />} />
+        <Route path="/legacy-advisory" element={<SoilInputPage />} />
       </Routes>
     </div>
   );
