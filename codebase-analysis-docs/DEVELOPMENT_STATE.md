@@ -266,4 +266,17 @@ Phase 1 readiness verified. No regressions detected in existing code.
   - Screenshots confirmed styling is clean. "AI reasoning available" banner displays accurately.
   - Confidence component accurately pulls the deterministic `92 / 100`.
   - Fertilizer and Alternatives rendered correctly using backend data natively.
-- **Next Authorized Phase:** Awaiting user direction (Phase 2E).
+- **Next Authorized Phase:** Phase 2E.
+
+## 23. Phase 2E: Live Weather Intelligence Using Open-Meteo
+- **Implementation Summary:** Integrated Open-Meteo live weather context to provide short-term 7-day forecast intelligence as supporting evidence.
+- **Source:** Open-Meteo Forecast API (No API key required).
+- **Variables Used:** `temperature_2m`, `relative_humidity_2m`, `precipitation` (Current) and `temperature_2m_max`, `temperature_2m_min`, `precipitation_sum`, `precipitation_probability_max` (Daily).
+- **Coordinate Handling:** If coordinates are missing from the input, it gracefully falls back to newly added standard geographic coordinates from `regional_affinity.json` (e.g., district headquarter Wikipedia coords). If unavailable, weather degrades gracefully to `{"status": "unavailable"}`.
+- **Gemini Context Integration:** The weather context is provided to Gemini as `weather_context`, accompanied by an updated `SYSTEM_INSTRUCTION` explicitly commanding Gemini to use it as supporting evidence, NOT as a replacement for deterministic agronomic rules.
+- **Graceful Degradation:** Handled timeouts (3s), HTTP errors, malformed responses, and missing coordinates cleanly without breaking the main advisory pipeline.
+- **Test Integrity:** Added 8 weather module tests (`test_weather.py`) using mocked HTTP responses (WT-01 to WT-08). Added engine integration tests (`test_engine.py`) verifying weather interaction and fallback without live APIs (W-E01 to W-E04). All 144 backend tests passed.
+- **Live Smoke Test:** Verified the weather context is fully parsed and available using a manual `python -c` script against Nagpur coordinates.
+- **Limitations:** No caching exists yet. The weather response is intentionally restricted to 1 call per request.
+- **Resource Usage:** 0 Gemini calls used during automated testing and implementation.
+- **Next Authorized Phase:** Awaiting user direction (Phase 2F).

@@ -143,5 +143,67 @@ class TestEngine(unittest.TestCase):
             mock_gemini.assert_not_called()
             self.assertEqual(res["reasoning_source"], "deterministic_rule_engine")
 
+    @patch("backend.advisory.engine.get_weather_context")
+    @patch("backend.advisory.engine.generate_advisory_reasoning")
+    def test_we01_weather_available(self, mock_gemini, mock_weather):
+        mock_weather.return_value = {"status": "available", "current": {"temperature_c": 25}}
+        mock_gemini.return_value = {"status": "success", "data": {"ranked_crops": [{"crop": "wheat", "rank": 1}]}}
+        
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "fake", "GEMINI_MODEL_NAME": "fake"}):
+            res = run_advisory(get_valid_input())
+            
+            # engine -> weather context
+            mock_weather.assert_called_once()
+            
+            # Gemini receives weather context
+            call_args = mock_gemini.call_args[0][0]
+            self.assertEqual(call_args["weather_context"]["status"], "available")
+            self.assertEqual(res["weather_context"]["status"], "available")
+
+    @patch("backend.advisory.engine.get_weather_context")
+    @patch("backend.advisory.engine.generate_advisory_reasoning")
+    def test_we02_weather_unavailable(self, mock_gemini, mock_weather):
+        mock_weather.return_value = {"status": "unavailable", "reason": "timeout"}
+        mock_gemini.return_value = {"status": "success", "data": {"ranked_crops": [{"crop": "wheat", "rank": 1}]}}
+        
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "fake", "GEMINI_MODEL_NAME": "fake"}):
+            res = run_advisory(get_valid_input())
+            
+            # engine continues normally
+            self.assertEqual(res["status"], "success")
+            
+            # Gemini still receives other context
+            call_args = mock_gemini.call_args[0][0]
+            self.assertEqual(call_args["weather_context"]["status"], "unavailable")
+            self.assertIn("farmer_input", call_args)
+
+    @patch("backend.advisory.engine.get_weather_context")
+    @patch("backend.advisory.engine.generate_advisory_reasoning")
+    @patch("backend.advisory.engine.filter_and_score")
+    def test_we03_no_candidate_crops(self, mock_filter, mock_gemini, mock_weather):
+        mock_filter.return_value = {"valid": True, "candidates": [], "excluded": []}
+        
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "fake", "GEMINI_MODEL_NAME": "fake"}):
+            res = run_advisory(get_valid_input())
+            
+            # weather not called, Gemini not called
+            mock_weather.assert_not_called()
+            mock_gemini.assert_not_called()
+            self.assertEqual(res["status"], "no_viable_crops")
+
+    @patch("backend.advisory.engine.get_weather_context")
+    @patch("backend.advisory.engine.generate_advisory_reasoning")
+    def test_we04_weather_available_gemini_unavailable(self, mock_gemini, mock_weather):
+        mock_weather.return_value = {"status": "available", "current": {"temperature_c": 25}}
+        
+        # Gemini missing API keys -> unavailable
+        with patch.dict(os.environ, clear=True):
+            res = run_advisory(get_valid_input())
+            
+            # Deterministic fallback still works
+            self.assertEqual(res["status"], "success")
+            self.assertEqual(res["reasoning_source"], "deterministic_rule_engine")
+            self.assertEqual(res["weather_context"]["status"], "available")
+
 if __name__ == '__main__':
     unittest.main()

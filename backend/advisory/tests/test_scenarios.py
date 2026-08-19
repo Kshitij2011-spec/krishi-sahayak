@@ -34,7 +34,17 @@ class TestScenarios(unittest.TestCase):
         self.env_patcher = patch.dict(os.environ, {"GOOGLE_API_KEY": "", "GEMINI_MODEL_NAME": ""})
         self.env_patcher.start()
         
+        self.weather_patcher = patch("backend.advisory.engine.get_weather_context")
+        self.mock_weather = self.weather_patcher.start()
+        self.mock_weather.return_value = {
+            "status": "available",
+            "source": "open_meteo",
+            "current": {"temperature_c": 25},
+            "retrieved_at": "fixed_timestamp_for_tests"
+        }
+        
     def tearDown(self):
+        self.weather_patcher.stop()
         self.env_patcher.stop()
 
     def test_s01_punjab_rabi(self):

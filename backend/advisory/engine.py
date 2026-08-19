@@ -7,6 +7,7 @@ from .rule_filter import filter_and_score
 from .fertilizer_engine import calculate_fertilizer
 from .gemini_layer import generate_advisory_reasoning
 from .confidence import calculate_confidence
+from .weather import get_weather_context
 
 def load_json(filename):
     base_dir = os.path.dirname(__file__)
@@ -105,11 +106,30 @@ def run_advisory(raw_input_data):
                     break
         approved_varieties[crop] = varieties
 
+    # 5.5 Weather Context
+    weather_location = {
+        "latitude": validated_data.get("location", {}).get("latitude"),
+        "longitude": validated_data.get("location", {}).get("longitude")
+    }
+    if not weather_location["latitude"] or not weather_location["longitude"]:
+        coords = region_info.get("coordinates", {})
+        if coords:
+            weather_location["latitude"] = coords.get("latitude")
+            weather_location["longitude"] = coords.get("longitude")
+    
+    # Check if we should call weather API
+    weather_context = {}
+    if top_crops:
+        weather_context = get_weather_context(weather_location)
+    else:
+        weather_context = {"status": "unavailable", "reason": "no_viable_crops"}
+
     # 6. Gemini Context
     context = {
         "farmer_input": validated_data,
         "candidate_crops": top_crops,
         "regional_context": region_info if region_info else {"status": "unavailable"},
+        "weather_context": weather_context,
         "fertilizer_context": fertilizer_context,
         "approved_varieties": approved_varieties,
         "data_quality": completeness
@@ -211,6 +231,7 @@ def run_advisory(raw_input_data):
         "top_recommendation": top_recommendation,
         "alternatives": alternatives,
         "warnings": [],
+        "weather_context": weather_context,
         "data_sources_used": data_sources_used,
         "data_completeness": completeness,
         "confidence": confidence

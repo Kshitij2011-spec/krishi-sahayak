@@ -2,9 +2,21 @@
   {
     "state": "Punjab",
     "district": "Ludhiana",
-    "kharif": ["rice", "cotton", "maize"],
-    "rabi": ["wheat", "chickpea", "lentil", "maize"],
-    "other": ["mungbean", "blackgram"],
+    "kharif": [
+      "rice",
+      "cotton",
+      "maize"
+    ],
+    "rabi": [
+      "wheat",
+      "chickpea",
+      "lentil",
+      "maize"
+    ],
+    "other": [
+      "mungbean",
+      "blackgram"
+    ],
     "sources": [
       {
         "authority": "PAU",
@@ -12,14 +24,28 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 30.901,
+      "longitude": 75.8523
+    }
   },
   {
     "state": "Punjab",
     "district": "Amritsar",
-    "kharif": ["rice", "maize"],
-    "rabi": ["wheat", "chickpea", "lentil"],
-    "other": ["mungbean", "blackgram"],
+    "kharif": [
+      "rice",
+      "maize"
+    ],
+    "rabi": [
+      "wheat",
+      "chickpea",
+      "lentil"
+    ],
+    "other": [
+      "mungbean",
+      "blackgram"
+    ],
     "sources": [
       {
         "authority": "PAU",
@@ -27,14 +53,27 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 31.634,
+      "longitude": 74.8723
+    }
   },
   {
     "state": "Punjab",
     "district": "Bathinda",
-    "kharif": ["cotton", "rice", "maize"],
-    "rabi": ["wheat", "chickpea"],
-    "other": ["mungbean"],
+    "kharif": [
+      "cotton",
+      "rice",
+      "maize"
+    ],
+    "rabi": [
+      "wheat",
+      "chickpea"
+    ],
+    "other": [
+      "mungbean"
+    ],
     "sources": [
       {
         "authority": "PAU",
@@ -42,14 +81,27 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 30.211,
+      "longitude": 74.9455
+    }
   },
   {
     "state": "Punjab",
     "district": "Patiala",
-    "kharif": ["rice", "maize"],
-    "rabi": ["wheat", "chickpea"],
-    "other": ["mungbean", "blackgram"],
+    "kharif": [
+      "rice",
+      "maize"
+    ],
+    "rabi": [
+      "wheat",
+      "chickpea"
+    ],
+    "other": [
+      "mungbean",
+      "blackgram"
+    ],
     "sources": [
       {
         "authority": "PAU",
@@ -57,14 +109,27 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 30.3398,
+      "longitude": 76.3869
+    }
   },
   {
     "state": "Punjab",
     "district": "Jalandhar",
-    "kharif": ["rice", "maize"],
-    "rabi": ["wheat", "chickpea"],
-    "other": ["mungbean", "blackgram"],
+    "kharif": [
+      "rice",
+      "maize"
+    ],
+    "rabi": [
+      "wheat",
+      "chickpea"
+    ],
+    "other": [
+      "mungbean",
+      "blackgram"
+    ],
     "sources": [
       {
         "authority": "PAU",
@@ -72,14 +137,28 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 31.326,
+      "longitude": 75.5762
+    }
   },
   {
     "state": "Punjab",
     "district": "Gurdaspur",
-    "kharif": ["rice", "maize"],
-    "rabi": ["wheat", "chickpea", "lentil"],
-    "other": ["mungbean", "blackgram"],
+    "kharif": [
+      "rice",
+      "maize"
+    ],
+    "rabi": [
+      "wheat",
+      "chickpea",
+      "lentil"
+    ],
+    "other": [
+      "mungbean",
+      "blackgram"
+    ],
     "sources": [
       {
         "authority": "PAU",
@@ -87,13 +166,24 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 32.0419,
+      "longitude": 75.4053
+    }
   },
   {
     "state": "Maharashtra",
     "district": "Nagpur",
-    "kharif": ["cotton", "soybean", "pigeonpea"],
-    "rabi": ["chickpea", "wheat"],
+    "kharif": [
+      "cotton",
+      "soybean",
+      "pigeonpea"
+    ],
+    "rabi": [
+      "chickpea",
+      "wheat"
+    ],
     "other": [],
     "sources": [
       {
@@ -102,13 +192,25 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 21.1458,
+      "longitude": 79.0882
+    }
   },
   {
     "state": "Maharashtra",
     "district": "Amravati",
-    "kharif": ["cotton", "soybean", "pigeonpea", "mungbean"],
-    "rabi": ["chickpea", "wheat"],
+    "kharif": [
+      "cotton",
+      "soybean",
+      "pigeonpea",
+      "mungbean"
+    ],
+    "rabi": [
+      "chickpea",
+      "wheat"
+    ],
     "other": [],
     "sources": [
       {
@@ -117,13 +219,25 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 20.932,
+      "longitude": 77.7523
+    }
   },
   {
     "state": "Maharashtra",
     "district": "Washim",
-    "kharif": ["soybean", "cotton", "pigeonpea", "blackgram"],
-    "rabi": ["chickpea", "wheat"],
+    "kharif": [
+      "soybean",
+      "cotton",
+      "pigeonpea",
+      "blackgram"
+    ],
+    "rabi": [
+      "chickpea",
+      "wheat"
+    ],
     "other": [],
     "sources": [
       {
@@ -132,13 +246,25 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 20.1063,
+      "longitude": 77.1293
+    }
   },
   {
     "state": "Maharashtra",
     "district": "Akola",
-    "kharif": ["cotton", "soybean", "pigeonpea", "mungbean"],
-    "rabi": ["chickpea", "wheat"],
+    "kharif": [
+      "cotton",
+      "soybean",
+      "pigeonpea",
+      "mungbean"
+    ],
+    "rabi": [
+      "chickpea",
+      "wheat"
+    ],
     "other": [],
     "sources": [
       {
@@ -147,6 +273,10 @@
         "url": null,
         "accessed": "2026-08-19"
       }
-    ]
+    ],
+    "coordinates": {
+      "latitude": 20.7059,
+      "longitude": 77.0029
+    }
   }
 ]
