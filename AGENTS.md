@@ -16,9 +16,9 @@ This project is an AI-driven crop recommendation and advisory system built for t
 - **ML Model:** Random Forest (scikit-learn) trained on Kaggle dataset (22 crops).
 
 ## Development State
-Current Phase: 1C
-Status: Deterministic agronomic rule engine implemented.
-Next Approved Phase: Phase 1D
+Current Phase: 1D
+Status: Deterministic fertilizer engine implemented.
+Next Approved Phase: Phase 1E
 
 ## Phase History
 - **Phase 0:** Complete - Repository audit and architecture research
@@ -27,6 +27,7 @@ Next Approved Phase: Phase 1D
 - **Phase 1A:** Complete - Verified Advisory Data Foundation created. Initial 10-crop scope. Data provenance rule established. Fertilizer unit convention (N, P2O5, K2O in kg/ha) standardized. Protected existing system remains unchanged.
 - **Phase 1B:** Complete - validator.py added, validator tests added, input contract locked, no existing application code modified.
 - **Phase 1C:** Complete - Deterministic agronomic rule engine implemented. Season hard filter, critical water mismatch filter, pH/temperature/rainfall soft scoring. No regional/market/budget logic yet. No Gemini.
+- **Phase 1D:** Complete - Deterministic fertilizer engine implemented. Fertilizer recommendations remain independent of Gemini. Unit representation explicitly documented. Old fertilizer endpoint remains untouched. Safety failure behavior documented.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*
