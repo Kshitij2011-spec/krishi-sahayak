@@ -1,44 +1,126 @@
 # Krishi-Sahayak Agent Context
 
+## Project Identity
+**Project:** Krishi-Sahayak
+**Problem Statement:** SIH25010 — Smart Crop Advisory System for Small and Marginal Farmers
+
 ## What this is
-This project is an AI-driven crop recommendation and advisory system built for the SIH25010 problem statement. Our thesis is providing personalized, explainable, and accessible agricultural advisory. For full context on the problem statement, setup instructions, and the human-readable overview, see [HANDOVER.md](file:///c:/Users/Kshitij%20Parkhe/OneDrive/Desktop/sihmvp/HANDOVER.md) and [PRD.md](file:///c:/Users/Kshitij%20Parkhe/OneDrive/Desktop/sihmvp/PRD.md).
+This project is an AI-driven crop recommendation and advisory system built for the SIH25010 problem statement. Our thesis is providing personalized, explainable, and accessible agricultural advisory. For full context on the problem statement, setup instructions, and the human-readable overview, see `HANDOVER.md` and `PRD.md`.
 
-## Live environments
-- **Frontend (Vercel):** https://krishi-sahayak-frontend-silk.vercel.app
-- **Backend API (Render):** https://krishi-sahayak-api.onrender.com
-- **Database (Supabase):** Project Ref `pmvyiptvbdrqvzbvogvr` (https://pmvyiptvbdrqvzbvogvr.supabase.co)
-*Note: Render free tier cold-starts after inactivity. Supabase free tier can auto-pause after ~1 week idle. Check both are active before starting a work session.*
+## Current Architecture
+- **Frontend:** React (v19) SPA hosted on Vercel (`krishi-sahayak-frontend-silk.vercel.app`).
+- **Backend:** Python (Flask) API hosted on Render (`krishi-sahayak-api.onrender.com`).
+- **Database:** Supabase (PostgreSQL) used directly by the frontend for logging advisories and feedback.
+- **External APIs:** Hugging Face Inference API (`google/vit-base-patch16-224`) for pest detection, `data.gov.in` Agmarknet for Mandi prices.
+- **Voice Features:** Web Speech API (native browser) for voice input and TTS. Translation-based TTS was reverted; currently uses native regional voices (Hindi, Marathi, Punjabi).
+- **ML Model:** Random Forest (scikit-learn) trained on Kaggle dataset (22 crops).
 
-## Architecture
-React (Vercel) → Flask (Render, ML endpoints only) → Supabase (DB/Storage, called directly from frontend). The frontend directly uploads images and saves logs to Supabase, bypassing the backend API which is strictly used for heavy ML inferences (Crop Rec, Pest Detection) and proxying external APIs (Mandi Prices).
+## Development State
+Current Phase: 1A
+Status: Verified Advisory Data Foundation created.
+Next Approved Phase: Phase 1B
 
-## Current status
-- **Shipped:** 
-  1. Crop & Fertilizer Recommendation (Random Forest).
-  2. Pest & Disease Detection (HF Inference API `google/vit-base-patch16-224`).
-  3. Real-Time Mandi Prices (via data.gov.in).
-  4. Voice Input & Text-to-Speech (Web Speech API).
-- **Stubbed/Mocked:** Mandi price fallback (returns historical averages if data.gov.in is down).
-- **Cut/Diagram-only:** User profiles, login/auth, SMS/WhatsApp integrations (out of scope for MVP).
+## Phase History
+- **Phase 0:** Complete - Repository audit and architecture research
+- **Phase 0.5:** Complete - Decision validation and evidence verification
+- **Phase 0.75:** Complete - Repository synchronization and governance
+- **Phase 1A:** Complete - Verified Advisory Data Foundation created. Initial 10-crop scope. Data provenance rule established. Fertilizer unit convention (N, P2O5, K2O in kg/ha) standardized. Protected existing system remains unchanged.
+- **Phase 1B:** Not started
 
-## Hard rules — do not violate
-- Every change: commit to git and push BEFORE considering it done. Never deploy by extracting files "in memory" bypassing git.
-- CORS errors are usually a red herring for a backend crash — check Render logs before touching CORS config.
-- Any fallback/mocked response must be labeled in its own output (e.g., source: "fallback"), never silently indistinguishable from live data.
-- All secrets as env vars on Render/Vercel dashboards, never hardcoded or committed.
+## Protected Existing System
+*No protected component may be modified during a phase unless that phase explicitly authorizes it.*
+- `backend/app.py`
+- `backend/model/`
+- `frontend/`
+- Existing API endpoints
+- Supabase integration
+- Deployment configuration (`vercel.json`, `backend/requirements.txt`)
 
-## Known issues
-- Translation-based TTS was attempted and reverted (broke functionality). Current TTS is accent-based only (speaks English text with the selected language's voice profile), not real translation. Don't re-attempt without checking with the user first.
+## Change Policy
+1. Do not modify unrelated code.
+2. Do not combine multiple phases into one implementation.
+3. Do not refactor merely because a better design is possible.
+4. Do not remove old functionality before its replacement has been independently validated.
+5. Do not change an API contract silently.
+6. Do not modify deployment infrastructure during a local implementation phase unless explicitly authorized.
+7. Do not introduce dependencies without documenting why they are required.
+8. Before modifying an existing file, inspect its current contents first.
+9. Before modifying architecture, verify the architecture actually exists.
+10. When uncertain, stop and ask rather than inventing an assumption.
 
-## Where things live
-- `frontend/src/pages/SoilInputPage.jsx`: Main form, voice input, TTS logic, crop rec UI.
-- `frontend/src/pages/PestDetectionPage.jsx`: Image upload, HF integration, confidence chart UI.
-- `frontend/src/pages/MandiPricePage.jsx`: Mandi prices UI.
-- `frontend/src/lib/api.js`: All fetch wrappers connecting React to the Flask backend.
-- `frontend/src/lib/supabase.js`: Supabase client initialization.
-- `backend/app.py`: Flask routes (`/api/recommend-crop`, `/api/detect-pest`, `/api/mandi-price`).
-- `backend/model.pkl` & `backend/label_encoder.pkl`: Trained ML artifacts for Crop Rec.
-- `HANDOVER.md`: Human onboarding document.
+## Reliability Rules
+The agent must distinguish between: `VERIFIED`, `INFERRED`, `UNVERIFIED`, `UNKNOWN`.
+- Never invent agricultural data.
+- Never invent API behavior.
+- Never invent existing code behavior.
+- Never invent model characteristics.
+- Never invent deployment configuration.
+- Never invent variety names.
+- Never invent fertilizer recommendations.
+- Never invent security guarantees.
+Every safety-critical agricultural value must have a traceable source.
 
-## Scope for remaining days
-Depth/reliability/polish on the 4 existing features only. No new features without explicit approval.
+## Source of Truth Priority
+1. Actual repository contents
+2. Current git history / current branch
+3. Explicit user instructions for the current phase
+4. Official project documentation
+5. Verified external documentation
+6. Previous audit reports
+7. Agent assumptions
+
+## Phase Gate
+```text
+Phase N
+   ↓
+Inspect current state
+   ↓
+Research
+   ↓
+Plan
+   ↓
+Identify ambiguities
+   ↓
+Ask user if required
+   ↓
+Explicit authorization
+   ↓
+Implement ONLY Phase N
+   ↓
+Test
+   ↓
+Verify
+   ↓
+Document
+   ↓
+Update AGENTS.md
+   ↓
+Wait for next phase
+```
+
+## Pre-Change Checkpoint
+Before modifying any code file, the agent must document internally or in the task output:
+- Files to change
+- Why each file changes
+- What behavior changes
+- Dependencies involved
+- Potential regression risks
+- How changes will be tested
+- Rollback strategy
+
+## Git Safety
+- Never force-push.
+- Never delete branches without authorization.
+- Never `git reset --hard` to discard user work.
+- Never overwrite uncommitted changes.
+- Always inspect `git status` before pulling.
+- Always inspect the diff before committing.
+- Never commit secrets.
+- Never commit `.env` credentials.
+- Never assume the current branch is up to date.
+- Before starting a phase, synchronize safely with the remote when possible.
+- After meaningful milestones, create a commit if authorized by the phase.
+- Commit messages should identify the phase and purpose.
+
+## AGENTS.md Maintenance Policy
+Whenever architecture changes, features are added/removed, API contracts change, or phases begin/end, the agent must determine whether `AGENTS.md` needs updating and update it in the same phase as the change. Do NOT turn `AGENTS.md` into a random log; keep it concise and stable.

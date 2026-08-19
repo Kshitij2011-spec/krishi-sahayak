@@ -1,0 +1,456 @@
+[
+  {
+    "crop_name": "wheat",
+    "display_name": "Wheat",
+    "seasons": [
+      "rabi"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 6.0,
+        "preferred_max": 7.5,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "PAU Package of Practices"
+      }
+    },
+    "water": {
+      "classification": "supplemental_irrigation",
+      "source": "PAU Package of Practices"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 15,
+        "preferred_max_c": 25,
+        "source": "PAU Package of Practices"
+      },
+      "rainfall": {
+        "preferred_min_mm": 500,
+        "preferred_max_mm": 1000,
+        "source": "ICAR"
+      }
+    },
+    "varieties": [
+      {
+        "name": "PBW 826",
+        "region": "Punjab",
+        "duration_days": null,
+        "traits": [],
+        "source": "PAU Package of Practices"
+      },
+      {
+        "name": "HD 2967",
+        "region": "Punjab",
+        "duration_days": null,
+        "traits": [],
+        "source": "PAU Package of Practices"
+      }
+    ],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Package of Practices for Rabi Crops",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "crop_name": "cotton",
+    "display_name": "Cotton",
+    "seasons": [
+      "kharif"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 6.0,
+        "preferred_max": 8.0,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "PAU Package of Practices"
+      }
+    },
+    "water": {
+      "classification": "supplemental_irrigation",
+      "source": "PAU Package of Practices"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 21,
+        "preferred_max_c": 30,
+        "source": "PAU Package of Practices"
+      },
+      "rainfall": {
+        "preferred_min_mm": 500,
+        "preferred_max_mm": 1000,
+        "source": "ICAR"
+      }
+    },
+    "varieties": [],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Package of Practices for Kharif Crops",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "crop_name": "rice",
+    "display_name": "Rice (Paddy)",
+    "seasons": [
+      "kharif"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 5.5,
+        "preferred_max": 6.5,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "PAU Package of Practices"
+      }
+    },
+    "water": {
+      "classification": "irrigation_dependent",
+      "source": "PAU Package of Practices"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 20,
+        "preferred_max_c": 35,
+        "source": "PAU Package of Practices"
+      },
+      "rainfall": {
+        "preferred_min_mm": 1000,
+        "preferred_max_mm": 2000,
+        "source": "ICAR"
+      }
+    },
+    "varieties": [],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Package of Practices for Kharif Crops",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "crop_name": "maize",
+    "display_name": "Maize",
+    "seasons": [
+      "kharif",
+      "rabi"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 5.5,
+        "preferred_max": 7.5,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "PAU Package of Practices"
+      }
+    },
+    "water": {
+      "classification": "supplemental_irrigation",
+      "source": "PAU Package of Practices"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 21,
+        "preferred_max_c": 27,
+        "source": "PAU Package of Practices"
+      },
+      "rainfall": {
+        "preferred_min_mm": 500,
+        "preferred_max_mm": 1000,
+        "source": "ICAR"
+      }
+    },
+    "varieties": [
+      {
+        "name": "PMH 1",
+        "region": "Punjab",
+        "duration_days": null,
+        "traits": [],
+        "source": "PAU Package of Practices"
+      }
+    ],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Package of Practices for Kharif Crops",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "crop_name": "soybean",
+    "display_name": "Soybean",
+    "seasons": [
+      "kharif"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 6.0,
+        "preferred_max": 7.5,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "Dr. PDKV"
+      }
+    },
+    "water": {
+      "classification": "rainfed_feasible",
+      "source": "Dr. PDKV"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 20,
+        "preferred_max_c": 30,
+        "source": "Dr. PDKV"
+      },
+      "rainfall": {
+        "preferred_min_mm": 600,
+        "preferred_max_mm": 1000,
+        "source": "Dr. PDKV"
+      }
+    },
+    "varieties": [
+      {
+        "name": "JS 335",
+        "region": "Maharashtra",
+        "duration_days": null,
+        "traits": [],
+        "source": "Dr. PDKV"
+      }
+    ],
+    "sources": [
+      {
+        "authority": "Dr. PDKV",
+        "document": "Kharif Crops Guide",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "crop_name": "pigeonpea",
+    "display_name": "Pigeonpea (Tur)",
+    "seasons": [
+      "kharif"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 6.5,
+        "preferred_max": 7.5,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "Dr. PDKV"
+      }
+    },
+    "water": {
+      "classification": "rainfed_feasible",
+      "source": "Dr. PDKV"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 26,
+        "preferred_max_c": 30,
+        "source": "Dr. PDKV"
+      },
+      "rainfall": {
+        "preferred_min_mm": 600,
+        "preferred_max_mm": 1000,
+        "source": "Dr. PDKV"
+      }
+    },
+    "varieties": [],
+    "sources": [
+      {
+        "authority": "Dr. PDKV",
+        "document": "Kharif Crops Guide",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "crop_name": "chickpea",
+    "display_name": "Chickpea (Gram)",
+    "seasons": [
+      "rabi"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 6.0,
+        "preferred_max": 7.0,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "Dr. PDKV"
+      }
+    },
+    "water": {
+      "classification": "rainfed_feasible",
+      "source": "Dr. PDKV"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 20,
+        "preferred_max_c": 25,
+        "source": "Dr. PDKV"
+      },
+      "rainfall": {
+        "preferred_min_mm": 400,
+        "preferred_max_mm": 500,
+        "source": "Dr. PDKV"
+      }
+    },
+    "varieties": [],
+    "sources": [
+      {
+        "authority": "Dr. PDKV",
+        "document": "Rabi Crops Guide",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "crop_name": "mungbean",
+    "display_name": "Mungbean (Moong)",
+    "seasons": [
+      "kharif",
+      "zaid"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 6.5,
+        "preferred_max": 7.5,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "PAU Package of Practices"
+      }
+    },
+    "water": {
+      "classification": "rainfed_feasible",
+      "source": "PAU Package of Practices"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 25,
+        "preferred_max_c": 35,
+        "source": "PAU Package of Practices"
+      },
+      "rainfall": {
+        "preferred_min_mm": 600,
+        "preferred_max_mm": 900,
+        "source": "ICAR"
+      }
+    },
+    "varieties": [],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Package of Practices for Kharif Crops",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "crop_name": "lentil",
+    "display_name": "Lentil (Masoor)",
+    "seasons": [
+      "rabi"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 6.0,
+        "preferred_max": 7.0,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "ICAR"
+      }
+    },
+    "water": {
+      "classification": "rainfed_feasible",
+      "source": "ICAR"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 18,
+        "preferred_max_c": 30,
+        "source": "ICAR"
+      },
+      "rainfall": {
+        "preferred_min_mm": 300,
+        "preferred_max_mm": 500,
+        "source": "ICAR"
+      }
+    },
+    "varieties": [],
+    "sources": [
+      {
+        "authority": "ICAR",
+        "document": "Lentil Production Guide",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "crop_name": "blackgram",
+    "display_name": "Blackgram (Urad)",
+    "seasons": [
+      "kharif",
+      "zaid"
+    ],
+    "soil": {
+      "ph": {
+        "preferred_min": 6.5,
+        "preferred_max": 7.5,
+        "hard_min": null,
+        "hard_max": null,
+        "treatment": "soft",
+        "source": "PAU Package of Practices"
+      }
+    },
+    "water": {
+      "classification": "rainfed_feasible",
+      "source": "PAU Package of Practices"
+    },
+    "climate": {
+      "temperature": {
+        "preferred_min_c": 25,
+        "preferred_max_c": 35,
+        "source": "PAU Package of Practices"
+      },
+      "rainfall": {
+        "preferred_min_mm": 600,
+        "preferred_max_mm": 900,
+        "source": "ICAR"
+      }
+    },
+    "varieties": [],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Package of Practices for Kharif Crops",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  }
+]

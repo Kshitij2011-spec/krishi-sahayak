@@ -1,0 +1,152 @@
+[
+  {
+    "state": "Punjab",
+    "district": "Ludhiana",
+    "kharif": ["rice", "cotton", "maize"],
+    "rabi": ["wheat", "chickpea", "lentil", "maize"],
+    "other": ["mungbean", "blackgram"],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Punjab Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "state": "Punjab",
+    "district": "Amritsar",
+    "kharif": ["rice", "maize"],
+    "rabi": ["wheat", "chickpea", "lentil"],
+    "other": ["mungbean", "blackgram"],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Punjab Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "state": "Punjab",
+    "district": "Bathinda",
+    "kharif": ["cotton", "rice", "maize"],
+    "rabi": ["wheat", "chickpea"],
+    "other": ["mungbean"],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Punjab Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "state": "Punjab",
+    "district": "Patiala",
+    "kharif": ["rice", "maize"],
+    "rabi": ["wheat", "chickpea"],
+    "other": ["mungbean", "blackgram"],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Punjab Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "state": "Punjab",
+    "district": "Jalandhar",
+    "kharif": ["rice", "maize"],
+    "rabi": ["wheat", "chickpea"],
+    "other": ["mungbean", "blackgram"],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Punjab Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "state": "Punjab",
+    "district": "Gurdaspur",
+    "kharif": ["rice", "maize"],
+    "rabi": ["wheat", "chickpea", "lentil"],
+    "other": ["mungbean", "blackgram"],
+    "sources": [
+      {
+        "authority": "PAU",
+        "document": "Punjab Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Nagpur",
+    "kharif": ["cotton", "soybean", "pigeonpea"],
+    "rabi": ["chickpea", "wheat"],
+    "other": [],
+    "sources": [
+      {
+        "authority": "Dr. PDKV",
+        "document": "Vidarbha Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Amravati",
+    "kharif": ["cotton", "soybean", "pigeonpea", "mungbean"],
+    "rabi": ["chickpea", "wheat"],
+    "other": [],
+    "sources": [
+      {
+        "authority": "Dr. PDKV",
+        "document": "Vidarbha Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Washim",
+    "kharif": ["soybean", "cotton", "pigeonpea", "blackgram"],
+    "rabi": ["chickpea", "wheat"],
+    "other": [],
+    "sources": [
+      {
+        "authority": "Dr. PDKV",
+        "document": "Vidarbha Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  },
+  {
+    "state": "Maharashtra",
+    "district": "Akola",
+    "kharif": ["cotton", "soybean", "pigeonpea", "mungbean"],
+    "rabi": ["chickpea", "wheat"],
+    "other": [],
+    "sources": [
+      {
+        "authority": "Dr. PDKV",
+        "document": "Vidarbha Agricultural Profile",
+        "url": null,
+        "accessed": "2026-08-19"
+      }
+    ]
+  }
+]
