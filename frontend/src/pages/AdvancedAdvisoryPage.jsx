@@ -129,6 +129,21 @@ function AdvancedAdvisoryPage() {
           </div>
         )}
 
+        {result.market_context && result.market_context.status === "available" && (
+          <div className="result-card market-card">
+            <h2>📈 CURRENT MARKET SIGNAL</h2>
+            <div className="market-details" style={{ padding: "10px", backgroundColor: "#f9fafb", borderRadius: "8px", border: "1px solid #e5e7eb", marginBottom: "15px" }}>
+              <p><strong>{result.market_context.commodity}</strong> - {result.market_context.market} Market ({result.market_context.district})</p>
+              <div className="market-prices" style={{ marginTop: "8px" }}>
+                <p>Modal Price: <strong style={{ color: "#059669" }}>₹{result.market_context.modal_price} / quintal</strong></p>
+                <p>Range: ₹{result.market_context.min_price} – ₹{result.market_context.max_price}</p>
+              </div>
+              <p className="market-date" style={{ marginTop: "8px", fontSize: "0.9em", color: "#6b7280" }}>As of: {result.market_context.arrival_date}</p>
+              <p className="market-warning" style={{ marginTop: "8px", fontSize: "0.85em", fontStyle: "italic", color: "#d97706" }}>This is current mandi data, not a guaranteed harvest price.</p>
+            </div>
+          </div>
+        )}
+
         <div className="result-card fertilizer-card">
           <h2>FERTILIZER GUIDANCE</h2>
           {top.fertilizer?.status === "available" ? (

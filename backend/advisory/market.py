@@ -29,8 +29,12 @@ def get_market_context(commodity: str, district: str) -> dict:
         "filters[district]": district
     }
 
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+
     try:
-        response = requests.get(AGMARKNET_URL, params=params, timeout=HTTP_TIMEOUT_SECONDS)
+        response = requests.get(AGMARKNET_URL, params=params, headers=headers, timeout=HTTP_TIMEOUT_SECONDS)
         response.raise_for_status()
         api_data = response.json()
         

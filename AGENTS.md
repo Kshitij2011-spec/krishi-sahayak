@@ -44,6 +44,8 @@ Next Approved Phase: None
 - **Phase 2E:** Complete - Open-Meteo weather context integrated as evidence. 0/1 weather request policy enforced. Coordinates sourced safely. Gemini prompt updated to treat weather as supporting context, not overriding deterministic agronomic rules. Existing UI untouched.
 - **Phase 2F:** Complete - Live market intelligence integrated via AGMARKNET/data.gov.in. API key absence handled gracefully as `unavailable` to prevent synthetic overrides. Market constraints embedded in Gemini prompt to treat prices as observations, not guarantees. Existing `/api/mandi-price` untouched.
 - **Phase 2G:** Complete - Regional Pest & Disease Early Warning Layer added. Deterministic static source-backed lookup. No additional Gemini API calls. No pesticide prescriptions. Integrated into single Gemini advisory call context.
+- **Phase 2H:** Complete - Government Market API verified and active. Variety intelligence expanded in `crop_taxonomy.json`. Gemini reasoning augmented with 7-point explicit criteria (market, pest, variety, weather, agronomics, regional, constraints). Verified end-to-end via Playwright MCP.
+- **Phase 2I:** Complete - Final advisory quality benchmark and controlled migration readiness audit completed. Recommended for Model Replacement.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*

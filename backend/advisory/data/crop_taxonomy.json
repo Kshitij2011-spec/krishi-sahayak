@@ -35,16 +35,30 @@
       {
         "name": "PBW 826",
         "region": "Punjab",
-        "duration_days": null,
-        "traits": [],
-        "source": "PAU Package of Practices"
+        "duration_days": 145,
+        "water_requirement": "irrigated",
+        "yield_potential": "high",
+        "pest_resistance": [
+          "yellow rust resistant"
+        ],
+        "seed_cost_tier": "medium",
+        "source": {
+          "authority": "PAU"
+        }
       },
       {
         "name": "HD 2967",
         "region": "Punjab",
-        "duration_days": null,
-        "traits": [],
-        "source": "PAU Package of Practices"
+        "duration_days": 150,
+        "water_requirement": "irrigated",
+        "yield_potential": "high",
+        "pest_resistance": [
+          "moderate yellow rust resistance"
+        ],
+        "seed_cost_tier": "low",
+        "source": {
+          "authority": "PAU"
+        }
       }
     ],
     "sources": [
@@ -88,7 +102,37 @@
         "source": "ICAR"
       }
     },
-    "varieties": [],
+    "varieties": [
+      {
+        "name": "PAU Bt 1",
+        "region": "Punjab",
+        "duration_days": 160,
+        "water_requirement": "irrigated",
+        "yield_potential": "medium",
+        "pest_resistance": [
+          "bollworm resistant"
+        ],
+        "seed_cost_tier": "low",
+        "source": {
+          "authority": "PAU"
+        }
+      },
+      {
+        "name": "PBD 88",
+        "region": "Punjab",
+        "duration_days": 155,
+        "water_requirement": "rainfed_feasible",
+        "yield_potential": "low",
+        "pest_resistance": [
+          "whitefly resistant",
+          "jassid resistant"
+        ],
+        "seed_cost_tier": "low",
+        "source": {
+          "authority": "PAU"
+        }
+      }
+    ],
     "sources": [
       {
         "authority": "PAU",
@@ -130,7 +174,22 @@
         "source": "ICAR"
       }
     },
-    "varieties": [],
+    "varieties": [
+      {
+        "name": "PR 126",
+        "region": "Punjab",
+        "duration_days": 125,
+        "water_requirement": "high",
+        "yield_potential": "high",
+        "pest_resistance": [
+          "bacterial blight resistant"
+        ],
+        "seed_cost_tier": "medium",
+        "source": {
+          "authority": "PAU"
+        }
+      }
+    ],
     "sources": [
       {
         "authority": "PAU",
@@ -177,9 +236,16 @@
       {
         "name": "PMH 1",
         "region": "Punjab",
-        "duration_days": null,
-        "traits": [],
-        "source": "PAU Package of Practices"
+        "duration_days": 95,
+        "water_requirement": "irrigated",
+        "yield_potential": "high",
+        "pest_resistance": [
+          "stem borer tolerance"
+        ],
+        "seed_cost_tier": "medium",
+        "source": {
+          "authority": "PAU"
+        }
       }
     ],
     "sources": [
@@ -227,9 +293,30 @@
       {
         "name": "JS 335",
         "region": "Maharashtra",
-        "duration_days": null,
-        "traits": [],
-        "source": "Dr. PDKV"
+        "duration_days": 100,
+        "water_requirement": "rainfed_feasible",
+        "yield_potential": "high",
+        "pest_resistance": [
+          "girdle beetle tolerance"
+        ],
+        "seed_cost_tier": "low",
+        "source": {
+          "authority": "Dr. PDKV"
+        }
+      },
+      {
+        "name": "MACS 1188",
+        "region": "Maharashtra",
+        "duration_days": 105,
+        "water_requirement": "rainfed_feasible",
+        "yield_potential": "high",
+        "pest_resistance": [
+          "rust resistant"
+        ],
+        "seed_cost_tier": "medium",
+        "source": {
+          "authority": "Dr. PDKV"
+        }
       }
     ],
     "sources": [
@@ -273,7 +360,36 @@
         "source": "Dr. PDKV"
       }
     },
-    "varieties": [],
+    "varieties": [
+      {
+        "name": "AL 882",
+        "region": "Punjab",
+        "duration_days": 135,
+        "water_requirement": "rainfed_feasible",
+        "yield_potential": "medium",
+        "pest_resistance": [
+          "pod borer tolerant"
+        ],
+        "seed_cost_tier": "medium",
+        "source": {
+          "authority": "PAU"
+        }
+      },
+      {
+        "name": "PKV Tara",
+        "region": "Maharashtra",
+        "duration_days": 160,
+        "water_requirement": "rainfed_feasible",
+        "yield_potential": "high",
+        "pest_resistance": [
+          "sterility mosaic disease resistant"
+        ],
+        "seed_cost_tier": "low",
+        "source": {
+          "authority": "Dr. PDKV"
+        }
+      }
+    ],
     "sources": [
       {
         "authority": "Dr. PDKV",
@@ -315,7 +431,36 @@
         "source": "Dr. PDKV"
       }
     },
-    "varieties": [],
+    "varieties": [
+      {
+        "name": "PBG 7",
+        "region": "Punjab",
+        "duration_days": 150,
+        "water_requirement": "rainfed_feasible",
+        "yield_potential": "medium",
+        "pest_resistance": [
+          "ascochyta blight tolerant"
+        ],
+        "seed_cost_tier": "medium",
+        "source": {
+          "authority": "PAU"
+        }
+      },
+      {
+        "name": "JAKI 9218",
+        "region": "Maharashtra",
+        "duration_days": 110,
+        "water_requirement": "rainfed_feasible",
+        "yield_potential": "high",
+        "pest_resistance": [
+          "wilt resistant"
+        ],
+        "seed_cost_tier": "low",
+        "source": {
+          "authority": "Dr. PDKV"
+        }
+      }
+    ],
     "sources": [
       {
         "authority": "Dr. PDKV",

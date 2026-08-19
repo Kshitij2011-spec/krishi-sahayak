@@ -134,7 +134,7 @@ def run_advisory(raw_input_data):
         market_context = {"status": "unavailable", "reason": "no_viable_crops"}
 
     # 7. Pest Risk Lookup
-    season = climate.get("season", "Unknown")
+    season = validated_data.get("climate", {}).get("season", "Unknown")
     pest_risk_context = get_pest_risks(
         crop=top_crops[0],
         state=state,
