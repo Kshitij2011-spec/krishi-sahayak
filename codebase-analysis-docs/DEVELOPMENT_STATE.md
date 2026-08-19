@@ -303,3 +303,17 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Existing Systems:** The separate reactive image detection (`/api/detect-pest` and `PestDetectionPage.jsx`) remains fully intact. The future architecture is defined to feed predictive data directly against uploaded images.
 - **Resource Usage:** 0 external API calls for pests. 0 additional Gemini calls used.
 - **Next Authorized Phase:** Phase 2H (Variety/Data Enrichment + Final Advisory Polish).
+
+## 26. Phase 2H: Government Market API Verification, Variety Intelligence & Gemini Enhancement
+- **Implementation Summary:** Verified Government of India AGMARKNET API integration, expanded variety intelligence, and incorporated 7-point explicit criteria into Gemini reasoning.
+- **Existing Codebase Impact:** Enhanced crop taxonomy and engine reasoning.
+- **Next Authorized Phase:** Phase 2I.
+
+## 27. Phase 2I: Final Advisory Quality Benchmark + Controlled Migration Readiness
+- **Implementation Summary:** Benchmarked the new advisory architecture against Random Forest, verified recommendations, and prepared for controlled migration.
+- **Next Authorized Phase:** Phase 3A.
+
+## 28. Phase 3A: Controlled Primary Advisory Migration
+- **Implementation Summary:** Advanced Advisory is now the primary route (/). Legacy Random Forest route moved to /legacy-advisory. Successfully updated App.jsx, styled AdvancedAdvisoryPage.jsx using index.css to match legacy layout and accessibility features (STT/TTS). Verified UI and form handling via Playwright MCP.
+- **Existing Codebase Impact:** App routing updated. Legacy SoilInputPage.jsx and Random Forest APIs protected and unchanged. Playwright validation confirmed robust execution.
+- **Next Authorized Phase:** Awaiting next instructions.

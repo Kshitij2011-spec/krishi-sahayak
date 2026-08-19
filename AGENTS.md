@@ -46,6 +46,7 @@ Next Approved Phase: None
 - **Phase 2G:** Complete - Regional Pest & Disease Early Warning Layer added. Deterministic static source-backed lookup. No additional Gemini API calls. No pesticide prescriptions. Integrated into single Gemini advisory call context.
 - **Phase 2H:** Complete - Government Market API verified and active. Variety intelligence expanded in `crop_taxonomy.json`. Gemini reasoning augmented with 7-point explicit criteria (market, pest, variety, weather, agronomics, regional, constraints). Verified end-to-end via Playwright MCP.
 - **Phase 2I:** Complete - Final advisory quality benchmark and controlled migration readiness audit completed. Recommended for Model Replacement.
+- **Phase 3A:** Complete - Controlled primary advisory migration. Advanced Advisory is now the root (`/`) route. Random Forest legacy route preserved at `/legacy-advisory`. Visual design, accessibility (STT/TTS), and architecture preserved. Verified via Playwright MCP.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*
