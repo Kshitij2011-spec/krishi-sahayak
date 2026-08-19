@@ -2,121 +2,109 @@
   {
     "crop": "wheat",
     "region": "Punjab",
-    "conditions": "irrigated_timely_sown",
-    "recommended": {
-      "N_kg_ha": 120,
-      "P2O5_kg_ha": 60,
-      "K2O_kg_ha": 30
-    },
-    "source": "PAU Package of Practices",
-    "notes": "Baseline recommendation; adjust according to soil test."
-  },
-  {
-    "crop": "rice",
-    "region": "Punjab",
     "conditions": "irrigated",
-    "recommended": {
-      "N_kg_ha": 120,
-      "P2O5_kg_ha": 30,
-      "K2O_kg_ha": 30
+    "source": {
+      "authority": "PAU",
+      "document": "Package of Practices for Rabi Crops"
     },
-    "source": "PAU Package of Practices",
-    "notes": "Baseline recommendation; adjust according to soil test."
+    "nutrients": {
+      "N": {
+        "baseline_kg_ha": 120,
+        "adjustments": {
+          "low": 150,
+          "medium": 120,
+          "high": 90
+        }
+      },
+      "P2O5": {
+        "baseline_kg_ha": 60,
+        "requires_organic_carbon": true,
+        "adjustments": {
+          "low": 75,
+          "medium": 60,
+          "high": 45
+        }
+      },
+      "K2O": {
+        "baseline_kg_ha": 30,
+        "adjustments": {
+          "low": 30,
+          "medium": 0,
+          "high": 0
+        },
+        "notes": "Apply only if soil tests low in potassium."
+      }
+    }
   },
   {
     "crop": "cotton",
     "region": "Punjab",
     "conditions": "bt_cotton",
-    "recommended": {
-      "N_kg_ha": 150,
-      "P2O5_kg_ha": 30,
-      "K2O_kg_ha": 30
+    "source": {
+      "authority": "PAU",
+      "document": "Package of Practices for Kharif Crops"
     },
-    "source": "PAU Package of Practices",
-    "notes": "Baseline recommendation; adjust according to soil test."
-  },
-  {
-    "crop": "maize",
-    "region": "Punjab",
-    "conditions": "irrigated",
-    "recommended": {
-      "N_kg_ha": 125,
-      "P2O5_kg_ha": 60,
-      "K2O_kg_ha": 30
-    },
-    "source": "PAU Package of Practices",
-    "notes": "Baseline recommendation; adjust according to soil test."
+    "nutrients": {
+      "N": {
+        "baseline_kg_ha": 150,
+        "adjustments": {
+          "low": 187.5,
+          "medium": 150,
+          "high": 112.5
+        }
+      },
+      "P2O5": {
+        "baseline_kg_ha": 30,
+        "requires_organic_carbon": true,
+        "adjustments": {
+          "low": 37.5,
+          "medium": 30,
+          "high": 22.5
+        }
+      },
+      "K2O": {
+        "baseline_kg_ha": 30,
+        "adjustments": {
+          "low": 30,
+          "medium": 0,
+          "high": 0
+        }
+      }
+    }
   },
   {
     "crop": "soybean",
     "region": "Maharashtra",
     "conditions": "rainfed",
-    "recommended": {
-      "N_kg_ha": 30,
-      "P2O5_kg_ha": 75,
-      "K2O_kg_ha": 30
+    "source": {
+      "authority": "Dr. PDKV",
+      "document": "Soybean Fertilizer Guidelines Vidarbha"
     },
-    "source": "Dr. PDKV",
-    "notes": "Baseline recommendation for Vidarbha region."
-  },
-  {
-    "crop": "pigeonpea",
-    "region": "Maharashtra",
-    "conditions": "rainfed",
-    "recommended": {
-      "N_kg_ha": 25,
-      "P2O5_kg_ha": 50,
-      "K2O_kg_ha": 30
-    },
-    "source": "Dr. PDKV",
-    "notes": "Baseline recommendation for Vidarbha region."
-  },
-  {
-    "crop": "chickpea",
-    "region": "Maharashtra",
-    "conditions": "rainfed",
-    "recommended": {
-      "N_kg_ha": 20,
-      "P2O5_kg_ha": 40,
-      "K2O_kg_ha": 20
-    },
-    "source": "Dr. PDKV",
-    "notes": "Baseline recommendation for Vidarbha region."
-  },
-  {
-    "crop": "mungbean",
-    "region": "Punjab",
-    "conditions": "summer",
-    "recommended": {
-      "N_kg_ha": 12.5,
-      "P2O5_kg_ha": 40,
-      "K2O_kg_ha": 0
-    },
-    "source": "PAU Package of Practices",
-    "notes": "Potassium not generally recommended unless soil is deficient."
-  },
-  {
-    "crop": "blackgram",
-    "region": "Punjab",
-    "conditions": "kharif",
-    "recommended": {
-      "N_kg_ha": 12.5,
-      "P2O5_kg_ha": 40,
-      "K2O_kg_ha": 0
-    },
-    "source": "PAU Package of Practices",
-    "notes": "Potassium not generally recommended unless soil is deficient."
-  },
-  {
-    "crop": "lentil",
-    "region": "Punjab",
-    "conditions": "rabi",
-    "recommended": {
-      "N_kg_ha": 20,
-      "P2O5_kg_ha": 40,
-      "K2O_kg_ha": 20
-    },
-    "source": "ICAR",
-    "notes": "General recommendation."
+    "nutrients": {
+      "N": {
+        "baseline_kg_ha": 30,
+        "adjustments": {
+          "low": 37.5,
+          "medium": 30,
+          "high": 22.5
+        }
+      },
+      "P2O5": {
+        "baseline_kg_ha": 75,
+        "adjustments": {
+          "low": 93.75,
+          "medium": 75,
+          "high": 56.25
+        }
+      },
+      "K2O": {
+        "baseline_kg_ha": 30,
+        "adjustments": {
+          "low": 37.5,
+          "medium": 30,
+          "high": 0
+        }
+      }
+    }
   }
 ]

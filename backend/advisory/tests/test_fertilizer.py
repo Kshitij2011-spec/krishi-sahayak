@@ -21,17 +21,17 @@ class TestFertilizerEngine(unittest.TestCase):
         data = get_base_validated()
         data["land"]["irrigation_type"] = "irrigated"
         res = calculate_fertilizer(data, "wheat")
-        self.assertEqual(res["status"], "baseline_available")
+        self.assertEqual(res["status"], "available")
         self.assertIn("PAU", res["source"]["authority"])
-        self.assertEqual(res["recommended_baseline"]["N_kg_ha"], 120)
+        self.assertEqual(res["nutrient_recommendation"]["N_kg_ha"], 120)
 
     def test_02_cotton_punjab_baseline(self):
         data = get_base_validated()
         data["climate"]["season"] = "kharif"
         data["land"]["irrigation_type"] = "bt_cotton"
         res = calculate_fertilizer(data, "cotton")
-        self.assertEqual(res["status"], "baseline_available")
-        self.assertEqual(res["recommended_baseline"]["N_kg_ha"], 150)
+        self.assertEqual(res["status"], "available")
+        self.assertEqual(res["nutrient_recommendation"]["N_kg_ha"], 150)
 
     # --- B. Soil Test Class & Adjustment Validation ---
     def test_03_medium_soil_class_no_adjustment(self):
@@ -42,13 +42,14 @@ class TestFertilizerEngine(unittest.TestCase):
         data["soil"]["potassium_kg_ha"] = 200 # Medium
         res = calculate_fertilizer(data, "wheat")
         
-        self.assertEqual(res["soil_analysis"]["N_class"], "medium")
-        self.assertEqual(res["soil_analysis"]["P_class"], "medium")
-        self.assertEqual(res["soil_analysis"]["K_class"], "medium")
+        self.assertEqual(res["soil_category"]["N"], "medium")
+        self.assertEqual(res["soil_category"]["P"], "medium")
+        self.assertEqual(res["soil_category"]["K"], "medium")
         
-        self.assertEqual(res["adjusted_dose"]["N_kg_ha"], res["recommended_baseline"]["N_kg_ha"])
-        self.assertEqual(res["adjusted_dose"]["P2O5_kg_ha"], res["recommended_baseline"]["P2O5_kg_ha"])
-        self.assertEqual(res["adjusted_dose"]["K2O_kg_ha"], res["recommended_baseline"]["K2O_kg_ha"])
+        # Wheat baseline for Punjab Medium is 120, 60, 0
+        self.assertEqual(res["nutrient_recommendation"]["N_kg_ha"], 120)
+        self.assertEqual(res["nutrient_recommendation"]["P2O5_kg_ha"], 60)
+        self.assertEqual(res["nutrient_recommendation"]["K2O_kg_ha"], 0)
 
     def test_04_low_soil_class_increase_dose(self):
         # Low N < 240, Low P < 11, Low K < 110
@@ -58,14 +59,14 @@ class TestFertilizerEngine(unittest.TestCase):
         data["soil"]["potassium_kg_ha"] = 50
         res = calculate_fertilizer(data, "wheat")
         
-        self.assertEqual(res["soil_analysis"]["N_class"], "low")
-        self.assertEqual(res["soil_analysis"]["P_class"], "low")
-        self.assertEqual(res["soil_analysis"]["K_class"], "low")
+        self.assertEqual(res["soil_category"]["N"], "low")
+        self.assertEqual(res["soil_category"]["P"], "low")
+        self.assertEqual(res["soil_category"]["K"], "low")
         
-        # 120 N -> 150
-        self.assertEqual(res["adjusted_dose"]["N_kg_ha"], 120 * 1.25)
-        # 60 P2O5 -> 75
-        self.assertEqual(res["adjusted_dose"]["P2O5_kg_ha"], 60 * 1.25)
+        self.assertEqual(res["nutrient_recommendation"]["N_kg_ha"], 150)
+        self.assertEqual(res["nutrient_recommendation"]["P2O5_kg_ha"], 75)
+        # K2O baseline for low is 30 for wheat
+        self.assertEqual(res["nutrient_recommendation"]["K2O_kg_ha"], 30)
 
     def test_05_high_soil_class_decrease_dose(self):
         # High N > 480, High P > 22, High K > 280
@@ -75,23 +76,26 @@ class TestFertilizerEngine(unittest.TestCase):
         data["soil"]["potassium_kg_ha"] = 300
         res = calculate_fertilizer(data, "wheat")
         
-        self.assertEqual(res["soil_analysis"]["N_class"], "high")
+        self.assertEqual(res["soil_category"]["N"], "high")
         
-        # 120 N -> 90
-        self.assertEqual(res["adjusted_dose"]["N_kg_ha"], 120 * 0.75)
+        self.assertEqual(res["nutrient_recommendation"]["N_kg_ha"], 90)
+        self.assertEqual(res["nutrient_recommendation"]["P2O5_kg_ha"], 45)
+        self.assertEqual(res["nutrient_recommendation"]["K2O_kg_ha"], 0)
         
     def test_06_product_conversion_balancing(self):
-        # Medium soil, Wheat GRD is 120 N, 60 P2O5, 30 K2O
+        # Medium soil, Wheat GRD is 120 N, 60 P2O5, 0 K2O
         data = get_base_validated()
         res = calculate_fertilizer(data, "wheat")
         
         # DAP = P2O5 / 0.46
         expected_dap = 60 / 0.46
-        self.assertAlmostEqual(res["products_per_ha"]["dap_kg_ha"], expected_dap, places=2)
+        self.assertAlmostEqual(res["fertilizer_products"]["dap_kg_ha"], expected_dap, places=2)
         
         # Urea = (N - (DAP * 0.18)) / 0.46
         expected_urea = (120 - (expected_dap * 0.18)) / 0.46
-        self.assertAlmostEqual(res["products_per_ha"]["urea_kg_ha"], expected_urea, places=2)
+        self.assertAlmostEqual(res["fertilizer_products"]["urea_kg_ha"], expected_urea, places=2)
+        
+        self.assertEqual(res["fertilizer_products"]["mop_kg_ha"], 0)
 
     # --- C. Farm scaling ---
     def test_07_one_hectare_equivalence(self):
@@ -99,7 +103,7 @@ class TestFertilizerEngine(unittest.TestCase):
         data["land"]["farm_size_acres"] = HECTARE_IN_ACRES
         res = calculate_fertilizer(data, "wheat")
         
-        self.assertAlmostEqual(res["farm_scale"]["urea_kg_farm"], res["products_per_ha"]["urea_kg_ha"], places=2)
+        self.assertAlmostEqual(res["farm_scale"]["urea_kg_farm"], res["fertilizer_products"]["urea_kg_ha"], places=2)
 
     def test_08_two_acres_scaling(self):
         data = get_base_validated()
@@ -107,7 +111,7 @@ class TestFertilizerEngine(unittest.TestCase):
         res = calculate_fertilizer(data, "wheat")
         hectares = 2.0 / HECTARE_IN_ACRES
         
-        expected_urea_farm = res["products_per_ha"]["urea_kg_ha"] * hectares
+        expected_urea_farm = res["fertilizer_products"]["urea_kg_ha"] * hectares
         self.assertAlmostEqual(res["farm_scale"]["urea_kg_farm"], expected_urea_farm, places=2)
 
     # --- D. Regional selection ---

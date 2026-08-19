@@ -118,4 +118,15 @@ Phase 1 readiness verified. No regressions detected in existing code.
   - High soils receive a -25% adjustment to the GRD.
 - **Product Conversion:** Safely unlocked Urea, DAP, and MOP dose generation per hectare and per farm size. Nutrient balancing explicitly accounts for DAP supplying both N (18%) and P2O5 (46%), preventing double-fertilization.
 - **Existing Codebase Impact:** Zero impact. Existing backend and ML model remain unmodified.
+- **Next Authorized Phase:** Phase 1D.2.
+
+## 11. Phase 1D.2: Source-Backed Fertilizer Adjustment Rules
+- **Implementation Summary:** Replaced generic `+25% / 0 / -25%` STCR multipliers with exact, explicit source-backed adjustments dynamically parsed from a newly designed `fertilizer_table.json` schema.
+- **Data Contract Update:** 
+  - `fertilizer_table.json` structure flattened to `crop > region > condition > source > nutrients`. Each nutrient defines its baseline dose and explicit adjustments (`low`, `medium`, `high`) in `kg/ha`.
+  - Added support for `requires_organic_carbon` metadata flag.
+- **Handling Phosphorus & Organic Carbon:** PAU recommendations for P heavily depend on Organic Carbon (OC). Since the system lacks farmer OC inputs, the engine safely flags a warning (`Phosphorus recommendation is degraded...`) and safely falls back to standard P-class adjustment without hallucinating OC values.
+- **Handling Potassium:** Enforced PAU's rule of "Potassium not generally recommended unless soil is deficient" by storing exact `0` adjustments for Medium and High potassium classes.
+- **Test Results:** Re-wrote tests to evaluate precise source-backed adjustments. 11 tests passed locally, total 71 passing tests. Zero regressions.
+- **Existing Codebase Impact:** Zero impact. Existing backend and ML model remain unmodified.
 - **Next Authorized Phase:** Phase 1E (Awaiting authorization).

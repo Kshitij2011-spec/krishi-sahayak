@@ -57,18 +57,6 @@ def get_soil_class(nutrient, value):
         return 'high'
     return 'medium'
 
-def adjust_dose(grd, soil_class):
-    """
-    Adjusts the General Recommended Dose (GRD) by 25% based on soil class.
-    """
-    if grd is None:
-        return 0
-    if soil_class == 'low':
-        return grd * 1.25
-    elif soil_class == 'high':
-        return max(0, grd * 0.75)
-    return grd
-
 def calculate_fertilizer(validated_input, crop_name):
     if not _is_validated(validated_input):
         return {
@@ -87,7 +75,7 @@ def calculate_fertilizer(validated_input, crop_name):
             "warnings": ["regional_baseline_unavailable: No validated baseline found for this crop and region."]
         }
         
-    recommended = baseline["recommended"]
+    nutrients = baseline.get("nutrients", {})
     
     soil_n = validated_input["soil"]["nitrogen_kg_ha"]
     soil_p = validated_input["soil"]["phosphorus_kg_ha"]
@@ -98,15 +86,28 @@ def calculate_fertilizer(validated_input, crop_name):
     class_p = get_soil_class('P', soil_p)
     class_k = get_soil_class('K', soil_k)
     
-    # Calculate STCR Adjusted Dose (kg/ha)
-    adj_n = adjust_dose(recommended.get("N_kg_ha"), class_n)
-    adj_p2o5 = adjust_dose(recommended.get("P2O5_kg_ha"), class_p)
-    adj_k2o = adjust_dose(recommended.get("K2O_kg_ha"), class_k)
+    warnings = []
+    
+    # Process N
+    adj_n = 0
+    if "N" in nutrients:
+        adj_n = nutrients["N"]["adjustments"].get(class_n, nutrients["N"]["baseline_kg_ha"])
+        
+    # Process P2O5
+    adj_p2o5 = 0
+    if "P2O5" in nutrients:
+        if nutrients["P2O5"].get("requires_organic_carbon", False):
+            # Currently farmer input lacks organic carbon.
+            # PAU states OC affects P adjustments for medium/high ranges.
+            warnings.append("Phosphorus recommendation is degraded. Source requires organic carbon for precise P adjustment; falling back to standard class adjustment.")
+        adj_p2o5 = nutrients["P2O5"]["adjustments"].get(class_p, nutrients["P2O5"]["baseline_kg_ha"])
+        
+    # Process K2O
+    adj_k2o = 0
+    if "K2O" in nutrients:
+        adj_k2o = nutrients["K2O"]["adjustments"].get(class_k, nutrients["K2O"]["baseline_kg_ha"])
     
     # Calculate Product Dosages (kg/ha)
-    # DAP: 46% P2O5, 18% N
-    # Urea: 46% N
-    # MOP: 60% K2O
     dap_kg_ha = adj_p2o5 / 0.46 if adj_p2o5 > 0 else 0
     n_from_dap = dap_kg_ha * 0.18
     remaining_n = max(0, adj_n - n_from_dap)
@@ -117,30 +118,20 @@ def calculate_fertilizer(validated_input, crop_name):
     farm_hectares = farm_acres / HECTARE_IN_ACRES
     
     return {
-        "status": "baseline_available",
-        "calculation_method": "STCR_adjusted_regional_baseline",
-        "source": {
-            "authority": baseline.get("source", "Unknown"),
-            "region": baseline.get("region", "Unknown"),
-            "condition": baseline.get("conditions", "Unknown"),
-            "notes": baseline.get("notes", "")
+        "status": "available",
+        "method": "source_specific_soil_category",
+        "source": baseline.get("source", {"authority": "Unknown"}),
+        "soil_category": {
+            "N": class_n,
+            "P": class_p,
+            "K": class_k
         },
-        "soil_analysis": {
-            "N_class": class_n,
-            "P_class": class_p,
-            "K_class": class_k
-        },
-        "recommended_baseline": {
-            "N_kg_ha": recommended.get("N_kg_ha"),
-            "P2O5_kg_ha": recommended.get("P2O5_kg_ha"),
-            "K2O_kg_ha": recommended.get("K2O_kg_ha")
-        },
-        "adjusted_dose": {
+        "nutrient_recommendation": {
             "N_kg_ha": round(adj_n, 2),
             "P2O5_kg_ha": round(adj_p2o5, 2),
             "K2O_kg_ha": round(adj_k2o, 2)
         },
-        "products_per_ha": {
+        "fertilizer_products": {
             "urea_kg_ha": round(urea_kg_ha, 2),
             "dap_kg_ha": round(dap_kg_ha, 2),
             "mop_kg_ha": round(mop_kg_ha, 2)
@@ -152,5 +143,5 @@ def calculate_fertilizer(validated_input, crop_name):
             "dap_kg_farm": round(dap_kg_ha * farm_hectares, 2),
             "mop_kg_farm": round(mop_kg_ha * farm_hectares, 2)
         },
-        "warning": "Dosages are STCR-adjusted based on general soil fertility classes. Consult local extension for micro-nutrient balancing."
+        "warnings": warnings
     }
