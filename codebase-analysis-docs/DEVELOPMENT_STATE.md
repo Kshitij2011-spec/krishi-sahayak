@@ -212,4 +212,14 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Manual Verification:** Sent an arbitrary POST payload via `requests` directly testing the locally hosted engine. Output validated the exact offline fallback functionality (Cotton, gemini_available=False).
 - **Existing Routes:** `/api/recommend-crop`, `/api/fertilizer`, `/api/detect-pest`, and `/api/mandi-price` remain unmodified and fully functional. Random Forest continues unchanged.
 - **Deployment Status:** Retained local-only deployment status.
-- **Next Authorized Phase:** Awaiting user direction (Phase 2B).
+- **Next Authorized Phase:** Phase 2B.
+
+## 19. Phase 2B: Gemini Interactions API Migration
+- **Implementation Summary:** Migrated `gemini_layer.py` from legacy `models.generate_content` to the `client.interactions.create` API using `google-genai` SDK v2.18.1.
+- **Stateless Configuration:** Implemented `store=False` in the interaction request to disable server-side conversation history, enforcing a purely stateless advisory architecture.
+- **Structured Output Strategy:** Successfully transitioned to the new nested `config={"response_format": {"type": "text", "mime_type": "application/json", "schema": ...}}` pattern mapping to the existing `AdvisoryReasoning` Pydantic model logic.
+- **Test Alignment:** Refactored unit tests to specifically mock `client.interactions.create`. All 134 unified tests continue to pass seamlessly offline.
+- **Live Validation Outcome:** Safely aborted the live test request because the required `GOOGLE_API_KEY` and `GEMINI_MODEL_NAME` were intentionally withheld from the execution environment. The pre-flight verification accurately captured the missing keys and halted the API call securely.
+- **Fallback Verification:** Validated the offline deterministic fallback path (`status=200`, `gemini_available=False`, `reasoning_source=deterministic_rule_engine`) through the `/api/v2/advisory` HTTP route, confirming no breakage from the migration.
+- **Credit Economics:** Live calls attempted: 0. One-call-per-advisory invariant rigidly preserved. No retries configured.
+- **Next Authorized Phase:** Awaiting user direction (Phase 2C).

@@ -73,16 +73,21 @@ def generate_advisory_reasoning(context: Dict[str, Any]) -> Dict[str, Any]:
         
         prompt = json.dumps(context, indent=2)
         
-        response = client.models.generate_content(
+        response = client.interactions.create(
             model=model_name,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-                response_schema=AdvisoryReasoning,
-                system_instruction=SYSTEM_INSTRUCTION,
-                temperature=0.2
-            )
+            input=prompt,
+            store=False,
+            config={
+                "response_format": {
+                    "type": "text",
+                    "mime_type": "application/json",
+                    "schema": AdvisoryReasoning.model_json_schema()
+                },
+                "system_instruction": SYSTEM_INSTRUCTION,
+                "temperature": 0.2
+            }
         )
+
         
         if not response.text:
             raise ValueError("Empty response text from Gemini.")

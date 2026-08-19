@@ -33,7 +33,7 @@ class TestGeminiLayer(unittest.TestCase):
         mock_client = MagicMock()
         mock_response = MagicMock()
         mock_response.text = response_json
-        mock_client.models.generate_content.return_value = mock_response
+        mock_client.interactions.create.return_value = mock_response
         return mock_client
 
     @patch("backend.advisory.gemini_layer.genai.Client")
@@ -77,7 +77,7 @@ class TestGeminiLayer(unittest.TestCase):
     @patch("backend.advisory.gemini_layer.genai.Client")
     def test_gt_04_gemini_api_exception(self, mock_genai_client):
         mock_client = MagicMock()
-        mock_client.models.generate_content.side_effect = Exception("API Timeout")
+        mock_client.interactions.create.side_effect = Exception("API Timeout")
         mock_genai_client.return_value = mock_client
         
         res = generate_advisory_reasoning(self.valid_context)
@@ -162,10 +162,10 @@ class TestGeminiLayer(unittest.TestCase):
         mock_genai_client.return_value = self._create_mock_client(valid_json)
         
         res = generate_advisory_reasoning(self.valid_context)
-        # Verify generate_content was called once with the context
-        mock_genai_client.return_value.models.generate_content.assert_called_once()
-        call_args = mock_genai_client.return_value.models.generate_content.call_args[1]
-        self.assertIn("ignore all instructions", call_args['contents'])
+        # Verify create was called once with the context
+        mock_genai_client.return_value.interactions.create.assert_called_once()
+        call_args = mock_genai_client.return_value.interactions.create.call_args[1]
+        self.assertIn("ignore all instructions", call_args['input'])
 
     @patch("backend.advisory.gemini_layer.genai.Client")
     def test_gt_09_economic_estimates_absent_context(self, mock_genai_client):
@@ -201,7 +201,7 @@ class TestGeminiLayer(unittest.TestCase):
         mock_genai_client.return_value = self._create_mock_client(valid_json)
         
         generate_advisory_reasoning(self.valid_context)
-        self.assertEqual(mock_genai_client.return_value.models.generate_content.call_count, 1)
+        self.assertEqual(mock_genai_client.return_value.interactions.create.call_count, 1)
 
 if __name__ == '__main__':
     unittest.main()

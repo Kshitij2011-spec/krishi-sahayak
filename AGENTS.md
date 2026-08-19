@@ -16,8 +16,8 @@ This project is an AI-driven crop recommendation and advisory system built for t
 - **ML Model:** Random Forest (scikit-learn) trained on Kaggle dataset (22 crops).
 
 ## Development State
-Current Phase: 2A
-Status: Flask API integration complete. New /api/v2/advisory endpoint added. Gemini remains optional. Existing routes preserved.
+Current Phase: 2B
+Status: Gemini Interactions API adopted (store=false). Live validation aborted safely due to missing API keys. One-call-per-advisory invariant preserved.
 Next Approved Phase: None
 
 ## Phase History
@@ -37,6 +37,7 @@ Next Approved Phase: None
 - **Phase 1H:** Complete - Recommendation quality audited. Tie-breaking bias fixed using regional affinity. Data coverage matrices (fertilizer, variety) verified and limitations documented. Confidence boundaries proven sound.
 - **Phase 1I:** Complete - Live Gemini validation skipped (API keys missing from environment). Credit policy strictly adhered to.
 - **Phase 2A:** Complete - `/api/v2/advisory` exposed via Flask. Standalone engine connected. Random Forest & existing endpoints preserved intact. No React integration yet. Gemini remains optional.
+- **Phase 2B:** Complete - Gemini Interactions API adopted. Stateless interaction mode (store=false). Configured model logic intact. Live validation aborted due to missing API key. One-call-per-advisory invariant preserved.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*
