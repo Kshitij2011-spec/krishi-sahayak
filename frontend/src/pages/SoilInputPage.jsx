@@ -154,17 +154,20 @@ function SoilInputPage() {
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <>
-      {/* Hero — UI strings translated */}
-      <section className="hero">
+      {/* Hero — full-screen farmer image background */}
+      <section className="hero hero-farmer">
         <h1 className="hero-title">{t('soil.hero_title')}</h1>
         <p className="hero-subtitle">{t('soil.hero_subtitle')}</p>
       </section>
 
-      <div className="container">
+      <div className="container container--overlap">
         {/* Input Form */}
-        <form onSubmit={handleSubmit} className="card" style={{ marginBottom: 'var(--space-xl)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-md)', flexWrap: 'wrap', gap: '1rem' }}>
-            <h2 className="card-title" style={{ marginBottom: 0 }}>{t('soil.card_title')}</h2>
+        <form onSubmit={handleSubmit} className="card" style={{ marginBottom: 'var(--space-xl)', borderTop: '3px solid var(--green-600)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-lg)', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <p className="section-label">🌾 Soil Analysis</p>
+              <h2 className="card-title" style={{ marginBottom: 0 }}>{t('soil.card_title')}</h2>
+            </div>
             {/* Language switcher is now in the Navbar — only voice button here */}
             <button
               type="button"
@@ -172,7 +175,6 @@ function SoilInputPage() {
               onClick={handleVoiceInput}
               disabled={isListening}
               id="btn-voice-input"
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
             >
               {isListening ? `🔴 ${t('soil.btn_voice_listening')}` : `🎤 ${t('soil.btn_voice_speak')}`}
             </button>
@@ -261,18 +263,15 @@ function SoilInputPage() {
 
         {/* Result — crop name and reasons are ML outputs, NOT translated */}
         {result && (
-          <div className="card" style={{ marginBottom: 'var(--space-xl)' }} id="recommendation-result">
+          <div className="card" style={{ marginBottom: 'var(--space-xl)', borderTop: '3px solid var(--green-500)' }} id="recommendation-result">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-md)' }}>
               <div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--gray-600)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  {t('soil.result.recommended_crop')}
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+                <p className="section-label">✅ {t('soil.result.recommended_crop')}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', flexWrap: 'wrap' }}>
                   {/* result.crop is an ML output — displayed as-is, never translated */}
                   <h2 className="result-crop">{result.crop}</h2>
                   <button
-                    className="btn btn-secondary"
-                    style={{ padding: '0.25rem 0.5rem', fontSize: '0.8rem', borderRadius: 'var(--radius-sm)' }}
+                    className="btn btn-secondary btn-sm"
                     onClick={handleTTS}
                     title="Read Advisory Aloud"
                     id="btn-tts"
@@ -281,12 +280,12 @@ function SoilInputPage() {
                   </button>
                 </div>
                 {ttsWarning && (
-                  <p style={{ fontSize: '0.75rem', color: '#d97706', marginTop: '0.25rem' }}>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--gold-600)', marginTop: '0.25rem' }}>
                     {ttsWarning}
                   </p>
                 )}
               </div>
-              <span className="badge badge-success" style={{ fontSize: '1rem', padding: 'var(--space-sm) var(--space-lg)' }}>
+              <span className="badge badge-success" style={{ fontSize: '0.95rem', padding: 'var(--space-sm) var(--space-lg)' }}>
                 {t('soil.result.confidence', { value: (result.confidence * 100).toFixed(1) })}
               </span>
             </div>
@@ -350,7 +349,8 @@ function SoilInputPage() {
 
         {/* Fertilizer — fertilizer names (Urea, DAP, MOP) are translated; values are ML outputs */}
         {fertilizer && (
-          <div className="card" style={{ marginBottom: 'var(--space-xl)' }} id="fertilizer-result">
+          <div className="card" style={{ marginBottom: 'var(--space-xl)', borderTop: '3px solid var(--gold-400)' }} id="fertilizer-result">
+            <p className="section-label">🧪 Fertilizer Guide</p>
             <h3 className="card-title">{t('soil.fertilizer.title')}</h3>
             <table className="fert-table">
               <thead>
