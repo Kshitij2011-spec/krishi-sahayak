@@ -1,11 +1,13 @@
 import unittest
 import sys
 import io
+import os
 from unittest.mock import patch
 import backend.advisory.cli as cli
 
 class TestCLI(unittest.TestCase):
 
+    @patch.dict(os.environ, {}, clear=True)
     @patch('sys.stdout', new_callable=io.StringIO)
     def test_cli_punjab_rabi_scenario(self, mock_stdout):
         # We simulate running: python cli.py --scenario punjab-rabi
@@ -20,6 +22,7 @@ class TestCLI(unittest.TestCase):
             self.assertIn("Reasoning source:", output)
             self.assertIn("Deterministic Rule Engine", output)
 
+    @patch.dict(os.environ, {}, clear=True)
     @patch('sys.stdout', new_callable=io.StringIO)
     def test_cli_nagpur_scenario(self, mock_stdout):
         with patch.object(sys, 'argv', ['cli.py', '--scenario', 'nagpur']):

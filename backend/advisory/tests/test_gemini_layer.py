@@ -32,7 +32,7 @@ class TestGeminiLayer(unittest.TestCase):
     def _create_mock_client(self, response_json):
         mock_client = MagicMock()
         mock_response = MagicMock()
-        mock_response.text = response_json
+        mock_response.output_text = response_json
         mock_client.interactions.create.return_value = mock_response
         return mock_client
 

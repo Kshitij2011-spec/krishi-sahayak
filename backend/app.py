@@ -11,6 +11,14 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests
 import traceback
+
+try:
+    from dotenv import load_dotenv
+    # Load backend/.env safely if it exists (for local dev)
+    load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+except ImportError:
+    pass
+
 from backend.advisory.engine import run_advisory
 app = Flask(__name__)
 CORS(app)

@@ -77,22 +77,20 @@ def generate_advisory_reasoning(context: Dict[str, Any]) -> Dict[str, Any]:
             model=model_name,
             input=prompt,
             store=False,
-            config={
-                "response_format": {
-                    "type": "text",
-                    "mime_type": "application/json",
-                    "schema": AdvisoryReasoning.model_json_schema()
-                },
-                "system_instruction": SYSTEM_INSTRUCTION,
-                "temperature": 0.2
-            }
+            response_format={
+                "type": "text",
+                "mime_type": "application/json",
+                "schema": AdvisoryReasoning.model_json_schema()
+            },
+            system_instruction=SYSTEM_INSTRUCTION,
+            generation_config={"temperature": 0.2}
         )
 
         
-        if not response.text:
+        if not response.output_text:
             raise ValueError("Empty response text from Gemini.")
             
-        data = json.loads(response.text)
+        data = json.loads(response.output_text)
         
         # Validation Logic
         candidate_crops = set(c.lower() for c in context.get("candidate_crops", []))

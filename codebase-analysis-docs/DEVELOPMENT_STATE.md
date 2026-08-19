@@ -222,4 +222,20 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Live Validation Outcome:** Safely aborted the live test request because the required `GOOGLE_API_KEY` and `GEMINI_MODEL_NAME` were intentionally withheld from the execution environment. The pre-flight verification accurately captured the missing keys and halted the API call securely.
 - **Fallback Verification:** Validated the offline deterministic fallback path (`status=200`, `gemini_available=False`, `reasoning_source=deterministic_rule_engine`) through the `/api/v2/advisory` HTTP route, confirming no breakage from the migration.
 - **Credit Economics:** Live calls attempted: 0. One-call-per-advisory invariant rigidly preserved. No retries configured.
+- **Next Authorized Phase:** Phase 2B.1.
+
+## 20. Phase 2B.1: Local Gemini Credential Loading, Environment Verification & One Live Advisory
+- **Implementation Summary:** Integrated `python-dotenv` into `app.py` for local credential loading without committing secrets. Resolved `interactions.create` kwarg incompatibilities (unpacked `response_format`, `system_instruction`, and `generation_config`). Successfully completed exactly ONE live Gemini API call.
+- **Environment State:** Safely loaded `GOOGLE_API_KEY` and `GEMINI_MODEL_NAME` from `.env` via `dotenv.load_dotenv()`. `backend/.env` is strictly `.gitignore`'d. No secrets were leaked into logs, files, or Git history.
+- **Test Integrity:** Discovered that globally loading `.env` in `app.py` unintentionally converted offline tests (like `test_cli_punjab_rabi_scenario`) into live Gemini calls. Remedied this by patching `os.environ` to clear `GOOGLE_API_KEY` specifically during offline `test_cli.py` executions, ensuring CI/CD determinism remains intact.
+- **Execution Outcome:** Performed the live POST `/api/v2/advisory` scenario against the active local Flask server.
+- **Output Validation:** 
+  - **Gemini Status:** `gemini_available` was True.
+  - **Crop Selected:** `soybean` (Valid candidate with score 100).
+  - **Variety Selected:** `JS 335` (Valid approved variety for Soybean).
+  - **Fertilizer:** Successfully retained Dr. PDKV deterministic baseline recommendations without any LLM alteration.
+  - **Confidence:** Preserved deterministic value (92, Very High).
+- **Reasoning Audit:** GROUNDED. The LLM accurately acknowledged the `kharif` season, `rainfed` limitation, and low `10,000 INR` budget, producing sensible, non-hallucinated explanations.
+- **Fallback Verification:** Offline tests and initial uncredentialed app boots successfully validated the offline fallback pipeline without API calls.
+- **Credit Accounting:** Attempted: 1, Completed: 1, Retries: 0, Extra calls: 0.
 - **Next Authorized Phase:** Awaiting user direction (Phase 2C).

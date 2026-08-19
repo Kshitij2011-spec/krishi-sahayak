@@ -16,8 +16,8 @@ This project is an AI-driven crop recommendation and advisory system built for t
 - **ML Model:** Random Forest (scikit-learn) trained on Kaggle dataset (22 crops).
 
 ## Development State
-Current Phase: 2B
-Status: Gemini Interactions API adopted (store=false). Live validation aborted safely due to missing API keys. One-call-per-advisory invariant preserved.
+Current Phase: 2B.1
+Status: Live Gemini validation complete. One call strictly observed. Interactions API kwarg mismatch fixed. `python-dotenv` integrated for local dev. Reasoning is grounded and uses deterministic fertilizer numbers.
 Next Approved Phase: None
 
 ## Phase History
@@ -38,6 +38,7 @@ Next Approved Phase: None
 - **Phase 1I:** Complete - Live Gemini validation skipped (API keys missing from environment). Credit policy strictly adhered to.
 - **Phase 2A:** Complete - `/api/v2/advisory` exposed via Flask. Standalone engine connected. Random Forest & existing endpoints preserved intact. No React integration yet. Gemini remains optional.
 - **Phase 2B:** Complete - Gemini Interactions API adopted. Stateless interaction mode (store=false). Configured model logic intact. Live validation aborted due to missing API key. One-call-per-advisory invariant preserved.
+- **Phase 2B.1:** Complete - Local `.env` credential loading verified and secured. Performed EXACTLY ONE live Gemini Interactions API validation using the dynamically loaded model configuration. Gemini accurately generated crop reasoning without modifying baseline deterministic fertilizer values. Fallback logic verified. Ready for React integration.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*
