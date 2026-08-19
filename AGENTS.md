@@ -16,8 +16,8 @@ This project is an AI-driven crop recommendation and advisory system built for t
 - **ML Model:** Random Forest (scikit-learn) trained on Kaggle dataset (22 crops).
 
 ## Development State
-Current Phase: 2C
-Status: Phase 2C complete. Advanced advisory page added at /advanced-advisory. /api/v2/advisory consumed by React. Existing Random Forest UI preserved. Gemini API key remains backend-only.
+Current Phase: 2D
+Status: Playwright browser validation completed. Advanced Advisory route tested successfully in the actual browser. Both Gemini live path and deterministic fallback path verified. No runtime errors or regressions found in the existing UI.
 Next Approved Phase: None
 
 ## Phase History
@@ -40,6 +40,7 @@ Next Approved Phase: None
 - **Phase 2B:** Complete - Gemini Interactions API adopted. Stateless interaction mode (store=false). Configured model logic intact. Live validation aborted due to missing API key. One-call-per-advisory invariant preserved.
 - **Phase 2B.1:** Complete - Local `.env` credential loading verified and secured. Performed EXACTLY ONE live Gemini Interactions API validation using the dynamically loaded model configuration. Gemini accurately generated crop reasoning without modifying baseline deterministic fertilizer values. Fallback logic verified. Ready for React integration.
 - **Phase 2C:** Complete - Advanced advisory page added. `/api/v2/advisory` consumed by React. Existing Random Forest UI preserved. Gemini API key remains backend-only.
+- **Phase 2D:** Complete - Playwright browser validation completed. Advanced Advisory route tested. Gemini live path tested. Fallback path tested. Existing UI regression checked. All clear.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*

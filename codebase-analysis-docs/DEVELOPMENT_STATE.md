@@ -248,4 +248,22 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Test Integrity:** Passed backend tests (134 tests). Frontend successfully built for production (`npm run build`). Manual offline fallback rendering tests were completed.
 - **Existing Page Regression:** The original `SoilInputPage.jsx` and `/` route was unmodified. Existing Random Forest recommendations, fertilizer mappings, speech-to-text, and TTS all remain 100% functional.
 - **Security Validation:** Verified that NO Gemini API keys exist in the frontend, nor are sent from the browser. The frontend solely relies on `/api/v2/advisory`.
-- **Next Authorized Phase:** Awaiting user direction (Phase 2D).
+- **Next Authorized Phase:** Phase 2D.
+
+## 22. Phase 2D: Playwright End-to-End UI Validation & Safe Frontend Hardening
+- **Implementation Summary:** Validated the new React `/advanced-advisory` route in a real browser using Playwright MCP.
+- **Playwright Test Scenarios:**
+  - **UI-01 (Basic Page Load):** PASS. Form and submit button accessible, zero console errors.
+  - **UI-02 (Nagpur Gemini Scenario):** PASS. Form populated and submitted via UI, POST `/api/v2/advisory` triggered.
+  - **UI-03 (Gemini Fallback):** PASS. Verified by running Flask without `.env`. UI gracefully showed "Advisory generated using verified agronomic rules."
+  - **UI-04 (Validation Error):** PASS. Tried `pH=99`, correctly blocked by HTML5 form validation.
+  - **UI-05 (Missing Required Field):** PASS. Blank `district` triggered validation, stopping network request.
+  - **UI-06 (Mobile View):** PASS. Tested 375x812 viewport. Form stacked properly, no overflow.
+  - **UI-07 & 08 (Existing UI & Routes):** PASS. `/` and other routes load fine, old Random Forest intact.
+  - **UI-09 (Browser Console):** PASS. Zero runtime errors.
+  - **UI-10 (Network Security):** PASS. No Gemini calls directly from browser. No keys in POST body.
+- **Visual & UX Findings:**
+  - Screenshots confirmed styling is clean. "AI reasoning available" banner displays accurately.
+  - Confidence component accurately pulls the deterministic `92 / 100`.
+  - Fertilizer and Alternatives rendered correctly using backend data natively.
+- **Next Authorized Phase:** Awaiting user direction (Phase 2E).
