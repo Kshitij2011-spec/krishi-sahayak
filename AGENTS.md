@@ -16,9 +16,9 @@ This project is an AI-driven crop recommendation and advisory system built for t
 - **ML Model:** Random Forest (scikit-learn) trained on Kaggle dataset (22 crops).
 
 ## Development State
-Current Phase: 1D.2
-Status: Source-Backed Fertilizer Adjustment Rules implemented.
-Next Approved Phase: Phase 1E
+Current Phase: 1E-A
+Status: Single-call Gemini reasoning layer implemented.
+Next Approved Phase: Phase 1E-B
 
 ## Phase History
 - **Phase 0:** Complete - Repository audit and architecture research
@@ -30,6 +30,7 @@ Next Approved Phase: Phase 1E
 - **Phase 1D:** Complete - Deterministic fertilizer engine implemented. Deficit logic was halted due to discovered P/K unit ambiguity.
 - **Phase 1D.1:** Complete - Fertilizer unit ambiguity resolved. Soil values represent Available N/P/K (concentration). Crude deficit subtraction replaced with Indian STCR logic (Low/Medium/High fertility classes). Product conversion (Urea, DAP, MOP) unlocked and implemented securely.
 - **Phase 1D.2:** Complete - Generic STCR adjustments replaced with precise source-backed rules per nutrient (PAU & Dr. PDKV). JSON schema restructured. Missing Organic Carbon logic safely flagged.
+- **Phase 1E-A:** Complete - Single-call Gemini reasoning layer. Structured output schema defined. Strict crop/variety validation. No Gemini-controlled fertilizer. No Gemini-controlled confidence. One-call-per-advisory design.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*

@@ -6,3 +6,4 @@ numpy==2.2.3
 pandas==2.2.3
 gunicorn==23.0.0
 requests
+google-genai

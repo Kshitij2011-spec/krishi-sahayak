@@ -129,4 +129,17 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Handling Potassium:** Enforced PAU's rule of "Potassium not generally recommended unless soil is deficient" by storing exact `0` adjustments for Medium and High potassium classes.
 - **Test Results:** Re-wrote tests to evaluate precise source-backed adjustments. 11 tests passed locally, total 71 passing tests. Zero regressions.
 - **Existing Codebase Impact:** Zero impact. Existing backend and ML model remain unmodified.
-- **Next Authorized Phase:** Phase 1E (Awaiting authorization).
+- **Next Authorized Phase:** Phase 1E-A.
+
+## 12. Phase 1E-A: Single-Call Gemini Reasoning Layer
+- **Implementation Summary:** Implemented the `gemini_layer.py` module to generate a structured agricultural advisory response via a single API call, minimizing credit usage.
+- **SDK & Model Configuration:** Uses the `google-genai` SDK. Requires `GOOGLE_API_KEY` and `GEMINI_MODEL_NAME` from environment variables.
+- **Response Schema:** Utilizes strict JSON schema (`AdvisoryReasoning` -> `RankedCrop`) mapping crops, ranks, advantages, trade-offs, and reasoning. Deliberately excludes numeric confidence and fertilizer doses to maintain deterministic engine boundaries.
+- **Validation & Fallback:** 
+  - Strictly verifies that every crop returned by Gemini exists in the provided `candidate_crops`. Returns `invalid_crop_generated` fallback otherwise.
+  - Verifies that Gemini's suggested variety is found in the `approved_varieties` dictionary. If not, strips it (`null`).
+  - Safely handles missing API keys, SDK import failures, JSON parsing errors, and network timeouts with deterministic fallback JSON structures.
+- **Prompt Injection Controls:** The system instruction explicitly isolates farmer inputs, ensuring they are treated as untrusted data rather than system commands.
+- **Testing Strategy:** Added `test_gemini_layer.py` with 10 mock-driven tests (GT-01 through GT-10). Live Gemini test: NOT RUN — API key unavailable.
+- **Existing Codebase Impact:** Zero impact. Existing backend and ML model remain unmodified. Added `google-genai` to `requirements.txt`.
+- **Next Authorized Phase:** Phase 1E-B (Awaiting authorization).
