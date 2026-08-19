@@ -16,8 +16,8 @@ This project is an AI-driven crop recommendation and advisory system built for t
 - **ML Model:** Random Forest (scikit-learn) trained on Kaggle dataset (22 crops).
 
 ## Development State
-Current Phase: 2E
-Status: Phase 2E complete. Open-Meteo weather context integrated. 0/1 weather request policy. Weather optional. Gemini call limit unchanged.
+Current Phase: 2F
+Status: Phase 2F complete. Government market API tested and reused. Market context integrated. One-market-request limit enforced. Market treated as evidence, not guaranteed future revenue.
 Next Approved Phase: None
 
 ## Phase History
@@ -42,6 +42,7 @@ Next Approved Phase: None
 - **Phase 2C:** Complete - Advanced advisory page added. `/api/v2/advisory` consumed by React. Existing Random Forest UI preserved. Gemini API key remains backend-only.
 - **Phase 2D:** Complete - Playwright browser validation completed. Advanced Advisory route tested. Gemini live path tested. Fallback path tested. Existing UI regression checked. All clear.
 - **Phase 2E:** Complete - Open-Meteo weather context integrated as evidence. 0/1 weather request policy enforced. Coordinates sourced safely. Gemini prompt updated to treat weather as supporting context, not overriding deterministic agronomic rules. Existing UI untouched.
+- **Phase 2F:** Complete - Live market intelligence integrated via AGMARKNET/data.gov.in. API key absence handled gracefully as `unavailable` to prevent synthetic overrides. Market constraints embedded in Gemini prompt to treat prices as observations, not guarantees. Existing `/api/mandi-price` untouched.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*

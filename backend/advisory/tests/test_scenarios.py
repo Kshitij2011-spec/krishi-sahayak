@@ -43,7 +43,17 @@ class TestScenarios(unittest.TestCase):
             "retrieved_at": "fixed_timestamp_for_tests"
         }
         
+        self.market_patcher = patch("backend.advisory.engine.get_market_context")
+        self.mock_market = self.market_patcher.start()
+        self.mock_market.return_value = {
+            "status": "available",
+            "source": "agmarknet_data_gov_in",
+            "commodity": "Wheat",
+            "modal_price": 2200
+        }
+        
     def tearDown(self):
+        self.market_patcher.stop()
         self.weather_patcher.stop()
         self.env_patcher.stop()
 

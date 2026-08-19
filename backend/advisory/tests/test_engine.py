@@ -205,5 +205,55 @@ class TestEngine(unittest.TestCase):
             self.assertEqual(res["reasoning_source"], "deterministic_rule_engine")
             self.assertEqual(res["weather_context"]["status"], "available")
 
+    @patch("backend.advisory.engine.get_market_context")
+    @patch("backend.advisory.engine.generate_advisory_reasoning")
+    def test_mke01_market_available(self, mock_gemini, mock_market):
+        mock_market.return_value = {"status": "available", "modal_price": 4000}
+        mock_gemini.return_value = {"status": "success", "data": {"ranked_crops": [{"crop": "wheat", "rank": 1}]}}
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "fake", "GEMINI_MODEL_NAME": "fake"}):
+            res = run_advisory(get_valid_input())
+            mock_market.assert_called_once()
+            call_args = mock_gemini.call_args[0][0]
+            self.assertEqual(call_args["market_context"]["status"], "available")
+            self.assertEqual(res["market_context"]["status"], "available")
+
+    @patch("backend.advisory.engine.get_market_context")
+    @patch("backend.advisory.engine.generate_advisory_reasoning")
+    def test_mke02_market_unavailable(self, mock_gemini, mock_market):
+        mock_market.return_value = {"status": "unavailable", "reason": "missing_credentials"}
+        mock_gemini.return_value = {"status": "success", "data": {"ranked_crops": [{"crop": "wheat", "rank": 1}]}}
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "fake", "GEMINI_MODEL_NAME": "fake"}):
+            res = run_advisory(get_valid_input())
+            self.assertEqual(res["status"], "success")
+            call_args = mock_gemini.call_args[0][0]
+            self.assertEqual(call_args["market_context"]["status"], "unavailable")
+
+    @patch("backend.advisory.engine.get_market_context")
+    @patch("backend.advisory.engine.get_weather_context")
+    @patch("backend.advisory.engine.generate_advisory_reasoning")
+    def test_mke03_weather_market_gemini(self, mock_gemini, mock_weather, mock_market):
+        mock_weather.return_value = {"status": "available"}
+        mock_market.return_value = {"status": "available"}
+        mock_gemini.return_value = {"status": "success", "data": {"ranked_crops": [{"crop": "wheat", "rank": 1}]}}
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "fake", "GEMINI_MODEL_NAME": "fake"}):
+            res = run_advisory(get_valid_input())
+            mock_gemini.assert_called_once()
+            call_args = mock_gemini.call_args[0][0]
+            self.assertEqual(call_args["weather_context"]["status"], "available")
+            self.assertEqual(call_args["market_context"]["status"], "available")
+
+    @patch("backend.advisory.engine.get_market_context")
+    @patch("backend.advisory.engine.get_weather_context")
+    @patch("backend.advisory.engine.generate_advisory_reasoning")
+    @patch("backend.advisory.engine.filter_and_score")
+    def test_mke04_no_viable_crops(self, mock_filter, mock_gemini, mock_weather, mock_market):
+        mock_filter.return_value = {"valid": True, "candidates": [], "excluded": []}
+        with patch.dict(os.environ, {"GOOGLE_API_KEY": "fake", "GEMINI_MODEL_NAME": "fake"}):
+            res = run_advisory(get_valid_input())
+            self.assertEqual(res["status"], "no_viable_crops")
+            mock_weather.assert_not_called()
+            mock_market.assert_not_called()
+            mock_gemini.assert_not_called()
+
 if __name__ == '__main__':
     unittest.main()

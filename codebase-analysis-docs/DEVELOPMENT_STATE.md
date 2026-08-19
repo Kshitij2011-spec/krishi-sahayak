@@ -279,4 +279,15 @@ Phase 1 readiness verified. No regressions detected in existing code.
 - **Live Smoke Test:** Verified the weather context is fully parsed and available using a manual `python -c` script against Nagpur coordinates.
 - **Limitations:** No caching exists yet. The weather response is intentionally restricted to 1 call per request.
 - **Resource Usage:** 0 Gemini calls used during automated testing and implementation.
-- **Next Authorized Phase:** Awaiting user direction (Phase 2F).
+- **Next Authorized Phase:** Phase 2F.
+
+## 24. Phase 2F: Live Market Intelligence Using AGMARKNET
+- **Implementation Summary:** Integrated data.gov.in / AGMARKNET live market context as economic supporting evidence for the advisory engine.
+- **Source:** AGMARKNET via data.gov.in
+- **Variables Used:** `commodity`, `market`, `district`, `state`, `modal_price`, `min_price`, `max_price`, `arrival_date`, `unit`
+- **Fallback Behavior:** The government API key is currently absent. The new advisory module (`market.py`) successfully detects this and yields `{"status": "unavailable"}`. Unlike the legacy endpoint, it deliberately DOES NOT substitute synthetic values, ensuring Gemini operates only on verified facts or clearly states data unavailability.
+- **Gemini Context Integration:** The market context is provided to Gemini as `market_context`. The `SYSTEM_INSTRUCTION` was updated explicitly stating: "Market prices are current observations, not guaranteed harvest prices. Agronomic suitability takes priority over market price."
+- **Test Integrity:** Added 10 tests for `market.py` in `test_market.py` (MK-01 to MK-10) using mocked HTTP responses and environments to enforce missing-key behaviors. Added engine integration tests (`test_engine.py`) verifying market availability permutations (MK-E01 to MK-E04). All 155 backend tests pass.
+- **Live Smoke Test:** Executed manual test querying Nagpur Soybean. Validated that missing API keys return clean unavailabilities without failing the advisory payload.
+- **Resource Usage:** 0 automated API calls. 0 extra Gemini calls. Maximum 1 market API request per advisory enforced by querying only the top agronomic candidate.
+- **Next Authorized Phase:** Phase 2G (Pest/Disease Early Warning).
