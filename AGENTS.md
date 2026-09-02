@@ -16,8 +16,8 @@ This project is an AI-driven crop recommendation and advisory system built for t
 - **ML Model:** Random Forest (scikit-learn) trained on Kaggle dataset (22 crops).
 
 ## Development State
-Current Phase: 2G
-Status: Phase 2G complete. Proactive pest/disease early warning integrated. Static source-backed lookup. No pesticide prescriptions. No additional Gemini calls. Reactive image detector remains separate.
+Current Phase: 7
+Status: Phase 7 complete. Farmer → Agriculture Officer Request System implemented. Farmer can submit a request from any LOW/MEDIUM/HIGH confidence result or from Crop Risk. Officer receives in Extension Dashboard with review modal. Status tracked via opaque KR-XXXXXX reference code.
 Next Approved Phase: None
 
 ## Phase History
@@ -48,6 +48,9 @@ Next Approved Phase: None
 - **Phase 2I:** Complete - Final advisory quality benchmark and controlled migration readiness audit completed. Recommended for Model Replacement.
 - **Phase 3A:** Complete - Controlled primary advisory migration. Advanced Advisory is now the root (`/`) route. Random Forest legacy route preserved at `/legacy-advisory`. Visual design, accessibility (STT/TTS), and architecture preserved. Verified via Playwright MCP.
 - **Phase 4A (Current):** Complete - Maharashtra Pest Early Warning System Pivot. Rebuilt pest_risk.json for Maharashtra specific crops with IPM/ETL logic. Updated UI with new root `/` page for Pest Detection and new Extension Officer Dashboard.
+- **Phase 5:** Complete - SIH Integration + Demo Polish. Unified narrative flow across all pages, photo tips, multilingual voice, officer dashboard maps and hotspot visualization.
+- **Phase 6:** Complete - Local MobileNetV2 inference migration. `/api/detect-pest` now uses local model with HF fallback. sys.path injection fixed.
+- **Phase 7 (Current):** Complete - Farmer → Agriculture Officer Request System. SQL migration `02_officer_requests.sql`. Flask endpoints (POST/GET/PATCH). OfficerRequestModal, OfficerRequestStatusPage, FarmerRequestReviewModal in officer dashboard. CTAs in PestDetectionPage (LOW/MEDIUM/HIGH), CropRiskPage, and HomePage. i18n keys in EN/HI/MR. Supabase Python SDK added for service-role backend access. SUPABASE_SERVICE_KEY required in Render env vars.
 
 ## Protected Existing System
 *No protected component may be modified during a phase unless that phase explicitly authorizes it.*
