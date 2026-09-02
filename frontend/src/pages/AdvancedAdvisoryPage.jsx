@@ -54,7 +54,6 @@ function AdvancedAdvisoryPage() {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript.toLowerCase();
-      console.log("Heard:", transcript);
 
       const parseValue = (keyword) => {
         const regex = new RegExp(`${keyword}[^\\d]*([\\d.]+)`, 'i');
@@ -177,14 +176,14 @@ function AdvancedAdvisoryPage() {
   };
 
   return (
-    <>
-      <section className="hero">
+    <main className="crop-page">
+      <section className="hero-farmer">
         <h1 className="hero-title">Advanced Crop Advisory</h1>
         <p className="hero-subtitle">Get personalized, deeply reasoned agricultural advice based on local data and agronomic rules.</p>
       </section>
 
-      <div className="container">
-        <form onSubmit={handleSubmit} className="card" style={{ marginBottom: 'var(--space-xl)' }}>
+      <div className="container--overlap">
+        <form onSubmit={handleSubmit} className="card">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-md)', flexWrap: 'wrap', gap: '1rem' }}>
             <h2 className="card-title" style={{ marginBottom: 0 }}>Farm & Field Parameters</h2>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -541,7 +540,7 @@ function AdvancedAdvisoryPage() {
         )}
 
       </div>
-    </>
+    </main>
   );
 }
 

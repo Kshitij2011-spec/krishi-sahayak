@@ -26,11 +26,11 @@ export async function getFertilizer(data) {
   return res.json();
 }
 
-export async function detectPest(imageUrl) {
+export async function detectPest(imageUrl, extraPayload = {}) {
   const res = await fetch(`${API_URL}/api/detect-pest`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ image_url: imageUrl }),
+    body: JSON.stringify({ image_url: imageUrl, ...extraPayload }),
   });
   if (!res.ok) {
     const errData = await res.json().catch(() => ({ error: 'Request failed' }));
@@ -57,6 +57,19 @@ export async function getMandiPrices(commodity, district) {
 
 export async function getAdvancedAdvisory(payload) {
   const res = await fetch(`${API_URL}/api/v2/advisory`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Request failed' }));
+    throw new Error(err.message || err.error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function checkCropRisk(payload) {
+  const res = await fetch(`${API_URL}/api/crop-risk`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

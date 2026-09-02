@@ -1,9 +1,19 @@
 flask==3.1.1
 flask-cors==5.0.1
-scikit-learn==1.6.1
+# scikit-learn==1.6.1  # Commented out due to Python 3.14 compiler error
 joblib==1.4.2
-numpy>=2.2.3
-pandas>=2.2.3
+numpy
+# pandas>=2.2.3
 gunicorn==23.0.0
 requests
 google-genai
+# ── Supabase admin client (service-role key, officer_requests) ────────────────
+supabase
+# ── Local MobileNetV2 inference (optional on Render free tier) ────────────────
+# If these are not installed, /api/detect-pest falls back to HF Inference API.
+# For local dev: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+# Then:          pip install transformers Pillow
+torch
+torchvision
+transformers
+Pillow

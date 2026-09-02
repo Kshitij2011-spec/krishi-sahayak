@@ -140,7 +140,8 @@ def run_advisory(raw_input_data):
         state=state,
         district=district,
         season=season,
-        weather_context=weather_context
+        weather_context=weather_context,
+        trap_count=validated_data.get("trap_count")
     )
 
     # 6. Gemini Context
