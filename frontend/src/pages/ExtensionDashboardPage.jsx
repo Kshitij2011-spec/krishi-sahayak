@@ -742,6 +742,14 @@ function ExtensionDashboardPage() {
   // ── Hotspots ─────────────────────────────────────────────────────────────
   const hotspots = useMemo(() => computeHotspots(allReports), [allReports]);
 
+  // ── Request stats ─────────────────────────────────────────────────────
+  const requestStats = useMemo(() => ({
+    pending:   officerRequests.filter(r => r.status === 'pending').length,
+    in_review: officerRequests.filter(r => r.status === 'in_review').length,
+    responded: officerRequests.filter(r => r.status === 'responded').length,
+    closed:    officerRequests.filter(r => r.status === 'closed').length,
+  }), [officerRequests]);
+
   // ══════════════════════════════════════════════════════════════════════════
   // LOGIN SCREEN (preserved from original)
   // ══════════════════════════════════════════════════════════════════════════
@@ -789,14 +797,6 @@ function ExtensionDashboardPage() {
     return 'low';
   }
   const PRIORITY_ICON = { high: '🔴', medium: '🟡', low: '🟢' };
-
-  // ── Request stats ─────────────────────────────────────────────────────
-  const requestStats = useMemo(() => ({
-    pending:   officerRequests.filter(r => r.status === 'pending').length,
-    in_review: officerRequests.filter(r => r.status === 'in_review').length,
-    responded: officerRequests.filter(r => r.status === 'responded').length,
-    closed:    officerRequests.filter(r => r.status === 'closed').length,
-  }), [officerRequests]);
 
   return (
     <div className="page-container extension-dashboard">
