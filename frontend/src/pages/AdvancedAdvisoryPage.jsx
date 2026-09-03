@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { getAdvancedAdvisory } from '../lib/api';
 
 const DISTRICTS = [
@@ -198,7 +198,7 @@ function AdvancedAdvisoryPage() {
                 <option value="pa-IN">Punjabi (pa-IN)</option>
               </select>
               <button type="button" className="btn btn-secondary" onClick={handleVoiceInput} disabled={isListening} id="btn-voice-input" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', border: '1px solid var(--gray-300)', padding: '0.4rem 0.8rem', background: 'var(--white)', borderRadius: '4px' }}>
-                {isListening ? "🔴 Listening..." : "🎤 Speak"}
+                {isListening ? "ðŸ”´ Listening..." : "ðŸŽ¤ Speak"}
               </button>
             </div>
           </div>
@@ -283,7 +283,7 @@ function AdvancedAdvisoryPage() {
           <h3 style={{ fontSize: '1rem', color: 'var(--green-800)', marginBottom: 'var(--space-sm)', paddingBottom: 'var(--space-xs)', borderBottom: '2px solid var(--green-200)' }}>Farmer Preferences</h3>
           <div className="form-grid" style={{ marginBottom: 'var(--space-lg)' }}>
             <div className="form-group">
-              <label>Budget (₹)</label>
+              <label>Budget (â‚¹)</label>
               <input type="number" min="0" name="budget_available_inr" value={formData.budget_available_inr} onChange={handleChange} required />
             </div>
             <div className="form-group">
@@ -325,217 +325,200 @@ function AdvancedAdvisoryPage() {
         )}
 
         {result && result.top_recommendation && (
-          <div className="card" style={{ marginBottom: 'var(--space-xl)' }}>
-            {/* Status Header */}
-            <div style={{ marginBottom: 'var(--space-md)' }}>
-              <span className="badge badge-success">
-                {result.gemini_available 
-                  ? "✨ AI reasoning available" 
-                  : "✅ Advisory generated using verified agronomic rules"}
-              </span>
-            </div>
+          <div className="adv-results-dashboard">
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'var(--space-md)' }}>
-              <div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--gray-600)', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Recommended Crop</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-                  <h2 className="result-crop">{result.top_recommendation.crop}</h2>
-                  <button 
-                    className="btn" 
-                    style={{ padding: '0.25rem 0.5rem', fontSize: '0.8rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--gray-300)', background: 'var(--white)' }}
-                    onClick={handleTTS}
-                    title="Read Advisory Aloud"
-                  >
-                    🔊 Listen
-                  </button>
-                </div>
-                {ttsWarning && <p style={{ fontSize: '0.75rem', color: '#d97706', marginTop: '0.25rem' }}>{ttsWarning}</p>}
-                <div style={{ marginTop: 'var(--space-xs)' }}>
+            {/* ROW 1: Hero recommendation */}
+            <div className="adv-hero-card">
+              <div className="adv-hero-card-inner">
+                <div className="adv-hero-left">
+                  <div className="adv-hero-eyebrow">
+                    <span className="adv-ai-badge">
+                      {result.gemini_available ? "✨ AI Reasoning" : "✅ Agronomic Rules"}
+                    </span>
+                    <span className="adv-result-label">Top Recommendation</span>
+                  </div>
+                  <h2 className="adv-crop-name">{result.top_recommendation.crop}</h2>
                   {result.top_recommendation.variety ? (
-                    <p style={{ color: 'var(--green-800)', fontWeight: 600 }}>Variety: {result.top_recommendation.variety}</p>
+                    <p className="adv-variety"><span className="adv-variety-tag">Variety</span>{result.top_recommendation.variety}</p>
                   ) : (
-                    <p style={{ color: 'var(--gray-500)', fontStyle: 'italic', fontSize: '0.9rem' }}>No verified variety recommendation is currently available for this crop and region.</p>
+                    <p className="adv-variety adv-variety--none">No verified variety available for this region</p>
                   )}
-                </div>
-              </div>
-              {result.confidence && (
-                <div style={{ textAlign: 'right' }}>
-                  <span className="badge badge-success" style={{ fontSize: '1rem', padding: 'var(--space-sm) var(--space-lg)', display: 'inline-block', marginBottom: '0.25rem' }}>
-                    {result.confidence.overall}% confidence
-                  </span>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--gray-600)', textTransform: 'capitalize' }}>
-                    {result.confidence.status?.replace('_', ' ')}
+                  <div className="adv-hero-actions">
+                    <button className="adv-tts-btn" onClick={handleTTS} title="Read Advisory Aloud">🔊 Listen</button>
+                    {ttsWarning && <p className="adv-tts-warning">{ttsWarning}</p>}
                   </div>
                 </div>
-              )}
-            </div>
-
-            {/* Confidence Breakdown */}
-            {result.confidence && result.confidence.components && (
-              <div style={{ marginTop: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
-                <p style={{ fontSize: '0.85rem', color: 'var(--gray-600)', fontWeight: 500, marginBottom: 'var(--space-sm)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Confidence Breakdown</p>
-                
-                <div style={{ marginBottom: '0.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.25rem' }}>
-                    <span style={{ fontWeight: 500 }}>Agronomic Fit</span>
-                    <span>{result.confidence.components.agronomic_fit}/50</span>
-                  </div>
-                  <div className="confidence-bar">
-                    <div className="confidence-fill" style={{ width: `${(result.confidence.components.agronomic_fit / 50) * 100}%` }}></div>
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '0.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.25rem' }}>
-                    <span style={{ fontWeight: 500 }}>Data Quality</span>
-                    <span>{result.confidence.components.data_quality}/30</span>
-                  </div>
-                  <div className="confidence-bar">
-                    <div className="confidence-fill" style={{ width: `${(result.confidence.components.data_quality / 30) * 100}%`, background: 'linear-gradient(90deg, #3b82f6, #60a5fa)' }}></div>
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '0.75rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.25rem' }}>
-                    <span style={{ fontWeight: 500 }}>Regional Evidence</span>
-                    <span>{result.confidence.components.regional_evidence}/20</span>
-                  </div>
-                  <div className="confidence-bar">
-                    <div className="confidence-fill" style={{ width: `${(result.confidence.components.regional_evidence / 20) * 100}%`, background: 'linear-gradient(90deg, #8b5cf6, #a78bfa)' }}></div>
-                  </div>
-                </div>
-
-                {result.confidence.notes && result.confidence.notes.length > 0 && (
-                  <div style={{ marginTop: 'var(--space-sm)', fontSize: '0.85rem', color: 'var(--gray-600)' }}>
-                    {result.confidence.notes.map((n, i) => <p key={i}>• {n}</p>)}
+                {result.confidence && (
+                  <div className="adv-confidence-hero">
+                    <div className="adv-confidence-ring">
+                      <span className="adv-confidence-pct">{result.confidence.overall}</span>
+                      <span className="adv-confidence-unit">/ 100</span>
+                    </div>
+                    <p className="adv-confidence-status">{result.confidence.status?.replace('_', ' ')}</p>
+                    <p className="adv-confidence-label">Advisory Confidence</p>
                   </div>
                 )}
               </div>
-            )}
-
-            {/* Why this crop */}
-            <div style={{ marginTop: 'var(--space-lg)' }}>
-              <h3 className="card-title">Why this crop?</h3>
-              <p style={{ color: 'var(--gray-700)', lineHeight: '1.6' }}>
-                {result.top_recommendation.reasoning || `Selected based on: ${result.top_recommendation.selection_basis?.replace('_', ' ')}`}
-              </p>
             </div>
-          </div>
-        )}
 
-        {/* Market Context */}
-        {result && result.market_context && result.market_context.status === 'available' && (
-          <div className="card" style={{ marginBottom: 'var(--space-xl)' }}>
-            <h3 className="card-title">📈 Current Market Observation</h3>
-            <div className="alert alert-success" style={{ display: 'block' }}>
-              <p style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: '0.25rem' }}>{result.market_context.commodity} - {result.market_context.market} ({result.market_context.district})</p>
-              <p style={{ fontSize: '1.2rem', marginBottom: '0.25rem' }}>Modal Price: <strong>₹{result.market_context.modal_price} / quintal</strong></p>
-              <p style={{ fontSize: '0.9rem', color: 'var(--green-900)' }}>Range: ₹{result.market_context.min_price} – ₹{result.market_context.max_price}</p>
-              <p style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--green-900)' }}>As of: {result.market_context.arrival_date}</p>
-            </div>
-            <p style={{ fontSize: '0.85rem', fontStyle: 'italic', color: 'var(--warning)', marginTop: 'var(--space-sm)' }}>
-              This is current mandi data, not a guaranteed harvest price.
-            </p>
-          </div>
-        )}
-
-        {/* Pest Warning */}
-        {result && result.top_recommendation && result.top_recommendation.risk_and_prevention && result.top_recommendation.risk_and_prevention.status === 'available' && (
-          <div className="card" style={{ marginBottom: 'var(--space-xl)' }}>
-            <h3 className="card-title" style={{ color: 'var(--danger)' }}>⚠️ Early Risk Warning</h3>
-            {result.top_recommendation.risk_and_prevention.risks.map((risk, idx) => (
-              <div key={idx} style={{ marginBottom: '1rem', paddingBottom: '1rem', borderBottom: idx !== result.top_recommendation.risk_and_prevention.risks.length -1 ? '1px solid var(--gray-200)' : 'none' }}>
-                <h4 style={{ color: 'var(--danger)', marginBottom: '0.25rem' }}>{risk.risk_name}</h4>
-                <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}><strong>Risk Likelihood:</strong> <span style={{ textTransform: 'capitalize' }}>{risk.likelihood}</span></p>
-                <div style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  <strong>Early Signs:</strong>
-                  <ul style={{ marginLeft: '1.5rem', marginTop: '0.25rem', color: 'var(--gray-700)' }}>
-                    {risk.early_signs?.map((s, i) => <li key={i}>{s}</li>)}
-                  </ul>
+            {/* ROW 2: Confidence bars + Why this crop */}
+            {result.confidence?.components && (
+              <div className="adv-row-2">
+                <div className="adv-card adv-card--confidence">
+                  <h3 className="adv-card-title">📊 Confidence Breakdown</h3>
+                  <div className="adv-conf-bars">
+                    {[
+                      { label: 'Agronomic Fit',    value: result.confidence.components.agronomic_fit,    max: 50, color: 'linear-gradient(90deg,#22c55e,#4ade80)' },
+                      { label: 'Data Quality',      value: result.confidence.components.data_quality,      max: 30, color: 'linear-gradient(90deg,#3b82f6,#60a5fa)' },
+                      { label: 'Regional Evidence', value: result.confidence.components.regional_evidence, max: 20, color: 'linear-gradient(90deg,#8b5cf6,#a78bfa)' },
+                    ].map(bar => (
+                      <div key={bar.label} className="adv-conf-bar-row">
+                        <div className="adv-conf-bar-meta">
+                          <span className="adv-conf-bar-label">{bar.label}</span>
+                          <span className="adv-conf-bar-score">{bar.value} / {bar.max}</span>
+                        </div>
+                        <div className="adv-conf-bar-track">
+                          <div className="adv-conf-bar-fill" style={{ width: `${(bar.value / bar.max) * 100}%`, background: bar.color }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {result.confidence.notes?.length > 0 && (
+                    <div className="adv-conf-notes">
+                      {result.confidence.notes.map((n, i) => <p key={i} className="adv-conf-note">• {n}</p>)}
+                    </div>
+                  )}
                 </div>
-                <div style={{ fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  <strong>How to Monitor:</strong>
-                  <ul style={{ marginLeft: '1.5rem', marginTop: '0.25rem', color: 'var(--gray-700)' }}>
-                    {risk.monitoring?.map((m, i) => <li key={i}>{m}</li>)}
-                  </ul>
-                </div>
-                <div style={{ fontSize: '0.9rem' }}>
-                  <strong>Prevention (Non-Chemical):</strong>
-                  <ul style={{ marginLeft: '1.5rem', marginTop: '0.25rem', color: 'var(--gray-700)' }}>
-                    {risk.prevention?.map((p, i) => <li key={i}>{p}</li>)}
-                  </ul>
+                <div className="adv-card adv-card--reasoning">
+                  <h3 className="adv-card-title">💡 Why This Crop?</h3>
+                  <p className="adv-reasoning-text">
+                    {result.top_recommendation.reasoning || `Selected based on: ${result.top_recommendation.selection_basis?.replace('_', ' ')}`}
+                  </p>
+                  {result.top_recommendation.tradeoffs?.length > 0 && (
+                    <div className="adv-tradeoffs">
+                      <p className="adv-tradeoffs-label">Important Notes</p>
+                      <ul className="adv-tradeoffs-list">
+                        {result.top_recommendation.tradeoffs.map((t, i) => <li key={i}>{t}</li>)}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-
-        {/* Fertilizer Guidance */}
-        {result && result.top_recommendation && (
-          <div className="card" style={{ marginBottom: 'var(--space-xl)' }}>
-            <h3 className="card-title">Fertilizer Guidance (per hectare)</h3>
-            {result.top_recommendation.fertilizer && result.top_recommendation.fertilizer.status === 'available' ? (
-              <>
-                <table className="fert-table">
-                  <thead>
-                    <tr>
-                      <th>Product</th>
-                      <th>Dosage (kg/ha)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Urea (46% N)</td>
-                      <td><strong>{result.top_recommendation.fertilizer.fertilizer_products.urea_kg_ha}</strong></td>
-                    </tr>
-                    <tr>
-                      <td>DAP (18% N, 46% P)</td>
-                      <td><strong>{result.top_recommendation.fertilizer.fertilizer_products.dap_kg_ha}</strong></td>
-                    </tr>
-                    <tr>
-                      <td>MOP (60% K)</td>
-                      <td><strong>{result.top_recommendation.fertilizer.fertilizer_products.mop_kg_ha}</strong></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <p style={{ marginTop: 'var(--space-sm)', fontSize: '0.85rem', color: 'var(--gray-600)' }}>
-                  Target Nutrients (kg/ha): N: {result.top_recommendation.fertilizer.nutrient_recommendation.N_kg_ha}, P₂O₅: {result.top_recommendation.fertilizer.nutrient_recommendation.P2O5_kg_ha}, K₂O: {result.top_recommendation.fertilizer.nutrient_recommendation.K2O_kg_ha}
-                </p>
-                <p style={{ marginTop: 'var(--space-xs)', fontSize: '0.85rem', color: 'var(--gray-600)' }}>
-                  Source: {result.top_recommendation.fertilizer.source?.authority}
-                </p>
-              </>
-            ) : (
-              <p style={{ color: 'var(--gray-600)', fontStyle: 'italic' }}>A verified fertilizer recommendation is not currently available for this crop-region combination.</p>
             )}
-          </div>
-        )}
 
-        {/* Alternatives */}
-        {result && result.alternatives && result.alternatives.length > 0 && (
-          <div className="card" style={{ marginBottom: 'var(--space-xl)' }}>
-            <h3 className="card-title">Alternatives</h3>
-            <div className="reasons-grid">
-              {result.alternatives.map((alt, idx) => (
-                <div className="reason-card" key={idx}>
-                  <div className="reason-icon">{idx + 1}</div>
-                  <div>
-                    <strong style={{ textTransform: 'capitalize', fontSize: '1.1rem', color: 'var(--green-900)' }}>{alt.crop}</strong>
-                    {alt.reasoning && <p className="reason-text" style={{ marginTop: '0.25rem' }}>{alt.reasoning}</p>}
+            {/* ROW 3: Market + Fertilizer */}
+            <div className="adv-row-3">
+              {result.market_context?.status === 'available' ? (
+                <div className="adv-card adv-card--market">
+                  <h3 className="adv-card-title">📈 Market Observation</h3>
+                  <p className="adv-market-commodity">{result.market_context.commodity}</p>
+                  <p className="adv-market-location">{result.market_context.market} · {result.market_context.district}</p>
+                  <div className="adv-market-price-row">
+                    <div className="adv-market-price-main">
+                      <span className="adv-market-price-label">Modal</span>
+                      <span className="adv-market-price-value">&#8377;{result.market_context.modal_price}</span>
+                      <span className="adv-market-price-unit">/ quintal</span>
+                    </div>
+                    <div className="adv-market-price-range">
+                      <span>Min &#8377;{result.market_context.min_price}</span>
+                      <span className="adv-market-range-sep">-</span>
+                      <span>Max &#8377;{result.market_context.max_price}</span>
+                    </div>
                   </div>
+                  <p className="adv-market-date">As of {result.market_context.arrival_date}</p>
+                  <p className="adv-market-disclaimer">Current mandi data - not a guaranteed harvest price</p>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+              ) : (
+                <div className="adv-card adv-card--market adv-card--empty">
+                  <h3 className="adv-card-title">📈 Market Observation</h3>
+                  <p className="adv-empty-note">Market data unavailable for this crop / region</p>
+                </div>
+              )}
 
-        {/* Important Notes */}
-        {result && result.top_recommendation && result.top_recommendation.tradeoffs && result.top_recommendation.tradeoffs.length > 0 && (
-          <div className="card" style={{ marginBottom: 'var(--space-xl)' }}>
-            <h3 className="card-title">Important Notes</h3>
-            <ul style={{ marginLeft: '1.5rem', color: 'var(--gray-700)' }}>
-              {result.top_recommendation.tradeoffs.map((t, i) => <li key={i} style={{ marginBottom: '0.5rem' }}>{t}</li>)}
-            </ul>
+              <div className="adv-card adv-card--fertilizer">
+                <h3 className="adv-card-title">🌿 Fertilizer Guidance <span className="adv-fert-subtitle">per hectare</span></h3>
+                {result.top_recommendation.fertilizer?.status === 'available' ? (
+                  <>
+                    <div className="adv-fert-products">
+                      {[
+                        { name: 'Urea', sub: '46% N',       value: result.top_recommendation.fertilizer.fertilizer_products.urea_kg_ha, bg: '#dcfce7', border: '#86efac', clr: '#15803d' },
+                        { name: 'DAP',  sub: '18%N 46%P',   value: result.top_recommendation.fertilizer.fertilizer_products.dap_kg_ha,  bg: '#eff6ff', border: '#bfdbfe', clr: '#1d4ed8' },
+                        { name: 'MOP',  sub: '60% K',        value: result.top_recommendation.fertilizer.fertilizer_products.mop_kg_ha,  bg: '#fff7ed', border: '#fed7aa', clr: '#c2410c' },
+                      ].map(p => (
+                        <div key={p.name} className="adv-fert-pill" style={{ background: p.bg, borderColor: p.border }}>
+                          <span className="adv-fert-pill-val" style={{ color: p.clr }}>{p.value}</span>
+                          <span className="adv-fert-pill-unit">kg/ha</span>
+                          <span className="adv-fert-pill-name">{p.name}</span>
+                          <span className="adv-fert-pill-sub">{p.sub}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="adv-fert-target">
+                      Target: N {result.top_recommendation.fertilizer.nutrient_recommendation.N_kg_ha} · P2O5 {result.top_recommendation.fertilizer.nutrient_recommendation.P2O5_kg_ha} · K2O {result.top_recommendation.fertilizer.nutrient_recommendation.K2O_kg_ha} kg/ha
+                    </p>
+                    <p className="adv-fert-source">Source: {result.top_recommendation.fertilizer.source?.authority}</p>
+                  </>
+                ) : (
+                  <p className="adv-empty-note">No verified fertilizer recommendation available for this crop-region combination.</p>
+                )}
+              </div>
+            </div>
+
+            {/* ROW 4: Pest Warning */}
+            {result.top_recommendation.risk_and_prevention?.status === 'available' && (
+              <div className="adv-card adv-card--pest">
+                <h3 className="adv-card-title adv-card-title--danger">Early Risk Warning</h3>
+                <div className="adv-pest-grid">
+                  {result.top_recommendation.risk_and_prevention.risks.map((risk, idx) => (
+                    <div key={idx} className="adv-pest-card">
+                      <div className="adv-pest-card-header">
+                        <h4 className="adv-pest-name">{risk.risk_name}</h4>
+                        <span className="adv-pest-likelihood">{risk.likelihood}</span>
+                      </div>
+                      <div className="adv-pest-sections">
+                        {risk.early_signs?.length > 0 && (
+                          <div className="adv-pest-section adv-pest-section--signs">
+                            <p className="adv-pest-section-label">Early Signs</p>
+                            <ul>{risk.early_signs.map((s, i) => <li key={i}>{s}</li>)}</ul>
+                          </div>
+                        )}
+                        {risk.monitoring?.length > 0 && (
+                          <div className="adv-pest-section adv-pest-section--monitor">
+                            <p className="adv-pest-section-label">How to Monitor</p>
+                            <ul>{risk.monitoring.map((m, i) => <li key={i}>{m}</li>)}</ul>
+                          </div>
+                        )}
+                        {risk.prevention?.length > 0 && (
+                          <div className="adv-pest-section adv-pest-section--prevent">
+                            <p className="adv-pest-section-label">Prevention</p>
+                            <ul>{risk.prevention.map((p, i) => <li key={i}>{p}</li>)}</ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ROW 5: Alternatives */}
+            {result.alternatives?.length > 0 && (
+              <div className="adv-card adv-card--alternatives">
+                <h3 className="adv-card-title">Alternative Crops</h3>
+                <div className="adv-alt-grid">
+                  {result.alternatives.map((alt, idx) => (
+                    <div className="adv-alt-card" key={idx}>
+                      <div className="adv-alt-rank">#{idx + 1}</div>
+                      <div className="adv-alt-body">
+                        <strong className="adv-alt-name">{alt.crop}</strong>
+                        {alt.reasoning && <p className="adv-alt-reason">{alt.reasoning}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
           </div>
         )}
 

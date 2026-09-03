@@ -74,15 +74,25 @@ function SeverityBadge({ severity, t }) {
 
 function ConfidenceBar({ score }) {
   const pct = (score * 100).toFixed(1);
-  const color = score >= 0.75 ? '#22c55e' : score >= 0.45 ? '#eab308' : '#ef4444';
+  let color, gradientColor, label;
+  if (score >= 0.75) {
+    color = '#22c55e'; gradientColor = 'linear-gradient(90deg, #22c55e, #4ade80)'; label = 'High';
+  } else if (score >= 0.45) {
+    color = '#eab308'; gradientColor = 'linear-gradient(90deg, #eab308, #facc15)'; label = 'Medium';
+  } else {
+    color = '#ef4444'; gradientColor = 'linear-gradient(90deg, #ef4444, #f87171)'; label = 'Low';
+  }
   return (
-    <div className="confidence-section">
-      <div className="confidence-info">
-        <span style={{ fontSize: '0.85rem' }}>AI Confidence</span>
-        <strong style={{ color }}>{pct}%</strong>
+    <div className="pd-confidence-card">
+      <div className="pd-confidence-header">
+        <span className="pd-confidence-label">AI Confidence</span>
+        <div className="pd-confidence-value-row">
+          <strong className="pd-confidence-pct" style={{ color }}>{pct}%</strong>
+          <span className="pd-confidence-tier" style={{ background: color + '20', color }}>{label}</span>
+        </div>
       </div>
-      <div className="confidence-bar">
-        <div className="confidence-fill" style={{ width: `${pct}%`, background: color }} />
+      <div className="pd-confidence-bar">
+        <div className="pd-confidence-fill" style={{ width: `${pct}%`, background: gradientColor }} />
       </div>
     </div>
   );
@@ -487,18 +497,19 @@ export default function PestDetectionPage() {
             ═══════════════════════════════════════════════ */}
         {result && (
           <section
-            className={`pest-result-card result-tier-${result.confidence_tier}`}
+            className={`pest-result-card pd-result-card result-tier-${result.confidence_tier}`}
             id="pest-result"
           >
-            <div className="result-header">
-              <div>
+            {/* ── Result header ── */}
+            <div className="pd-result-header">
+              <div className="pd-result-header-left">
                 <p className="section-label">{t('pest.result.section_label')}</p>
 
                 {/* HIGH — confirmed diagnosis */}
                 {result.confidence_tier === 'high' && !result.is_healthy && (
                   <>
-                    <p className="result-label">{t('pest.result.detected_condition')}</p>
-                    <h2 className="result-title">{result.disease}</h2>
+                    <p className="pd-result-label">{t('pest.result.detected_condition')}</p>
+                    <h2 className="pd-result-title">{result.disease}</h2>
                     <p className="result-crop-label">
                       {t('pest.result.crop_label')}: <strong style={{ textTransform: 'capitalize' }}>{result.crop}</strong>
                     </p>
@@ -509,7 +520,7 @@ export default function PestDetectionPage() {
                 {/* HIGH — healthy */}
                 {result.confidence_tier === 'high' && result.is_healthy && (
                   <>
-                    <h2 className="result-title healthy-title">✅ Crop Appears Healthy</h2>
+                    <h2 className="pd-result-title pd-result-title--healthy">✅ Crop Appears Healthy</h2>
                     <p className="result-crop-label">
                       {t('pest.result.crop_label')}: <strong style={{ textTransform: 'capitalize' }}>{result.crop}</strong>
                     </p>
@@ -519,51 +530,55 @@ export default function PestDetectionPage() {
                 {/* MEDIUM — uncertain */}
                 {result.confidence_tier === 'medium' && (
                   <>
-                    <p className="result-label">{t('pest.result.possible_condition')}</p>
-                    <h2 className="result-title warning">⚠️ {result.disease}</h2>
+                    <p className="pd-result-label pd-result-label--warning">{t('pest.result.possible_condition')}</p>
+                    <h2 className="pd-result-title pd-result-title--warning">⚠️ {result.disease}</h2>
                     <p className="result-crop-label">
                       {t('pest.result.crop_label')}: <strong style={{ textTransform: 'capitalize' }}>{result.crop}</strong>
                     </p>
-                    <div className="medium-confidence-banner">
-                      <span>📸</span>
-                      <p>{t('pest.result.medium_confidence_note')}</p>
-                    </div>
                   </>
                 )}
 
                 {/* LOW — can't identify */}
                 {result.confidence_tier === 'low' && (
                   <>
-                    <h2 className="result-title warning">❌ {t('pest.result.low_confidence_title')}</h2>
-                    <div className="low-confidence-banner">
-                      <p>{t('pest.result.low_confidence_desc', { value: (result.confidence * 100).toFixed(0) })}</p>
-                      <p><strong>{t('pest.result.low_confidence_action')}</strong></p>
-                    </div>
+                    <h2 className="pd-result-title pd-result-title--danger">❌ {t('pest.result.low_confidence_title')}</h2>
                   </>
                 )}
               </div>
 
-              {/* Confidence badge */}
-              <div className={`confidence-badge ${result.confidence_tier !== 'high' ? 'warning' : ''}`}>
-                {(result.confidence * 100).toFixed(0)}%
-                <span>confidence</span>
+              {/* Tier badge */}
+              <div className={`pd-tier-badge pd-tier-badge--${result.confidence_tier}`}>
+                <span className="pd-tier-badge-pct">{(result.confidence * 100).toFixed(0)}%</span>
+                <span className="pd-tier-badge-label">confidence</span>
               </div>
             </div>
 
-            {/* SEVERITY (high/medium only, non-healthy) */}
-            {result.confidence_tier !== 'low' && !result.is_healthy && (
-              <div style={{ marginBottom: 14 }}>
+            {/* ── Meta row: severity + speak ── */}
+            <div className="pd-result-meta-row">
+              {result.confidence_tier !== 'low' && !result.is_healthy && (
                 <SeverityBadge severity={result.severity} t={t} />
+              )}
+              <SpeakButton text={speakText} label={t('pest.result.listen_result')} />
+            </div>
+
+            {/* ── Medium confidence banner ── */}
+            {result.confidence_tier === 'medium' && (
+              <div className="medium-confidence-banner">
+                <span>📸</span>
+                <p>{t('pest.result.medium_confidence_note')}</p>
+              </div>
+            )}
+
+            {/* ── Low confidence banner ── */}
+            {result.confidence_tier === 'low' && (
+              <div className="low-confidence-banner">
+                <p>{t('pest.result.low_confidence_desc', { value: (result.confidence * 100).toFixed(0) })}</p>
+                <p><strong>{t('pest.result.low_confidence_action')}</strong></p>
               </div>
             )}
 
             {/* CONFIDENCE BAR */}
             <ConfidenceBar score={result.confidence} />
-
-            {/* 🔊 SPEAK BUTTON */}
-            <div style={{ marginTop: 12, marginBottom: 4 }}>
-              <SpeakButton text={speakText} label={t('pest.result.listen_result')} />
-            </div>
 
             {/* VALIDATION NOTE */}
             {result.validation_note && (
@@ -642,36 +657,42 @@ export default function PestDetectionPage() {
             {/* IPM ACTION PLAN */}
             {result.forecast?.status === 'available' && result.forecast.risks?.length > 0 && (
               <div className="ipm-action-plan">
-                <h3>{t('pest.result.ipm_title')}</h3>
-                <p className="ipm-data-note">{t('pest.result.ipm_source_note')}</p>
-                {result.forecast.risks.map((risk, idx) => (
-                  <div key={idx} className="risk-card">
-                    <h4>
-                      {risk.risk_name}{' '}
-                      <span className={`risk-badge ${risk.current_alert_level?.toLowerCase().replace(' ', '-')}`}>
-                        {risk.current_alert_level}
-                      </span>
-                    </h4>
-                    {risk.early_signs?.length > 0 && (
-                      <div className="ipm-section">
-                        <h5>🔍 {t('pest.result.early_signs')}</h5>
-                        <ul>{risk.early_signs.map((s, i) => <li key={i}>{s}</li>)}</ul>
+                <div className="ipm-action-plan-header">
+                  <h3>🌿 {t('pest.result.ipm_title')}</h3>
+                  <p className="ipm-data-note">{t('pest.result.ipm_source_note')}</p>
+                </div>
+                {result.forecast.risks.map((risk, idx) => {
+                  const alertLevelClass = risk.current_alert_level?.toLowerCase().replace(' ', '-') || '';
+                  const controlSections = [
+                    { key: 'cultural',   icon: '🌱', label: t('pest.result.cultural_controls'),   items: risk.ipm?.cultural,   colorClass: 'ipm-section--cultural' },
+                    { key: 'biological', icon: '🐞', label: t('pest.result.biological_controls'), items: risk.ipm?.biological, colorClass: 'ipm-section--biological' },
+                    { key: 'chemical',   icon: '🧪', label: t('pest.result.chemical_controls'),   items: risk.ipm?.chemical,   colorClass: 'ipm-section--chemical' },
+                  ].filter(s => s.items?.length > 0);
+                  return (
+                    <div key={idx} className="risk-card">
+                      <div className="risk-card-header">
+                        <h4 className="risk-card-title">{risk.risk_name}</h4>
+                        <span className={`risk-badge ${alertLevelClass}`}>{risk.current_alert_level}</span>
                       </div>
-                    )}
-                    <div className="ipm-section">
-                      <h5>🌱 {t('pest.result.cultural_controls')}</h5>
-                      <ul>{risk.ipm?.cultural?.map((c, i) => <li key={i}>{c}</li>)}</ul>
+                      {risk.early_signs?.length > 0 && (
+                        <div className="ipm-section ipm-section--signs">
+                          <div className="ipm-section-label"><span className="ipm-section-icon">🔍</span>{t('pest.result.early_signs')}</div>
+                          <ul className="ipm-section-list">{risk.early_signs.map((s, i) => <li key={i}>{s}</li>)}</ul>
+                        </div>
+                      )}
+                      {controlSections.length > 0 && (
+                        <div className="ipm-controls-grid">
+                          {controlSections.map(sec => (
+                            <div key={sec.key} className={`ipm-section ${sec.colorClass}`}>
+                              <div className="ipm-section-label"><span className="ipm-section-icon">{sec.icon}</span>{sec.label}</div>
+                              <ul className="ipm-section-list">{sec.items.map((c, i) => <li key={i}>{c}</li>)}</ul>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div className="ipm-section">
-                      <h5>🐞 {t('pest.result.biological_controls')}</h5>
-                      <ul>{risk.ipm?.biological?.map((c, i) => <li key={i}>{c}</li>)}</ul>
-                    </div>
-                    <div className="ipm-section">
-                      <h5>🧪 {t('pest.result.chemical_controls')}</h5>
-                      <ul>{risk.ipm?.chemical?.map((c, i) => <li key={i}>{c}</li>)}</ul>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 

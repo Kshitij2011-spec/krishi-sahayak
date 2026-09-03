@@ -22,19 +22,30 @@ function SeverityGauge({ score, t }) {
   if (score === null || score === undefined) return null;
   const pct = Math.min(100, Math.max(0, score));
   let color = '#22c55e';
+  let gradientColor = 'linear-gradient(90deg, #22c55e, #4ade80)';
   let level = t('common.severity_low');
-  if (pct >= 90) { color = '#ef4444'; level = t('common.severity_critical'); }
-  else if (pct >= 70) { color = '#f97316'; level = t('common.severity_high'); }
-  else if (pct >= 40) { color = '#eab308'; level = t('common.severity_moderate'); }
+  if (pct >= 90) {
+    color = '#ef4444';
+    gradientColor = 'linear-gradient(90deg, #ef4444, #f87171)';
+    level = t('common.severity_critical');
+  } else if (pct >= 70) {
+    color = '#f97316';
+    gradientColor = 'linear-gradient(90deg, #f97316, #fb923c)';
+    level = t('common.severity_high');
+  } else if (pct >= 40) {
+    color = '#eab308';
+    gradientColor = 'linear-gradient(90deg, #eab308, #facc15)';
+    level = t('common.severity_moderate');
+  }
 
   return (
     <div className="risk-gauge-wrapper">
       <div className="risk-gauge-label">
-        <span>Early Risk Score — {level}</span>
-        <strong style={{ color }}>{pct} / 100</strong>
+        <span>Early Risk Score — <strong style={{ color }}>{level}</strong></span>
+        <strong style={{ color }} className="risk-gauge-score">{pct}<span className="risk-gauge-unit"> / 100</span></strong>
       </div>
       <div className="risk-gauge-bar">
-        <div className="risk-gauge-fill" style={{ width: `${pct}%`, background: color }} />
+        <div className="risk-gauge-fill" style={{ width: `${pct}%`, background: gradientColor }} />
       </div>
       <p className="risk-gauge-note">
         {t('pest.result.risk_not_diagnosis')}
@@ -58,34 +69,70 @@ function SeverityBadge({ severity }) {
 }
 
 function IpmCard({ risk, t }) {
+  const alertLevelClass = risk.current_alert_level?.toLowerCase().replace(' ', '-') || '';
+
+  const controlSections = [
+    {
+      key: 'cultural',
+      icon: '🌱',
+      label: t('pest.result.cultural_controls'),
+      items: risk.ipm?.cultural,
+      colorClass: 'ipm-section--cultural',
+    },
+    {
+      key: 'biological',
+      icon: '🐞',
+      label: t('pest.result.biological_controls'),
+      items: risk.ipm?.biological,
+      colorClass: 'ipm-section--biological',
+    },
+    {
+      key: 'chemical',
+      icon: '🧪',
+      label: t('pest.result.chemical_controls'),
+      items: risk.ipm?.chemical,
+      colorClass: 'ipm-section--chemical',
+    },
+  ].filter(s => s.items?.length > 0);
+
   return (
     <div className="risk-card">
-      <h4>
-        {risk.risk_name}{' '}
-        <span className={`risk-badge ${risk.current_alert_level?.toLowerCase().replace(' ', '-')}`}>
+      <div className="risk-card-header">
+        <h4 className="risk-card-title">
+          {risk.risk_name}
+        </h4>
+        <span className={`risk-badge ${alertLevelClass}`}>
           {risk.current_alert_level}
         </span>
-      </h4>
+      </div>
 
       {risk.early_signs?.length > 0 && (
-        <div className="ipm-section">
-          <h5>🔍 {t('pest.result.early_signs')}</h5>
-          <ul>{risk.early_signs.map((s, i) => <li key={i}>{s}</li>)}</ul>
+        <div className="ipm-section ipm-section--signs">
+          <div className="ipm-section-label">
+            <span className="ipm-section-icon">🔍</span>
+            {t('pest.result.early_signs')}
+          </div>
+          <ul className="ipm-section-list">
+            {risk.early_signs.map((s, i) => <li key={i}>{s}</li>)}
+          </ul>
         </div>
       )}
 
-      <div className="ipm-section">
-        <h5>🌱 {t('pest.result.cultural_controls')}</h5>
-        <ul>{risk.ipm?.cultural?.map((c, i) => <li key={i}>{c}</li>)}</ul>
-      </div>
-      <div className="ipm-section">
-        <h5>🐞 {t('pest.result.biological_controls')}</h5>
-        <ul>{risk.ipm?.biological?.map((c, i) => <li key={i}>{c}</li>)}</ul>
-      </div>
-      <div className="ipm-section">
-        <h5>🧪 {t('pest.result.chemical_controls')}</h5>
-        <ul>{risk.ipm?.chemical?.map((c, i) => <li key={i}>{c}</li>)}</ul>
-      </div>
+      {controlSections.length > 0 && (
+        <div className="ipm-controls-grid">
+          {controlSections.map(sec => (
+            <div key={sec.key} className={`ipm-section ${sec.colorClass}`}>
+              <div className="ipm-section-label">
+                <span className="ipm-section-icon">{sec.icon}</span>
+                {sec.label}
+              </div>
+              <ul className="ipm-section-list">
+                {sec.items.map((c, i) => <li key={i}>{c}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
 
       {risk.source && (
         <p className="ipm-source">
@@ -281,7 +328,7 @@ export default function CropRiskPage() {
 
         {/* RESULTS */}
         {result && (
-          <section className="pest-result-card" id="crop-risk-result">
+          <section className="pest-result-card cr-result-card" id="crop-risk-result">
 
             {result.status === 'no_data' ? (
               <>
@@ -293,53 +340,54 @@ export default function CropRiskPage() {
               </>
             ) : (
               <>
-                <div className="result-header">
-                  <div>
+                {/* ── Result header ── */}
+                <div className="cr-result-header">
+                  <div className="cr-result-header-text">
                     <p className="section-label">{t('crop_risk.result.section_label')}</p>
-                    <h2 className="result-title" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <h2 className="cr-result-title">
                       {t('crop_risk.result.title', { crop: cropLabel })}
-                      {result.severity && <SeverityBadge severity={result.severity} />}
                     </h2>
+                  </div>
+                  <div className="cr-result-header-badges">
+                    {result.severity && <SeverityBadge severity={result.severity} />}
+                    <SpeakButton text={speakText} label={t('common.listen')} />
                   </div>
                 </div>
 
-                {/* Risk ≠ Diagnosis banner */}
+                {/* ── Risk ≠ Diagnosis banner ── */}
                 <div className="risk-not-diagnosis-banner" role="note">
                   ⚠️ {t('crop_risk.result.risk_not_diagnosis')}
                 </div>
 
-                {/* Score gauge */}
+                {/* ── Score gauge ── */}
                 <SeverityGauge score={result.risk_score} t={t} />
 
-                {/* 🔊 SPEAK RESULT */}
-                <div style={{ marginBottom: 14 }}>
-                  <SpeakButton text={speakText} label={t('common.listen')} />
-                </div>
-
-                {/* Why this score */}
-                {result.reasons?.length > 0 && (
-                  <div className="risk-reasons-box">
-                    <h3>📊 {t('crop_risk.result.reasons_heading')}</h3>
-                    <ul>{result.reasons.map((r, i) => <li key={i}>{r}</li>)}</ul>
+                {/* ── Two-column info grid: reasons + action ── */}
+                {(result.reasons?.length > 0 || result.recommended_action) && (
+                  <div className="cr-info-grid">
+                    {result.reasons?.length > 0 && (
+                      <div className="risk-reasons-box">
+                        <h3>📊 {t('crop_risk.result.reasons_heading')}</h3>
+                        <ul>{result.reasons.map((r, i) => <li key={i}>{r}</li>)}</ul>
+                      </div>
+                    )}
+                    {result.recommended_action && (
+                      <div className="recommended-action-box">
+                        <h3>✅ {t('crop_risk.result.action_heading')}</h3>
+                        <p>{result.recommended_action}</p>
+                      </div>
+                    )}
                   </div>
                 )}
 
-                {/* Recommended action */}
-                {result.recommended_action && (
-                  <div className="recommended-action-box">
-                    <h3>✅ {t('crop_risk.result.action_heading')}</h3>
-                    <p>{result.recommended_action}</p>
-                  </div>
-                )}
-
-                {/* Location note */}
+                {/* ── Location note ── */}
                 {result.location_note && (
                   <div className="alert alert-warning" style={{ marginTop: 12, fontSize: '0.85rem' }}>
                     ⚠️ {result.location_note}
                   </div>
                 )}
 
-                {/* Weather context */}
+                {/* ── Weather context ── */}
                 {result.weather_context?.status === 'available' && (
                   <div className="weather-context-box">
                     <h3>🌤️ {t('crop_risk.result.weather_heading')}</h3>
@@ -364,65 +412,70 @@ export default function CropRiskPage() {
                   </div>
                 )}
 
-                {/* IPM cards */}
+                {/* ── IPM cards ── */}
                 {result.risks?.length > 0 && (
                   <div className="ipm-action-plan">
-                    <h3>{t('common.ipm_advice')}</h3>
-                    <p className="ipm-data-note">{t('pest.result.ipm_source_note')}</p>
+                    <div className="ipm-action-plan-header">
+                      <h3>🌿 {t('common.ipm_advice')}</h3>
+                      <p className="ipm-data-note">{t('pest.result.ipm_source_note')}</p>
+                    </div>
                     {result.risks.map((risk, idx) => (
                       <IpmCard key={idx} risk={risk} t={t} />
                     ))}
                   </div>
                 )}
 
-                {/* Disclaimer */}
+                {/* ── Disclaimer ── */}
                 <p className="risk-score-note">ℹ️ {result.score_note}</p>
 
-                {/* ── Risk → Detection bridge ──────────────────── */}
-                <div className="risk-to-detect-bridge">
-                  {DETECTION_SUPPORTED_CROPS.has(crop) ? (
-                    <>
-                      <p className="bridge-hint">📷 {t('home.detect_next')}</p>
-                      <button
-                        className="btn btn-outline bridge-btn"
-                        onClick={() => navigate('/detect')}
-                        id="btn-risk-to-detect"
-                      >
-                        {t('home.cta_detection')} →
-                      </button>
-                    </>
-                  ) : (
-                    <p className="bridge-hint bridge-hint--muted">ℹ️ {t('home.detect_unsupported')}</p>
-                  )}
-                </div>
+                {/* ── Bottom CTAs row ── */}
+                <div className="cr-bottom-ctas">
+                  {/* Risk → Detection bridge */}
+                  <div className="risk-to-detect-bridge">
+                    {DETECTION_SUPPORTED_CROPS.has(crop) ? (
+                      <>
+                        <p className="bridge-hint">📷 {t('home.detect_next')}</p>
+                        <button
+                          className="btn btn-outline bridge-btn"
+                          onClick={() => navigate('/detect')}
+                          id="btn-risk-to-detect"
+                        >
+                          {t('home.cta_detection')} →
+                        </button>
+                      </>
+                    ) : (
+                      <p className="bridge-hint bridge-hint--muted">ℹ️ {t('home.detect_unsupported')}</p>
+                    )}
+                  </div>
 
-                {/* ── Officer assistance CTA (Phase 7) ────────────────── */}
-                <div className="or-risk-officer-cta">
-                  {riskRequestSuccess ? (
-                    <div className="or-inline-success">
-                      <p>✅ {t('officer_request.submit_success')}</p>
-                      <p className="or-ref-inline">{t('officer_request.request_id')}: <strong>{riskRequestSuccess.reference_code}</strong></p>
-                      <button
-                        type="button"
-                        className="btn btn-outline btn-sm"
-                        onClick={() => window.open(`/request-status/${riskRequestSuccess.reference_code}`, '_blank')}
-                      >
-                        {t('officer_request.view_request_status')} →
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <p className="or-risk-cta-label">🤔 {t('officer_request.need_officer_advice', 'Need an officer\'s advice?')}</p>
-                      <button
-                        type="button"
-                        className="btn btn-request-officer-outline"
-                        id="btn-crop-risk-officer"
-                        onClick={() => setShowRiskRequestModal(true)}
-                      >
-                        📤 {t('officer_request.request_officer_assistance')}
-                      </button>
-                    </>
-                  )}
+                  {/* Officer assistance CTA (Phase 7) */}
+                  <div className="or-risk-officer-cta">
+                    {riskRequestSuccess ? (
+                      <div className="or-inline-success">
+                        <p>✅ {t('officer_request.submit_success')}</p>
+                        <p className="or-ref-inline">{t('officer_request.request_id')}: <strong>{riskRequestSuccess.reference_code}</strong></p>
+                        <button
+                          type="button"
+                          className="btn btn-outline btn-sm"
+                          onClick={() => window.open(`/request-status/${riskRequestSuccess.reference_code}`, '_blank')}
+                        >
+                          {t('officer_request.view_request_status')} →
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="or-risk-cta-label">🤔 {t('officer_request.need_officer_advice', 'Need an officer\'s advice?')}</p>
+                        <button
+                          type="button"
+                          className="btn btn-request-officer-outline"
+                          id="btn-crop-risk-officer"
+                          onClick={() => setShowRiskRequestModal(true)}
+                        >
+                          📤 {t('officer_request.request_officer_assistance')}
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
               </>
             )}
