@@ -83,6 +83,19 @@ CORS(
     vary_header=True,
 )
 
+# ── CORS safety net for error responses ──────────────────────────────────────
+# flask-cors 5.x does NOT inject CORS headers on 4xx/5xx responses, so the
+# browser sees "No Access-Control-Allow-Origin" even on e.g. 503 MODEL_UNAVAILABLE.
+# This after_request hook ensures the header is present on EVERY response for
+# any origin in the allowlist.
+@app.after_request
+def _inject_cors_on_errors(response):
+    origin = request.headers.get("Origin", "")
+    if origin in _CORS_ORIGINS:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Vary"] = "Origin"
+    return response
+
 
 
 # ---------------------------------------------------------------------------

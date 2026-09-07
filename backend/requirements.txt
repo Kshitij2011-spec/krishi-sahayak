@@ -9,11 +9,11 @@ requests
 google-genai
 # ── Supabase admin client (service-role key, officer_requests) ────────────────
 supabase
-# ── Local MobileNetV2 inference (optional on Render free tier) ────────────────
-# If these are not installed, /api/detect-pest falls back to HF Inference API.
-# For local dev: pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-# Then:          pip install transformers Pillow
-torch
-torchvision
-transformers
+# ── Local MobileNetV2 inference ───────────────────────────────────────────────
+# CPU-only torch wheels (~180 MB total) — avoids pulling 2.4 GB CUDA build
+# which exceeds Render free-tier disk limits and crashes the build.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.2.2+cpu
+torchvision==0.17.2+cpu
+transformers==4.40.2
 Pillow
