@@ -56,7 +56,32 @@ from backend.advisory.disease_meta import get_disease_meta
 
 app = Flask(__name__)
 app.register_blueprint(extension_bp)
-CORS(app)
+# ── CORS ─────────────────────────────────────────────────────────────────────
+# Explicit origin allowlist — do NOT use "*" (breaks preflight on credentialed
+# requests and is rejected by some browsers on file-upload endpoints).
+_CORS_ORIGINS = [
+    # Production Vercel frontend
+    "https://krishi-sahayak3.vercel.app",
+    # Local development
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:3000",
+]
+# Allow the deployer to add extra origins via a Render environment variable
+# without touching code (e.g. custom domains, preview URLs).
+_extra_origin = os.environ.get("FRONTEND_URL", "").strip()
+if _extra_origin and _extra_origin not in _CORS_ORIGINS:
+    _CORS_ORIGINS.append(_extra_origin)
+
+CORS(
+    app,
+    origins=_CORS_ORIGINS,
+    methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    supports_credentials=False,
+    vary_header=True,
+)
 
 
 
