@@ -71,37 +71,63 @@ def _build_transform():
 
 def _normalize_to_hf_format(label: str) -> str:
     """
-    Convert the model's id2label human-readable format to the
-    PlantVillage '___' separator format expected by _parse_hf_label in app.py.
+    Convert this model's id2label strings to the PlantVillage '___' separator
+    format expected by _parse_hf_label in app.py.
 
-    The local model returns labels like:
-        'Tomato with Late Blight'      → 'Tomato___Late_Blight'
-        'Corn (Maize) with Common Rust'→ 'Corn_(Maize)___Common_Rust'
-        'Apple Healthy'                → 'Apple___healthy'
-        'Apple - Healthy'              → 'Apple___healthy'
+    Actual id2label values from config.json — four formats observed:
 
-    The HF API returns labels like:
-        'Tomato___Late_blight'
+      1. "Crop with Disease"              → "Crop___Disease"
+         e.g. "Apple with Black Rot"      → "Apple___Black_Rot"
+         e.g. "Corn (Maize) with Common Rust" → "Corn_(Maize)___Common_Rust"
+
+      2. "Healthy Crop Plant"             → "Crop___healthy"
+         e.g. "Healthy Tomato Plant"      → "Tomato___healthy"
+         e.g. "Healthy Corn (Maize) Plant"→ "Corn_(Maize)___healthy"
+
+      3. "Healthy Crop" (no 'Plant')      → "Crop___healthy"
+         e.g. "Healthy Apple"             → "Apple___healthy"
+
+      4. Bare "Crop Disease" / virus names with no separator
+         e.g. "Apple Scab"               → "Apple___Scab"
+         e.g. "Cedar Apple Rust"         → "Cedar_Apple___Rust"   (best-effort)
+         e.g. "Tomato Yellow Leaf Curl Virus" → handled via explicit map
+
+    If already in '___' format, returned as-is.
     """
-    # Already in ___ format (e.g. if upstream changes)
+    # Already normalised (e.g. if upstream changes the model)
     if "___" in label:
         return label
 
-    # Format: "Crop with Disease"
+    # ── Format 1: "Crop with Disease" ────────────────────────────────────────
     if " with " in label:
         crop_part, disease_part = label.split(" with ", 1)
         crop_norm    = crop_part.strip().replace(" ", "_")
         disease_norm = disease_part.strip().replace(" ", "_")
         return f"{crop_norm}___{disease_norm}"
 
-    # Format: "Crop - Healthy" or "Crop Healthy"
-    for suffix in [" - Healthy", " -Healthy", " Healthy"]:
-        if label.endswith(suffix):
-            crop_norm = label[: -len(suffix)].strip().replace(" ", "_")
-            return f"{crop_norm}___healthy"
+    # ── Format 2 & 3: "Healthy X Plant" or "Healthy X" ───────────────────────
+    if label.startswith("Healthy "):
+        rest = label[len("Healthy "):]          # strip leading "Healthy "
+        if rest.endswith(" Plant"):
+            rest = rest[: -len(" Plant")]       # strip trailing " Plant"
+        crop_norm = rest.strip().replace(" ", "_")
+        return f"{crop_norm}___healthy"
 
-    # Unrecognised format — return as-is; _parse_hf_label will fall to else branch
-    logger.warning("[LOCAL ML] Unrecognised id2label format: %r", label)
+    # ── Format 4: explicit map for bare labels with no clear separator ────────
+    _BARE_LABEL_MAP = {
+        "Apple Scab":                      "Apple___Apple_Scab",
+        "Cedar Apple Rust":                "Apple___Cedar_Apple_Rust",
+        "Squash with Powdery Mildew":      "Squash___Powdery_Mildew",
+        "Strawberry with Leaf Scorch":     "Strawberry___Leaf_Scorch",
+        "Tomato Yellow Leaf Curl Virus":   "Tomato___Yellow_Leaf_Curl_Virus",
+        "Tomato Mosaic Virus":             "Tomato___Mosaic_Virus",
+        "Orange with Citrus Greening":     "Orange___Citrus_Greening",
+    }
+    if label in _BARE_LABEL_MAP:
+        return _BARE_LABEL_MAP[label]
+
+    # ── Fallback: return as-is; _parse_hf_label will display raw text ─────────
+    logger.warning("[LOCAL ML] Unrecognised id2label format: %r — returned as-is", label)
     return label
 
 
