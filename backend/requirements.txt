@@ -1,6 +1,6 @@
 flask==3.1.1
 flask-cors==5.0.1
-# scikit-learn==1.6.1  # Commented out due to Python 3.14 compiler error
+scikit-learn==1.6.1
 joblib==1.4.2
 numpy
 # pandas>=2.2.3
