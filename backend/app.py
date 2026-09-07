@@ -81,7 +81,7 @@ CORS(
     app,
     origins=_CORS_ORIGINS,
     methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
+    allow_headers=["Content-Type", "Authorization", "X-Officer-Token"],
     supports_credentials=False,
     vary_header=True,
 )
@@ -103,7 +103,7 @@ def _inject_cors_on_errors(response):
         # causing "content-type not allowed by Access-Control-Allow-Headers".
         if request.method == "OPTIONS":
             response.headers["Access-Control-Allow-Headers"] = \
-                "Content-Type, Authorization"
+                "Content-Type, Authorization, X-Officer-Token"
             response.headers["Access-Control-Allow-Methods"] = \
                 "GET, POST, PUT, PATCH, DELETE, OPTIONS"
             response.headers["Access-Control-Max-Age"] = "3600"
