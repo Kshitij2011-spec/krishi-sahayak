@@ -92,8 +92,18 @@ CORS(
 def _inject_cors_on_errors(response):
     origin = request.headers.get("Origin", "")
     if origin in _CORS_ORIGINS:
+        # Always ensure the origin header is present (fixes 4xx/5xx responses
+        # where flask-cors 5.x skips injection).
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Vary"] = "Origin"
+        # For OPTIONS preflight: flask-cors 5.x sometimes omits Allow-Headers
+        # causing "content-type not allowed by Access-Control-Allow-Headers".
+        if request.method == "OPTIONS":
+            response.headers["Access-Control-Allow-Headers"] = \
+                "Content-Type, Authorization"
+            response.headers["Access-Control-Allow-Methods"] = \
+                "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+            response.headers["Access-Control-Max-Age"] = "3600"
     return response
 
 
