@@ -69,10 +69,13 @@ _CORS_ORIGINS = [
     "http://127.0.0.1:3000",
 ]
 # Allow the deployer to add extra origins via a Render environment variable
-# without touching code (e.g. custom domains, preview URLs).
-_extra_origin = os.environ.get("FRONTEND_URL", "").strip()
-if _extra_origin and _extra_origin not in _CORS_ORIGINS:
-    _CORS_ORIGINS.append(_extra_origin)
+# without touching code (e.g. custom domains, preview Vercel URLs).
+# Supports comma-separated values:
+#   FRONTEND_URL=https://krishi-sahayak3.vercel.app,https://preview-url.vercel.app
+for _extra_origin in os.environ.get("FRONTEND_URL", "").split(","):
+    _extra_origin = _extra_origin.strip().rstrip("/")   # strip spaces + trailing slash
+    if _extra_origin and _extra_origin not in _CORS_ORIGINS:
+        _CORS_ORIGINS.append(_extra_origin)
 
 CORS(
     app,
